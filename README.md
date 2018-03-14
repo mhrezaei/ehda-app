@@ -10,3 +10,10 @@ npm install
 react-native run-android
 
 ```
+
+# test
+
+```
+npm test
+
+```
