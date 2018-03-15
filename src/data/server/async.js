@@ -11,7 +11,6 @@ export function* request_utc() {
 		const result = yield call(api.request_utc);
 
 		if (result.status === 200) {
-            console.log(result);
 			yield put(methods.request_utc_success(result.data.time));
 		}
 	} catch (error) {

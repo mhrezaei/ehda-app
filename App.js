@@ -2,12 +2,11 @@ import React, {Component} from 'react';
 
 // react native
 import {StyleSheet, Text, View, Button} from 'react-native';
-import {NativeRouter, Route, Link} from 'react-router-native';
-
-
-
+import {NativeRouter, Route, Link, withRouter} from 'react-router-native';
 
 // temp
+
+import trans from './src/app/lang';
 
 type Props = {};
 class Home_Temp extends Component<Props>
@@ -17,17 +16,22 @@ class Home_Temp extends Component<Props>
 
         this.onReqPressed = this.onReqPressed.bind(this);
         this.onLoginPress = this.onLoginPress.bind(this);
+        this.changeLang = this.changeLang.bind(this);
     }
 
 
     onReqPressed(){
         this.props.server_methods.request_utc_async();
     }
+    changeLang(){
+        this.props.app_methods.switch_language();
+        this.props.history.push('about');
+    }
     onLoginPress(){
         this.props.auth_methods.signin_user_async({email: 'aryan@gmail.com'});
     }
     render(){
-        const {rcat, rcdat, tkn} = this.props;
+        const {rcat, rcdat, tkn, lnga} = this.props;
         return (
             <View>
                 <Text style={styles.header}>
@@ -40,10 +44,17 @@ class Home_Temp extends Component<Props>
                 <Text style={styles.header}>
                     Token : { tkn }
                 </Text>
+
+                <Text style={styles.header}>
+                    { trans('fields.first_name') } : { lnga }
+                </Text>
+
                 <Button title={"Request time"} onPress={this.onReqPressed}>
 
                 </Button>
+                <Button title={"Switch Lang"} onPress={this.changeLang}>
 
+                </Button>
                 <Button title={"Login"} onPress={this.onLoginPress}>
 
                 </Button>
@@ -55,18 +66,21 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as server_methods from './src/data/server/methods';
 import * as auth_methods from './src/data/auth/methods';
+import * as app_methods from './src/data/app/methods';
 const Home = connect((state)=>{
     return {
         rcat: state.getIn(['server','request_utc_at']),
         rcdat: state.getIn(['server','request_utc_done_at']),
         tkn: state.getIn(['auth','token']),
+        lnga: state.getIn(['app','lang'])
     };
 }, (dispatch)=>{
     return {
         server_methods: bindActionCreators(server_methods, dispatch),
         auth_methods: bindActionCreators(auth_methods, dispatch),
+        app_methods: bindActionCreators(app_methods, dispatch)
     };
-})( Home_Temp );
+})( withRouter(Home_Temp) );
 
 
 

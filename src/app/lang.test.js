@@ -6,12 +6,12 @@ import MockStorage from 'Tests/mock-storage';
 
 describe('Localization Module', ()=>{
    it('should convert english numbers to persian numbers', () =>{
-       expect(to_fa(1234567890)).toEqual('۱۲۳۴۵۶۷۸۹۰');
+       expect(to_fa('1234567890')).toEqual('۱۲۳۴۵۶۷۸۹۰');
    });
 
 
     it('should convert persian numbers to english numbers', () =>{
-        expect(to_en('۱۲۳۴۵۶۷۸۹۰')).toEqual(1234567890);
+        expect(to_en('۱۲۳۴۵۶۷۸۹۰')).toEqual('1234567890');
     });
 
 });

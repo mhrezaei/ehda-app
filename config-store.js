@@ -2,55 +2,56 @@
 // data
 import {AsyncStorage} from 'react-native';
 
-import {fromJS} from 'immutable';
+import {fromJS, Set} from 'immutable';
 import createSagaMiddleware from 'redux-saga';
-import {routerMiddleware} from 'react-router-redux';
-import lang from './src/app/lang';
 import async_root from './src/data/async';
 import configure_store from './src/data/store';
 import structure from './src/data/structure';
 import * as actions from './src/data/actions';
-import {Provider, connect} from 'react-redux';
 
 
 import * as server_methods from './src/data/server/methods';
-import * as auth_methods from './src/data/auth/methods';
 
 
 
 // apply route middleware
-const route_middleware = routerMiddleware();
 const async_middleware = createSagaMiddleware();
 
 const timeout = ms => new Promise(res => setTimeout(res, ms))
 
+function keys_to_save(data=fromJS(structure)){
 
-async function configStore(){
+    return data.filter(
+        (v, k) => {
+            return k == 'app' || k == 'auth';
+        }
+    );
+}
 
-
-    const data = JSON.parse(await AsyncStorage.getItem('application-state'));
-
-    if (!data && structure.has('auth')) {
-        await AsyncStorage.setItem('application-state', JSON.stringify({auth: structure.get('auth').toJS()}));
+async function configStore() {
+    const map = await AsyncStorage.getItem('application-state');
+    if (!map) {
+        await AsyncStorage.setItem('application-state', JSON.stringify( keys_to_save().toJS()) );
     }
-
     const persisted_state = JSON.parse(await AsyncStorage.getItem('application-state'));
+    const store = configure_store(async_middleware, fromJS(persisted_state));
 
 
-    const store = configure_store(route_middleware, async_middleware, fromJS(persisted_state));
+    global.language = persisted_state.app.lang;
 
     store.subscribe(async () => {
         const state = store.getState();
-        const payload = state.getIn(['app', 'last_action']);
+        const payload = state.getIn(['history', 'last_action']);
+
         console.log(payload);
         switch (payload) {
             case actions.AUTH_REFRESH_TOKEN_SUCCESS:
                 await AsyncStorage.setItem('application-token', state.getIn(['auth', 'token']));
-
                 break;
         }
-        if (payload && payload.startsWith('AUTH')) {
-            await AsyncStorage.setItem('application-state', JSON.stringify({auth: state.get('auth').toJS()}));
+        if (payload && (payload.startsWith('AUTH_') || payload.startsWith('APP_'))) {
+            let map = fromJS(JSON.parse(await AsyncStorage.getItem('application-state')));
+            await AsyncStorage.setItem('application-state', JSON.stringify(map.merge(keys_to_save(state)).toJS()));
         }
     });
 
@@ -58,7 +59,6 @@ async function configStore(){
     store.dispatch(server_methods.request_utc_async());
 
     await timeout(2000);
-
     return store;
 }
 

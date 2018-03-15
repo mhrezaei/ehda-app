@@ -10,6 +10,9 @@ import {View, Image, StyleSheet} from 'react-native';
 
 import splash_src from './splash.png';
 
+
+global.language = null;
+
 class Splash extends Component<Props> {
     constructor(props) {
         super(props);
@@ -17,6 +20,7 @@ class Splash extends Component<Props> {
         this.state = {
             loading: true
         }
+
 
     }
     componentDidMount(){

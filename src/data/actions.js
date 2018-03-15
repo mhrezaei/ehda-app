@@ -11,3 +11,4 @@ export const SERVER_REQUEST_UTC_SUCCESS = 'SERVER_REQUEST_UTC_SUCCESS';
 export const SERVER_REQUEST_UTC_FAILED = 'SERVER_REQUEST_UTC_FAILED';
 export const SERVER_CHANGE_FORCE_UPDATE = 'SERVER_CHANGE_FORCE_UPDATE';
 // -------------------------------------------------------------------------
+export const APP_SWITCH_LANGUAGE = 'APP_SWITCH_LANGUAGE';

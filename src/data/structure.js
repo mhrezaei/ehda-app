@@ -2,8 +2,11 @@ import {fromJS} from 'immutable';
 
 
 export default fromJS({
-    app: {
+    history: {
         last_action: null
+    },
+    app: {
+        lang: 'fa'
     },
     auth: {
         token: null,
