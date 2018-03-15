@@ -1,3 +1,20 @@
 {
-  "presets": ["react-native"]
+  "presets": ["react-native"],
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "root": ["./src"],
+        "alias": {
+          "Common": "./src/ui/__common",
+          "Ui": "./src/ui",
+          "Vendor": "./src/vendor",
+          "App": "./src/app",
+          "Api": "./src/api",
+          "Data": "./src/data",
+          "Tests": "./tests"
+        }
+      }
+    ]
+  ]
 }

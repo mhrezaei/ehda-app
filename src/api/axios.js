@@ -3,8 +3,6 @@ import {AsyncStorage} from 'react-native';
 // load api address from url.js
 import path from './url';
 
-
-
 export const axios_instance = axios.create({
     baseURL: path,
     timeout: 500,
