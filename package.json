@@ -7,16 +7,28 @@
     "test": "jest"
   },
   "dependencies": {
+    "axios": "^0.18.0",
+    "immutable": "^3.8.2",
     "react": "^16.3.0-alpha.1",
-    "react-native": "0.54.2"
+    "react-native": "0.54.2",
+    "react-redux": "^5.0.7",
+    "react-router": "^4.2.0",
+    "react-router-native": "^4.2.0",
+    "redux": "^3.7.2",
+    "redux-immutable": "^4.0.0",
+    "redux-saga": "^0.16.0"
   },
   "devDependencies": {
+    "axios-mock-adapter": "^1.14.1",
     "babel-jest": "22.4.1",
     "babel-preset-react-native": "4.0.0",
     "jest": "22.4.2",
     "react-test-renderer": "^16.3.0-alpha.1"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "transformIgnorePatterns": [
+      "node_modules/(?!react-native|react-router-native)/"
+    ]
   }
 }
