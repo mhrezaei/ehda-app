@@ -12,10 +12,8 @@ export default function (state = structure.get('auth'), payload) {
 			return state.merge({user, datetime: new Date().getTime()});
 		}
 		case actions.AUTH_REFRESH_TOKEN_SUCCESS:
-			localStorage.setItem('application-token', payload.token);
 			return state.merge({token: payload.token, datetime: new Date().getTime()});
 		case actions.AUTH_SIGNOUT_USER:
-			localStorage.setItem('application-token', null);
 			return structure.get('auth');
 		default:
 			return state;

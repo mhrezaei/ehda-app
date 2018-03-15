@@ -1,81 +1,62 @@
 import React, {Component} from 'react';
 
-import {
-    Platform,
-    StyleSheet,
-    Text,
-    View
-} from 'react-native';
-import {AsyncStorage} from 'react-native';
-
-
-
-
-import {fromJS} from 'immutable';
-import createSagaMiddleware from 'redux-saga';
-import {routerMiddleware} from 'react-router-redux';
-import lang from './src/app/lang';
-import async_root from './src/data/async';
-import configure_store from './src/data/store';
-import structure from './src/data/structure';
-import * as actions from './src/data/actions';
-import * as server_methods from './src/data/server/methods';
-import {Provider, connect} from 'react-redux';
-
-
-
-
-// apply route middleware
-const route_middleware = routerMiddleware();
-const async_middleware = createSagaMiddleware();
-
-
-async function configStore(){
-    const data = JSON.parse(await AsyncStorage.getItem('application-state'));
-
-    if (!data && structure.has('auth')) {
-        await AsyncStorage.setItem('application-state', JSON.stringify({auth: structure.get('auth').toJS()}));
-    }
-
-    const persisted_state = JSON.parse(await AsyncStorage.getItem('application-state'));
-
-    const store = configure_store(route_middleware, async_middleware, fromJS(persisted_state));
-
-    store.subscribe(async () => {
-        const state = store.getState();
-        const payload = state.getIn(['app', 'last_action']);
-        switch (payload) {
-            case actions.AUTH_REFRESH_TOKEN_SUCCESS:
-                await AsyncStorage.setItem('application-token', state.getIn(['auth', 'token']));
-                break;
-        }
-        if (payload && payload.startsWith('AUTH')) {
-            await AsyncStorage.setItem('application-state', JSON.stringify({auth: state.get('auth').toJS()}));
-        }
-    });
-
-    async_middleware.run(async_root);
-    store.dispatch(server_methods.request_utc_async());
-}
-
-
-configStore();
-
-
+// react native
+import {StyleSheet, Text, View, Button} from 'react-native';
 import {NativeRouter, Route, Link} from 'react-router-native';
 
 
-const Home = () => (
-    <Text style={styles.header}>
-        Home
-    </Text>
-);
+
+
+// temp
+
+type Props = {};
+class Home_Temp extends Component<Props>
+{
+    constructor(props){
+        super(props);
+
+        this.onClickPressed = this.onClickPressed.bind(this);
+    }
+
+
+    onClickPressed(){
+        this.props.actions.request_utc_async();
+    }
+    render(){
+        const {temp} = this.props;
+        return (
+            <View>
+                <Text style={styles.header}>
+                    Home { temp }
+                </Text>
+                <Button title={"Update Me"} onPress={this.onClickPressed}>
+
+                </Button>
+            </View>
+        );
+    }
+}
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import * as server_methods from './src/data/server/methods';
+const Home = connect((state)=>{
+    return {
+        temp: state.getIn(['server','request_utc_at'])
+    };
+}, (dispatch)=>{
+    return {
+        actions: bindActionCreators(server_methods, dispatch)
+    };
+})( Home_Temp );
+
+
 
 const About = () => (
     <Text style={styles.header}>
         About
     </Text>
 );
+
 
 const Topic = ({match}) => (
     <Text style={styles.topic}>
