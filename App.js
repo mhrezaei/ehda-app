@@ -15,21 +15,36 @@ class Home_Temp extends Component<Props>
     constructor(props){
         super(props);
 
-        this.onClickPressed = this.onClickPressed.bind(this);
+        this.onReqPressed = this.onReqPressed.bind(this);
+        this.onLoginPress = this.onLoginPress.bind(this);
     }
 
 
-    onClickPressed(){
-        this.props.actions.request_utc_async();
+    onReqPressed(){
+        this.props.server_methods.request_utc_async();
+    }
+    onLoginPress(){
+        this.props.auth_methods.signin_user_async({email: 'aryan@gmail.com'});
     }
     render(){
-        const {temp} = this.props;
+        const {rcat, rcdat, tkn} = this.props;
         return (
             <View>
                 <Text style={styles.header}>
-                    Home { temp }
+                    Request : { rcat }
                 </Text>
-                <Button title={"Update Me"} onPress={this.onClickPressed}>
+                <Text style={styles.header}>
+                    Done : { rcdat }
+                </Text>
+
+                <Text style={styles.header}>
+                    Token : { tkn }
+                </Text>
+                <Button title={"Request time"} onPress={this.onReqPressed}>
+
+                </Button>
+
+                <Button title={"Login"} onPress={this.onLoginPress}>
 
                 </Button>
             </View>
@@ -39,13 +54,17 @@ class Home_Temp extends Component<Props>
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as server_methods from './src/data/server/methods';
+import * as auth_methods from './src/data/auth/methods';
 const Home = connect((state)=>{
     return {
-        temp: state.getIn(['server','request_utc_at'])
+        rcat: state.getIn(['server','request_utc_at']),
+        rcdat: state.getIn(['server','request_utc_done_at']),
+        tkn: state.getIn(['auth','token']),
     };
 }, (dispatch)=>{
     return {
-        actions: bindActionCreators(server_methods, dispatch)
+        server_methods: bindActionCreators(server_methods, dispatch),
+        auth_methods: bindActionCreators(auth_methods, dispatch),
     };
 })( Home_Temp );
 

@@ -2,9 +2,7 @@ import * as actions from '../actions';
 
 export const signin_user_async = (user, done, error) => ({
 	type: actions.AUTH_SIGNIN_USER_ASYNC,
-	user,
-	done,
-	error
+	user
 });
 
 export const signin_user_success = (user) => ({

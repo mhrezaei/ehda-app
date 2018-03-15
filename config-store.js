@@ -10,8 +10,11 @@ import async_root from './src/data/async';
 import configure_store from './src/data/store';
 import structure from './src/data/structure';
 import * as actions from './src/data/actions';
-import * as server_methods from './src/data/server/methods';
 import {Provider, connect} from 'react-redux';
+
+
+import * as server_methods from './src/data/server/methods';
+import * as auth_methods from './src/data/auth/methods';
 
 
 
@@ -23,6 +26,8 @@ const timeout = ms => new Promise(res => setTimeout(res, ms))
 
 
 async function configStore(){
+
+
     const data = JSON.parse(await AsyncStorage.getItem('application-state'));
 
     if (!data && structure.has('auth')) {
@@ -31,14 +36,17 @@ async function configStore(){
 
     const persisted_state = JSON.parse(await AsyncStorage.getItem('application-state'));
 
+
     const store = configure_store(route_middleware, async_middleware, fromJS(persisted_state));
 
     store.subscribe(async () => {
         const state = store.getState();
         const payload = state.getIn(['app', 'last_action']);
+        console.log(payload);
         switch (payload) {
             case actions.AUTH_REFRESH_TOKEN_SUCCESS:
                 await AsyncStorage.setItem('application-token', state.getIn(['auth', 'token']));
+
                 break;
         }
         if (payload && payload.startsWith('AUTH')) {
