@@ -8,6 +8,9 @@ export default fromJS({
     app: {
         lang: 'fa'
     },
+    nav: {
+        menuOpen: false
+    },
     auth: {
         token: null,
         user: null,

@@ -1,17 +1,22 @@
 import React, {Component} from 'react';
 import { AppRegistry } from 'react-native';
-import App from './App';
 
-import ConfigStore from './config-store';
+
+import ConfigStore from './src/config-store';
 import {Provider} from 'react-redux';
 
-import {View, Image, StyleSheet} from 'react-native';
+import {View, Image, StyleSheet, StatusBar} from 'react-native';
 
 
 import splash_src from './splash.png';
 
+import App from './src';
+
+
+import theme from './src/theme';
 
 global.language = null;
+
 
 class Splash extends Component<Props> {
     constructor(props) {
@@ -27,9 +32,9 @@ class Splash extends Component<Props> {
         this.setState({loading:true});
         ConfigStore().then((s) => {
             this.store = s;
+            console.log('done');
             this.setState({loading:false});
         });
-
     }
     render() {
         const {loading} = this.state;
@@ -41,8 +46,12 @@ class Splash extends Component<Props> {
                 </View>
             );
         }else {
-            return (<Provider store={this.store}>
-                <App/>
+            return (
+            <Provider store={this.store}>
+                <View>
+                    <StatusBar backgroundColor={theme.darkPrimaryColor}/>
+                    <App />
+                </View>
             </Provider>);
         }
     }

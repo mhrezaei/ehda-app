@@ -4,13 +4,13 @@ import {AsyncStorage} from 'react-native';
 
 import {fromJS, Set} from 'immutable';
 import createSagaMiddleware from 'redux-saga';
-import async_root from './src/data/async';
-import configure_store from './src/data/store';
-import structure from './src/data/structure';
-import * as actions from './src/data/actions';
+import async_root from './data/async';
+import configure_store from './data/store';
+import structure from './data/structure';
+import * as actions from './data/actions';
 
 
-import * as server_methods from './src/data/server/methods';
+import * as server_methods from './data/server/methods';
 
 
 
@@ -23,7 +23,7 @@ function keys_to_save(data=fromJS(structure)){
 
     return data.filter(
         (v, k) => {
-            return k == 'app' || k == 'auth';
+            return k === 'app' || k === 'auth';
         }
     );
 }
@@ -58,7 +58,7 @@ async function configStore() {
     async_middleware.run(async_root);
     store.dispatch(server_methods.request_utc_async());
 
-    await timeout(2000);
+    await timeout(200);
     return store;
 }
 
