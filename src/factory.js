@@ -8,7 +8,7 @@ export const createMenuFromRoutes = (routes) =>{
     let i = 0;
     for(let key in routes){
         const route = routes[key];
-        items.push(<MenuItem key={i} title={route.title} icon={route.icon}/>)
+        items.push(<MenuItem key={i} title={route.title} icon={route.icon}/>);
         i++;
     }
 

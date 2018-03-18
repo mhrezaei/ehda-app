@@ -36,7 +36,7 @@ export const to_en = (input) => {
 
 export const trans = (term) => {
     I18n.locale = global.language;
-    return localize_number(I18n.t(term))
+    return localize_number(I18n.t(term)).toString();
 };
 
 export const isRtl = ()=>{

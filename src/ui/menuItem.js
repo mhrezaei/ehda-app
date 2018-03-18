@@ -14,7 +14,7 @@ import {
 
 class MenuItem extends Component {
     static propTypes = {
-        title: PropTypes.string.required,
+        title: PropTypes.string,
         icon: PropTypes.string,
         onPress: PropTypes.func,
     };
@@ -22,15 +22,20 @@ class MenuItem extends Component {
     render() {
         let {title, icon, onPress} = this.props;
         return (
-            <TouchableHighlight style={styles.container} underlayColor="#929292" onPress={onPress}>
-                <Text style={styles.text}>{title}</Text>
-            </TouchableHighlight>
+            <View style={styles.container}>
+                <TouchableHighlight style={styles.container_inner} onPress={onPress}>
+                    <Text style={styles.text}>{title}</Text>
+                </TouchableHighlight>
+            </View>
         )
     }
 }
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1
+    },
+    container_inner: {
         flex: 1,
         flexDirection: 'row-reverse',
         alignContent: 'center',
