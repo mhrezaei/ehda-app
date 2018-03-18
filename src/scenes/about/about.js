@@ -1,10 +1,10 @@
 import React from 'react';
 
-import {View} from 'react-native';
+import {View, Text} from 'react-native';
 
 class About extends React.Component {
     render(){
-        return (<View> I am About !</View>);
+        return (<View><Text>I am About !</Text></View>);
     }
 }
 

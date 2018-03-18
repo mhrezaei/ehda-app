@@ -10,6 +10,7 @@ I18n.translations = {
     fa,
 };
 
+
 I18nManager.allowRTL(I18n.locale in I18n.translations);
 
 I18n.start  = I18nManager.isRTL ? 'right' : 'left';
@@ -34,7 +35,13 @@ export const to_en = (input) => {
 };
 
 export const trans = (term) => {
-    return I18n.t(term)
+    I18n.locale = global.language;
+    return localize_number(I18n.t(term))
+};
+
+export const isRtl = ()=>{
+    I18n.locale = global.language;
+    return I18n.locale in ['fa', 'ar'];
 };
 
 
