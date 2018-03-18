@@ -9,6 +9,8 @@ import {
     Image
 } from 'react-native'
 
+// <Image source={require('../../aryan.png')} style={styles.profilePicture}/>
+
 class Menu extends Component {
     static propTypes = {
         children: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
@@ -19,7 +21,7 @@ class Menu extends Component {
         return (
             <ScrollView style={styles.container}>
                 <View style={styles.header}>
-                    <Image source={require('../../aryan.png')} style={styles.profilePicture}/>
+
                     <Text style={styles.profileName}>{trans('somebody')}</Text>
                 </View>
                 <View style={styles.container_inner}>
@@ -59,11 +61,11 @@ const styles = StyleSheet.create({
 
     },
     profileName: {
-        paddingTop: 10,
         alignSelf: 'flex-end',
         textAlign: 'right',
         direction: 'rtl',
-        fontFamily: 'IRANSans'
+        fontFamily: 'IRANSans',
+        color: 'white'
     }
 });
 

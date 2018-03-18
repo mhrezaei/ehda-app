@@ -6,14 +6,14 @@ export default {
         icon: "home",
         component: require('./scenes/home/home').default
     },
-    news: {
+    cardList: {
         title: trans('myCards'),
         icon: "list",
         component: require('./scenes/cardList/cardList').default
     },
-    cardList: {
+    news: {
         title: trans('news'),
-        icon: "feed",
+        icon: "rss-feed",
         component: require('./scenes/news/news').default
     },
     about: {

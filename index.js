@@ -19,10 +19,12 @@ import ActionBar from 'react-native-action-bar';
 import Drawer from 'react-native-drawer'
 
 
+import * as nav_methods from './src/data/nav/methods';
 import Router from './src/ui/router';
 
 
 import * as Factory from './src/factory';
+import * as server_methods from "./src/data/server/methods";
 
 
 class Splash extends Component {
@@ -39,6 +41,7 @@ class Splash extends Component {
 
         this.openDrawer = this.openDrawer.bind(this);
         this.closeDrawer = this.closeDrawer.bind(this);
+        this.goTo = this.goTo.bind(this);
     }
 
 
@@ -57,6 +60,16 @@ class Splash extends Component {
             this.setState({loading: false});
         });
 
+    }
+
+    goTo(page) {
+        const {loading} = this.state;
+
+        if(!loading)
+        {
+            this.store.dispatch(nav_methods.goto(page));
+            this.closeDrawer();
+        }
     }
 
     render() {
@@ -85,7 +98,7 @@ class Splash extends Component {
                         main: { opacity:(2-ratio)/2 }
                     })}
                     side={"right"}
-                    content={Factory.createMenuFromRoutes(routes)}
+                    content={Factory.createMenuFromRoutes(routes, this.goTo)}
                 >
                     <Provider store={this.store}>
                         <View style={styles.container_app}>

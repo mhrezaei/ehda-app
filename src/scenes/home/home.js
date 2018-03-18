@@ -10,7 +10,7 @@ import * as auth_methods from "../../data/auth/methods";
 import * as server_methods from "../../data/server/methods";
 
 
-import Icon from 'react-native-vector-icons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 class Home extends Component {
     constructor(props){
@@ -28,7 +28,6 @@ class Home extends Component {
             <View>
                 <Button title={"change language"} onPress={this.changeLang}/>
                 <Text>{this.props.lang}</Text>
-
             </View>
         );
     }

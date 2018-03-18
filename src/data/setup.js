@@ -58,7 +58,7 @@ async function configStore() {
     async_middleware.run(async_root);
     store.dispatch(server_methods.request_utc_async());
 
-    await timeout(2000);
+    await timeout(1000);
     return store;
 }
 

@@ -7,7 +7,7 @@ import {NativeRouter, Route, Link, withRouter} from 'react-router-native';
 
 // temp
 
-import {trans} from './src/i18'
+import {trans} from '../src/i18'
 
 
 type Props = {};
@@ -68,9 +68,9 @@ class Home_Temp extends Component<Props>
 }
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as server_methods from './src/data/server/methods';
-import * as auth_methods from './src/data/auth/methods';
-import * as app_methods from './src/data/app/methods';
+import * as server_methods from '../src/data/server/methods';
+import * as auth_methods from '../src/data/auth/methods';
+import * as app_methods from '../src/data/app/methods';
 const Home = connect((state)=>{
     return {
         rcat: state.getIn(['server','request_utc_at']),

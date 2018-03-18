@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {trans} from '../i18'
 
-import Icon from 'react-native-vector-icons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 
 import {
@@ -10,6 +10,7 @@ import {
     Text,
     View,
     TouchableHighlight,
+    TouchableOpacity
 } from 'react-native';
 
 class MenuItem extends Component {
@@ -22,11 +23,13 @@ class MenuItem extends Component {
     render() {
         let {title, icon, onPress} = this.props;
         return (
-            <View style={styles.container}>
-                <TouchableHighlight style={styles.container_inner} onPress={onPress}>
+
+            <TouchableOpacity style={styles.container} onPress={onPress}>
+                <View style={styles.container_inner}>
+                    <Icon name={icon} style={styles.icon} size={20} color={"#4f8ef7"}/>
                     <Text style={styles.text}>{title}</Text>
-                </TouchableHighlight>
-            </View>
+                </View>
+            </TouchableOpacity>
         )
     }
 }
@@ -39,7 +42,13 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row-reverse',
         alignContent: 'center',
-        padding: 10,
+        paddingHorizontal:20,
+        paddingVertical:10
+    },
+    icon:{
+        width: 20,
+        height: 20,
+        marginLeft:10
     },
     text: {
         fontFamily: 'IRANSans'
