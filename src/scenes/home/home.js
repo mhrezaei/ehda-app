@@ -29,7 +29,6 @@ class Home extends Component {
                 <Button title={"change language"} onPress={this.changeLang}/>
                 <Text>{this.props.lang}</Text>
 
-                <Icon name={"list"} size={20} color={"#4f8ef7"}/>
             </View>
         );
     }
