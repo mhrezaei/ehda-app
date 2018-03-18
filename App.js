@@ -4,9 +4,11 @@ import React, {Component} from 'react';
 import {StyleSheet, Text, View, Button} from 'react-native';
 import {NativeRouter, Route, Link, withRouter} from 'react-router-native';
 
+
 // temp
 
-import trans from './src/app/lang';
+import {trans} from './src/i18'
+
 
 type Props = {};
 class Home_Temp extends Component<Props>
@@ -33,7 +35,7 @@ class Home_Temp extends Component<Props>
     render(){
         const {rcat, rcdat, tkn, lnga} = this.props;
         return (
-            <View>
+            <View style={styles.parent}>
                 <Text style={styles.header}>
                     Request : { rcat }
                 </Text>
@@ -46,17 +48,19 @@ class Home_Temp extends Component<Props>
                 </Text>
 
                 <Text style={styles.header}>
-                    { trans('fields.first_name') } : { lnga }
+                    Lang : { lnga }
+                </Text>
+                <Text style={styles.header}>
+                    {trans('hello')}
                 </Text>
 
-                <Button title={"Request time"} onPress={this.onReqPressed}>
+                <Button primary title={"Request time"} onPress={this.onReqPressed}>
 
                 </Button>
                 <Button title={"Switch Lang"} onPress={this.changeLang}>
 
                 </Button>
                 <Button title={"Login"} onPress={this.onLoginPress}>
-
                 </Button>
             </View>
         );
@@ -171,6 +175,9 @@ const styles = StyleSheet.create({
     container: {
         marginTop: 25,
         padding: 10,
+    },
+    parent: {
+        direction: 'ltr'
     },
     header: {
         fontSize: 20,

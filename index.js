@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { AppRegistry } from 'react-native';
 import App from './App';
 
-import ConfigStore from './config-store';
+import ConfigStore from './src/data/setup';
 import {Provider} from 'react-redux';
 
 import {View, Image, StyleSheet} from 'react-native';
@@ -12,6 +12,7 @@ import splash_src from './splash.png';
 
 
 global.language = null;
+
 
 class Splash extends Component<Props> {
     constructor(props) {

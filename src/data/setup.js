@@ -4,13 +4,13 @@ import {AsyncStorage} from 'react-native';
 
 import {fromJS, Set} from 'immutable';
 import createSagaMiddleware from 'redux-saga';
-import async_root from './src/data/async';
-import configure_store from './src/data/store';
-import structure from './src/data/structure';
-import * as actions from './src/data/actions';
+import async_root from './async';
+import configure_store from './store';
+import structure from './structure';
+import * as actions from './actions';
 
 
-import * as server_methods from './src/data/server/methods';
+import * as server_methods from './server/methods';
 
 
 
