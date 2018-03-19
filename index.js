@@ -115,9 +115,7 @@ class Splash extends Component {
                         <View style={styles.container_app}>
                             <ActionBar name={trans('app')} title={route ? route.title : trans('loading')} onPress={this.openDrawer}/>
 
-                            <ScrollView>
                             <Router routes={routes} onChange={this.onChangeRoute}/>
-                            </ScrollView>
                         </View>
                     </Provider>
 
@@ -154,7 +152,7 @@ const styles = StyleSheet.create({
 
 const drawerStyles = {
     drawer: {shadowColor: theme.black, shadowOpacity: 0.1, shadowRadius: 10},
-    main: {backgroundColor: theme.background},
+    main: {backgroundColor: theme.black},
 };
 
 

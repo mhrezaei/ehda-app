@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import {View, StyleSheet, Dimensions,ScrollView} from 'react-native';
+import {View, StyleSheet, Dimensions, ScrollView, Image} from 'react-native';
 
 
 import {trans} from '../../i18'
@@ -13,22 +13,21 @@ import {Button, TextInput} from '../../ui/components';
 
 import theme from "../../theme";
 
+import card_src from '../../../res/card.png'
 
 const view_height = Dimensions.get('window').height;
 
 
 class Home extends Component {
-    constructor(props) {
+    constructor(props){
         super(props);
     }
 
-    render() {
+    render(){
         return (
             <ScrollView>
                 <View style={styles.container}>
-                    <TextInput style={{marginTop: view_height / 5}} placeholder={trans('codeMelli')}
-                               keyboardType={'numeric'}/>
-                    <Button title={trans('requestCard')}/>
+                    <Image source={card_src}/>
                 </View>
             </ScrollView>
         );
@@ -45,10 +44,11 @@ const styles = StyleSheet.create({
     }
 });
 
-export default connect((state) => {
-    return {};
-}, (dispatch) => {
+export default connect((state)=>{
+    return {
+    };
+}, (dispatch)=>{
     return {
         app_methods: bindActionCreators(app_methods, dispatch)
     };
-})(Home);
+})( Home );

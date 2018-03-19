@@ -6,6 +6,11 @@ export default {
         icon: "home",
         component: require('./scenes/home/home').default
     },
+    myCard: {
+        title: trans('myCard'),
+        icon: "profile",
+        component: require('./scenes/my-card/myCard').default
+    },
     cardList: {
         title: trans('myCards'),
         icon: "list",

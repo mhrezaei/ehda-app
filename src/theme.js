@@ -7,5 +7,7 @@ export default {
     backgroundDark: '#eee',
     background: '#D2D7D9',
     textField: '#fff',
+    black: '#000',
+    white: '#fff',
     font: 'IRANSans'
 };
