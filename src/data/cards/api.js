@@ -1,5 +1,5 @@
 
-export function signin_user(payload) {
+export function request_card(payload) {
     return new Promise((resolves, rejects)=>{
         setTimeout(()=>{
             resolves({

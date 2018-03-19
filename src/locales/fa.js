@@ -6,4 +6,7 @@ export default {
     aboutUs: 'درباره ما',
     myCards: 'کارت های من',
     loading: 'در حال بازیابی...',
+    app: 'اهدای کارت',
+    codeMelli: 'کدملی',
+    requestCard: 'درخواست کارت'
 };

@@ -140,7 +140,7 @@ class App extends Component<Props> {
     render() {
         return (
             <NativeRouter>
-                <View style={styles.container}>
+                <View style={styles.actionBar}>
                     <View style={styles.nav}>
                         <Link
                             to="/"
@@ -172,7 +172,7 @@ class App extends Component<Props> {
 }
 
 const styles = StyleSheet.create({
-    container: {
+    actionBar: {
         marginTop: 25,
         padding: 10,
     },

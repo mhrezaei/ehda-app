@@ -1,18 +1,18 @@
 import React from 'react';
 
-import Menu from "./ui/menu";
-import MenuItem from "./ui/menuItem";
+import {Menu, MenuItem} from "./ui/components";
 
-export const createMenuFromRoutes = (routes, goTo) =>{
+export const createMenuFromRoutes = (routes, goTo, title, image) =>{
     let items = [];
     let i = 0;
     for(let key in routes){
-        const route = routes[key];
-        items.push(<MenuItem key={i} title={route.title} icon={route.icon} onPress={()=>goTo(key)}/>);
-        i++;
+        if(routes.hasOwnProperty(key)) {
+            const route = routes[key];
+            items.push(<MenuItem key={i} title={route.title} icon={route.icon} onPress={() => goTo(key)}/>);
+            i++;
+        }
     }
-
-    return (<Menu>
+    return (<Menu title={title} image={image}>
         {items}
-    </Menu>)
-}
+    </Menu>);
+};

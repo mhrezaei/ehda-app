@@ -3,7 +3,8 @@ import {connect} from 'react-redux';
 import * as nav_methods from '../data/nav/methods'
 import {bindActionCreators} from 'redux';
 import PropTypes from 'prop-types';
-import {StyleSheet, View, Text, Dimensions,TouchableHighlight} from 'react-native';
+
+// import {StyleSheet, View, Text, Dimensions,TouchableHighlight} from 'react-native';
 
 
 class Router extends React.Component {
@@ -13,7 +14,6 @@ class Router extends React.Component {
         defaultRoute: PropTypes.string.isRequired,
         actions: PropTypes.object.isRequired,
         onChange: PropTypes.func,
-
     };
     constructor(props){
         super(props);
@@ -37,7 +37,7 @@ class Router extends React.Component {
                 const route = routes[next];
                 if (route.hasOwnProperty('condition') && !route.condition(app_state)) {
                     const to = route.hasOwnProperty('redirect') ? route.redirect : defaultRoute;
-                    this.props.actions.goto(to)
+                    this.props.actions.goto(to);
                     this.props.onChange(routes[to]);
                     return;
                 }
@@ -55,7 +55,7 @@ class Router extends React.Component {
         return routes[current];
     }
     render() {
-        const {routes, current, defaultRoute} = this.props;
+        const {routes, current} = this.props;
         const route = routes[current];
         return React.createElement(route.component, null);
     }

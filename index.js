@@ -7,13 +7,12 @@ import {Provider} from 'react-redux';
 import {View, Image, StyleSheet, ScrollView, StatusBar} from 'react-native';
 
 
-import splash_src from './res/splash.png';
 
 
 global.language = null;
 
 
-import ActionBar from './src/ui/actionBar';
+import {ActionBar, TextField} from './src/ui/components';
 import Drawer from 'react-native-drawer'
 
 
@@ -24,6 +23,12 @@ import Router from './src/ui/router';
 import * as Factory from './src/factory';
 import {trans} from "./src/i18";
 
+
+import theme from './src/theme';
+
+
+import splash_small_src from './res/ehda-logo-small.png';
+import splash_src from './res/splash.png';
 
 
 
@@ -47,7 +52,7 @@ class Splash extends Component {
     }
 
 
-    onChangeRoute(route){
+    onChangeRoute(route) {
         this.setState({route: route});
     }
 
@@ -82,7 +87,7 @@ class Splash extends Component {
 
         if (loading) {
             return (
-                <View style={styles.container}>
+                <View style={styles.container_splash}>
                     <Image source={splash_src}/>
                 </View>
             );
@@ -96,7 +101,7 @@ class Splash extends Component {
                     ref={(ref) => this.drawer = ref}
                     type="displace"
                     tapToClose={true}
-                    openDrawerOffset={0.2}
+                    openDrawerOffset={0.3}
                     panCloseMask={0.6}
                     closedDrawerOffset={-3}
                     styles={drawerStyles}
@@ -104,13 +109,14 @@ class Splash extends Component {
                         main: {opacity: (2 - ratio) / 2}
                     })}
                     side={"right"}
-                    content={Factory.createMenuFromRoutes(routes, this.goTo)}
+                    content={Factory.createMenuFromRoutes(routes, this.goTo, trans('somebody'),splash_small_src)}
                 >
                     <Provider store={this.store}>
                         <View style={styles.container_app}>
-                            <ActionBar title={route ? route.title : trans('loading')} onPress={this.openDrawer}/>
-                            <ScrollView style={styles.container_route}>
-                                <Router routes={routes} onChange={this.onChangeRoute}/>
+                            <ActionBar name={trans('app')} title={route ? route.title : trans('loading')} onPress={this.openDrawer}/>
+
+                            <ScrollView>
+                            <Router routes={routes} onChange={this.onChangeRoute}/>
                             </ScrollView>
                         </View>
                     </Provider>
@@ -120,10 +126,11 @@ class Splash extends Component {
         }
     }
 }
+//
 
 
 const styles = StyleSheet.create({
-    container: {
+    container_splash: {
         marginTop: 25,
         padding: 10,
         flex: 1,
@@ -134,20 +141,20 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         flexDirection: 'column',
-        backgroundColor: '#F5FCFF',
+        backgroundColor: theme.backgroundDark,
     },
     container_route: {
         flex: 1,
         padding: 10
     },
-    titleStyle:{
-        fontFamily: 'IRANSans'
+    titleStyle: {
+        fontFamily: theme.font
     }
 });
 
 const drawerStyles = {
-    drawer: {shadowColor: '#000000', shadowOpacity: 0.1, shadowRadius: 10},
-    main: {backgroundColor:'#F5FCFF'},
+    drawer: {shadowColor: theme.black, shadowOpacity: 0.1, shadowRadius: 10},
+    main: {backgroundColor: theme.background},
 };
 
 

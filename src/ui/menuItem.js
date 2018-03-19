@@ -1,57 +1,57 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {trans} from '../i18'
-
-import Icon from 'react-native-vector-icons/MaterialIcons';
-
-
 import {
     StyleSheet,
     Text,
     View,
-    TouchableHighlight,
-    TouchableOpacity
-} from 'react-native';
+    TouchableOpacity,
+} from 'react-native'
 
-class MenuItem extends Component {
-    static propTypes = {
-        title: PropTypes.string,
-        icon: PropTypes.string,
-        onPress: PropTypes.func,
-    };
 
-    render() {
-        let {title, icon, onPress} = this.props;
-        return (
+import theme from '../theme'
 
-            <TouchableOpacity style={styles.container} onPress={onPress}>
-                <View style={styles.container_inner}>
-                    <Icon name={icon} style={styles.icon} size={20} color={"#4f8ef7"}/>
-                    <Text style={styles.text}>{title}</Text>
-                </View>
-            </TouchableOpacity>
-        )
-    }
-}
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
+
+// menu item
+const MenuItem = ({title, icon, onPress}) => {
+    return (
+        <TouchableOpacity style={styles.menuItem} onPress={onPress}>
+            <View style={styles.menuItem_direct}>
+                <Icon name={icon} style={styles.menuItem_icon} size={20} color={theme.accent}/>
+                <Text style={styles.menuItem_text}>{title}</Text>
+            </View>
+        </TouchableOpacity>
+    );
+};
+MenuItem.propTypes = {
+    title: PropTypes.string.isRequired,
+    icon: PropTypes.string,
+    onPress: PropTypes.func
+};
+
+
 
 const styles = StyleSheet.create({
-    container: {
+    // menu item
+    menuItem: {
         flex: 1
     },
-    container_inner: {
+    menuItem_direct: {
         flex: 1,
         flexDirection: 'row-reverse',
         alignContent: 'center',
         paddingHorizontal:20,
         paddingVertical:10
     },
-    icon:{
+    menuItem_text: {
+        fontFamily: theme.font
+    },
+    menuItem_icon: {
         width: 20,
         height: 20,
-        marginLeft:10
-    },
-    text: {
-        fontFamily: 'IRANSans'
+        marginLeft: 10,
+        paddingTop: 2
     }
 });
 

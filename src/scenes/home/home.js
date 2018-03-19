@@ -1,32 +1,32 @@
 import React, {Component} from 'react';
 
-import {View, Text, Button, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, Dimensions} from 'react-native';
 
 
-import i18 from '../../i18'
+import {trans} from '../../i18'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as app_methods from '../../data/app/methods';
 
+
+import {Button, TextInput} from '../../ui/components';
+
+import theme from "../../theme";
+
+
+const view_height = Dimensions.get('window').height;
+
+
 class Home extends Component {
     constructor(props){
         super(props);
-        this.changeLang = this.changeLang.bind(this);
-    }
-
-
-    changeLang(){
-        this.props.app_methods.switch_language();
     }
 
     render(){
         return (
-            <View>
-                <TouchableOpacity style={styles.button} onPress={this.changeLang}>
-                    <Text style={styles.button_text}>
-                        Change Language { this.props.language }
-                    </Text>
-                </TouchableOpacity>
+            <View style={styles.container}>
+                <TextInput style={{marginTop: view_height/5}} placeholder={trans('codeMelli')} keyboardType={'numeric'}/>
+                <Button title={trans('requestCard')}/>
             </View>
         );
     }
@@ -34,20 +34,16 @@ class Home extends Component {
 
 
 const styles = StyleSheet.create({
-    button: {
-        backgroundColor: '#3b59f7',
-        borderRadius: 5,
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-    },
-    button_text: {
-        color: '#fff'
+    container: {
+        flex: 1,
+        flexDirection: 'column',
+        alignItems: 'center',
+        paddingVertical: 20
     }
 });
 
 export default connect((state)=>{
     return {
-        lang: state.getIn(['app','lang'])
     };
 }, (dispatch)=>{
     return {

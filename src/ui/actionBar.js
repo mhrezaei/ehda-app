@@ -1,61 +1,79 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {trans} from '../i18'
 import {
-    ScrollView,
     StyleSheet,
     Text,
     View,
     TouchableOpacity,
-    Image, Platform
+    StatusBar,
 } from 'react-native'
 
-
+import theme from '../theme';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-class Menu extends Component {
-    static propTypes = {
-        title: PropTypes.string.isRequired,
-        onPress: PropTypes.func,
-    };
 
-    render() {
-        const {title, onPress} = this.props;
+const ActionBar = ({name,title, onPress}) => {
+    return (
+        <View style={styles.actionBar}>
+            <View style={styles.actionBar_direct}>
 
-        return (
-            <View style={styles.container}>
-                <View style={styles.container_inner}>
+                <StatusBar backgroundColor={theme.primaryDark}/>
+
+                <View style={styles.actionBar_menuHolder}>
                     <TouchableOpacity onPress={onPress}>
-                        <Icon name={"menu"} style={styles.icon} size={20} color={"#fff"}/>
+                        <Icon name={"menu"} style={styles.actionBar_menuIcon} size={20} color={"#fff"}/>
                     </TouchableOpacity>
-                    <Text style={styles.title}>{title}</Text>
+                    <Text style={styles.actionBar_title}>{title}</Text>
                 </View>
+                <Text style={styles.actionBar_titleLeft}>{name}</Text>
             </View>
-        )
-    }
-}
+        </View>
+    );
+};
+ActionBar.propTypes = {
+    title: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    icon: PropTypes.string,
+    onPress: PropTypes.func
+};
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: '#55a655',
+    // action bar
+    actionBar: {
+        backgroundColor: theme.primary,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
     },
-    container_inner: {
+    actionBar_direct: {
         flex: 1,
-        backgroundColor: '#55a655',
         flexDirection: 'row-reverse',
         alignContent: 'center',
+        justifyContent: 'space-between',
         paddingHorizontal:20,
         paddingVertical:10
     },
-    title:{
-        color: '#fff',
-        fontFamily: 'IRANSans',
+    actionBar_menuHolder: {
+        flex: 1,
+        flexDirection: 'row-reverse',
+        alignContent: 'center',
+        justifyContent: 'flex-start'
+    },
+    actionBar_title:{
+        color: theme.text,
+        fontFamily: theme.font,
+        fontSize: 16,
+        alignSelf: 'flex-end',
+        textAlign: 'right',
+    },
+    actionBar_titleLeft:{
+        color: theme.text,
+        alignSelf: 'flex-start',
+        fontFamily: theme.font,
+        textAlign: 'left',
         fontSize: 16
     },
-    icon:{
+    actionBar_menuIcon:{
         width: 20,
         height: 20,
         paddingTop:3,
@@ -63,5 +81,4 @@ const styles = StyleSheet.create({
     }
 });
 
-
-export default Menu;
+export default ActionBar;
