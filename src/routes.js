@@ -8,8 +8,8 @@ export default {
     },
     myCard: {
         title: trans('myCard'),
-        icon: "profile",
-        component: require('./scenes/my-card/myCard').default
+        icon: "account-box",
+        component: require('./scenes/myCard/myCard').default
     },
     cardList: {
         title: trans('myCards'),

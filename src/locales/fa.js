@@ -8,5 +8,6 @@ export default {
     loading: 'در حال بازیابی...',
     app: 'اهدای کارت',
     codeMelli: 'کدملی',
-    requestCard: 'درخواست کارت'
+    requestCard: 'درخواست کارت',
+    myCard: 'کارت من',
 };
