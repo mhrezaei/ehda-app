@@ -7,22 +7,57 @@ import {StyleSheet, View, Text, Dimensions,TouchableHighlight} from 'react-nativ
 
 
 class Router extends React.Component {
+    static propTypes = {
+        routes: PropTypes.object.isRequired,
+        current: PropTypes.string,
+        defaultRoute: PropTypes.string.isRequired,
+        actions: PropTypes.object.isRequired,
+        onChange: PropTypes.func,
+
+    };
     constructor(props){
         super(props);
+        this.getCurrentRoute = this.getCurrentRoute.bind(this);
     }
+    componentDidMount(){
+        const {routes, current} = this.props;
+        this.props.onChange(routes[current]);
 
-    render() {
-        const {state, routes, current, defaultRoute} = this.props;
-        const route = routes[routes.hasOwnProperty(current) ? current : defaultRoute];
+    }
+    componentWillReceiveProps(nextProps) {
+        const app_state = this.props.state;
+        const routes = this.props.routes;
+        const defaultRoute = this.props.defaultRoute;
+        const current = this.props.current;
 
-        if(route.hasOwnProperty('condition')) {
-            if (route.condition(state))
-                return React.createElement(route.component, null);
-            else
-                return React.createElement(routes[defaultRoute], null);
-        } else {
-            return React.createElement(route.component, null);
+        const next = nextProps.current;
+        if(next !== current){
+
+            if(routes.hasOwnProperty(next)){
+                const route = routes[next];
+                if (route.hasOwnProperty('condition') && !route.condition(app_state)) {
+                    const to = route.hasOwnProperty('redirect') ? route.redirect : defaultRoute;
+                    this.props.actions.goto(to)
+                    this.props.onChange(routes[to]);
+                    return;
+                }
+                this.props.actions.goto(next);
+                this.props.onChange(routes[next]);
+            }
         }
+
+    }
+    shouldComponentUpdate(nextProps) {
+        return this.props.current !== nextProps.current;
+    }
+    getCurrentRoute(){
+        const {current, routes} = this.props;
+        return routes[current];
+    }
+    render() {
+        const {routes, current, defaultRoute} = this.props;
+        const route = routes[current];
+        return React.createElement(route.component, null);
     }
 }
 

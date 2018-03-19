@@ -10,7 +10,7 @@ export default fromJS({
     },
 
     "nav": {
-        "current": null,
+        "current": 'home',
         "default": 'home'
     },
     "auth": {

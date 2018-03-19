@@ -9,11 +9,16 @@ import {
     Image
 } from 'react-native'
 
+
+
+import splash_src from '../../res/ehda-logo-small.png';
+
+
 // <Image source={require('../../aryan.png')} style={styles.profilePicture}/>
 
 class Menu extends Component {
     static propTypes = {
-        children: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
+        children: PropTypes.oneOfType([PropTypes.element, PropTypes.array])
     };
 
     render() {
@@ -21,7 +26,7 @@ class Menu extends Component {
         return (
             <ScrollView style={styles.container}>
                 <View style={styles.header}>
-
+                    <Image style={styles.logo_image} source={splash_src} />
                     <Text style={styles.profileName}>{trans('somebody')}</Text>
                 </View>
                 <View style={styles.container_inner}>
@@ -48,20 +53,20 @@ const styles = StyleSheet.create({
     header: {
         flex: 1,
         paddingHorizontal:20,
-        paddingTop: 20,
+        paddingTop: 10,
         paddingBottom: 10,
         flexDirection: 'column',
-        backgroundColor: '#419148',
+        alignContent: 'flex-end',
+        backgroundColor: '#55a655',
     },
-    profilePicture: {
-        width: 50,
-        height: 50,
-        borderRadius: 50,
-        alignSelf: 'flex-end',
-
+    logo_image: {
+        flex: 1,
+        alignSelf: 'center',
+        resizeMode: 'center'
     },
     profileName: {
         alignSelf: 'flex-end',
+        fontSize: 16,
         textAlign: 'right',
         direction: 'rtl',
         fontFamily: 'IRANSans',
