@@ -16,7 +16,7 @@ const Text_Exp = ({style, children, invert}) => {
 Text_Exp.propTypes = {
     children: PropTypes.string.isRequired,
     style: PropTypes.object,
-    invert: PropTypes.boolean
+    invert: PropTypes.any
 };
 
 
@@ -30,5 +30,6 @@ const styles = StyleSheet.create({
         fontFamily: theme.font
     }
 });
+
 
 export default Text_Exp;

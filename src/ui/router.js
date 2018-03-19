@@ -14,6 +14,7 @@ class Router extends React.Component {
         defaultRoute: PropTypes.string.isRequired,
         actions: PropTypes.object.isRequired,
         onChange: PropTypes.func,
+        state: PropTypes.object
     };
     constructor(props){
         super(props);

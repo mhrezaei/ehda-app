@@ -8,7 +8,7 @@ import {
     StatusBar,
 } from 'react-native'
 
-import theme from '../theme';
+import theme from '../theme'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 

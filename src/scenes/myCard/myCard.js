@@ -9,13 +9,13 @@ import {bindActionCreators} from 'redux';
 import * as app_methods from '../../data/app/methods';
 
 
-import {Button, TextInput} from '../../ui/components';
+import {Button, TextInput, Text} from '../../ui/components';
 
 import theme from "../../theme";
 
 import card_src from '../../../res/card.png'
 
-const view_height = Dimensions.get('window').height;
+const view_width = Dimensions.get('window').width;
 
 
 class Home extends Component {
@@ -27,7 +27,12 @@ class Home extends Component {
         return (
             <ScrollView>
                 <View style={styles.container}>
-                    <Image source={card_src}/>
+                    <View style={styles.cardContainer}>
+                        <Image style={styles.cardImage} source={card_src}/>
+                        <View style={styles.sharingBar}>
+                            <Text>Hello</Text>
+                        </View>
+                    </View>
                 </View>
             </ScrollView>
         );
@@ -41,6 +46,21 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'center',
         paddingVertical: 20
+    },
+    cardContainer: {
+        flex: 1,
+        borderRadius: 7,
+    },
+    cardImage:{
+        borderRadius: 3,
+        width: view_width * 0.9,
+        height: 120,
+        resizeMode: 'contain'
+    },
+    sharingBar:{
+        backgroundColor: '#ccc',
+        borderRadius: 3,
+        marginTop: 3,
     }
 });
 
