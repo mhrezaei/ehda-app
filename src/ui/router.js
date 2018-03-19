@@ -64,8 +64,8 @@ class Router extends React.Component {
 
 export default connect((state) => {
     return {
-        "defaultRoute": state.getIn(['nav', 'default']),
-        "current": state.getIn(['nav', 'current']),
+        "defaultRoute": state.nav.default,
+        "current": state.nav.current,
         "state": state,
     }
 }, (dispatch) => {

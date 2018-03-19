@@ -7,13 +7,11 @@ import {Provider} from 'react-redux';
 import {View, Image, StyleSheet, ScrollView, StatusBar} from 'react-native';
 
 
-
-
 global.language = null;
 
 
 import {ActionBar, TextField} from './src/ui/components';
-import Drawer from 'react-native-drawer'
+import Drawer from './src/ui/drawer';
 
 
 import * as nav_methods from './src/data/nav/methods';
@@ -139,7 +137,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         flexDirection: 'column',
-        backgroundColor: theme.backgroundDark,
+        backgroundColor: theme.background,
     },
     container_route: {
         flex: 1,
@@ -156,4 +154,4 @@ const drawerStyles = {
 };
 
 
-AppRegistry.registerComponent('Card', () => Splash);
+AppRegistry.registerComponent('temp', () => Splash);

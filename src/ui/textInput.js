@@ -10,9 +10,10 @@ import {
 
 import theme from '../theme';
 
-const view_width = Dimensions.get('window').width;
 
 const TextInput_Exp = ({style, placeholder, onChange, defaultValue, children}) => {
+
+
     return (
         <TextInput
             style={StyleSheet.flatten([style, styles.textInput])}
@@ -25,7 +26,7 @@ const TextInput_Exp = ({style, placeholder, onChange, defaultValue, children}) =
 };
 
 TextInput_Exp.propTypes = {
-    style: PropTypes.object,
+    style: PropTypes.any,
     placeholder: PropTypes.string,
     onChange: PropTypes.func,
     defaultValue: PropTypes.string,
@@ -38,8 +39,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: theme.textInvert,
         fontFamily: theme.font,
-        marginTop: 10,
-        width: view_width * 0.9
+        marginTop: 10
     }
 });
 

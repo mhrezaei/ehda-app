@@ -1,4 +1,3 @@
-import axios from '../../api/axios';
 
 export function request_utc() {
     return new Promise((resolves, rejects)=>{

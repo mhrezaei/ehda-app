@@ -1,20 +1,13 @@
-import {I18nManager} from 'react-native';
-import I18n from 'react-native-i18n';
 import fa from './locales/fa';
 import en from './locales/en';
 
-I18n.fallbacks = true;
 
-I18n.translations = {
-    en,
+const fallback = 'en';
+
+const translations = {
     fa,
+    en
 };
-
-
-I18nManager.allowRTL(I18n.locale in I18n.translations);
-
-I18n.start  = I18nManager.isRTL ? 'right' : 'left';
-I18n.end    = I18nManager.isRTL ? 'left' : 'right';
 
 export const to_fa = (input) => {
     if (!input)
@@ -34,14 +27,28 @@ export const to_en = (input) => {
     });
 };
 
-export const trans = (term) => {
-    I18n.locale = global.language;
-    return localize_number(I18n.t(term)).toString();
+
+const leaf = (obj, path) => (path.split('.').reduce((value,el) => value[el], obj));
+
+export const trans = (key, data) => {
+    const keys = key.split('.');
+    const translation = translations[global.language];
+    const d = leaf(translation, key);
+    let ok = d ? d : leaf(translations[fallback], key);
+    if (data) {
+        for (let key in data) {
+            if (data.hasOwnProperty(key)) {
+                const item = data[key];
+                ok = ok.replace(new RegExp(`:${key}`, 'g'), item);
+            }
+        }
+    }
+    return typeof ok === 'string' ? localize_number(ok) : ok;
+
 };
 
 export const isRtl = ()=>{
-    I18n.locale = global.language;
-    return I18n.locale in ['fa', 'ar'];
+    return global.language in ['fa', 'ar'];
 };
 
 
@@ -53,6 +60,3 @@ export const localize_number = (num) => {
         return to_en(num);
     }
 };
-
-
-export default I18n;

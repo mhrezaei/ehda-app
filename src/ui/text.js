@@ -10,12 +10,12 @@ import theme from '../theme';
 
 // button
 const Text_Exp = ({style, children, invert}) => {
-    return (<Text style={[style, invert ? styles.text_invert : styles.text]}>{children}</Text>);
+    return (<Text style={StyleSheet.flatten([style, invert ? styles.text_invert : styles.text])}>{children}</Text>);
 };
 
 Text_Exp.propTypes = {
     children: PropTypes.string.isRequired,
-    style: PropTypes.object,
+    style: PropTypes.any,
     invert: PropTypes.any
 };
 

@@ -5,6 +5,7 @@ import {
     Text,
     View,
     TouchableOpacity,
+    Platform,
     StatusBar,
 } from 'react-native'
 
@@ -14,8 +15,14 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const ActionBar = ({name,title, onPress}) => {
     return (
-        <View style={styles.actionBar}>
-            <View style={styles.actionBar_direct}>
+        <View style={Platform.select({
+            'ios' : styles.actionBar_ios,
+            'android' : styles.actionBar,
+        })}>
+            <View  style={Platform.select({
+                'ios' : styles.actionBar_direct_ios,
+                'android' : styles.actionBar_direct,
+            })}>
 
                 <StatusBar backgroundColor={theme.primaryDark}/>
 
@@ -45,8 +52,25 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    // action bar
+    actionBar_ios: {
+        backgroundColor: theme.primaryDark,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingTop: 20
+    },
     actionBar_direct: {
         flex: 1,
+        flexDirection: 'row-reverse',
+        alignContent: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal:20,
+        paddingVertical:10
+    },
+    actionBar_direct_ios: {
+        flex: 1,
+        backgroundColor: theme.primary,
         flexDirection: 'row-reverse',
         alignContent: 'center',
         justifyContent: 'space-between',

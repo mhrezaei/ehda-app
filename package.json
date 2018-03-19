@@ -1,5 +1,5 @@
 {
-  "name": "Card",
+  "name": "temp",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -8,29 +8,21 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "immutable": "^3.8.2",
     "prop-types": "^15.6.1",
     "react": "^16.3.0-alpha.1",
     "react-native": "0.54.2",
-    "react-native-drawer": "^2.5.0",
-    "react-native-i18n": "^2.0.12",
     "react-native-vector-icons": "^4.5.0",
     "react-redux": "^5.0.7",
     "redux": "^3.7.2",
-    "redux-immutable": "^4.0.0",
-    "redux-saga": "^0.16.0"
+    "redux-saga": "^0.16.0",
+    "tween-functions": "^1.2.0"
   },
   "devDependencies": {
     "axios-mock-adapter": "^1.14.1",
-    "babel-jest": "22.4.1",
+    "babel-jest": "23.0.0-alpha.0",
     "babel-preset-react-native": "4.0.0",
-    "enzyme": "^3.3.0",
     "jest": "22.4.2",
-    "jest-serializer-enzyme": "^1.0.0",
-    "react-native-mock": "^0.3.1",
-    "react-test-renderer": "^16.3.0-alpha.1",
-    "redux-mock-store": "^1.5.1",
-    "sinon": "^4.4.6"
+    "react-test-renderer": "^16.3.0-alpha.1"
   },
   "rnpm": {
     "assets": [
@@ -38,9 +30,6 @@
     ]
   },
   "jest": {
-    "preset": "react-native",
-    "transformIgnorePatterns": [
-      "node_modules/(?!react-native|react-router-native)/"
-    ]
+    "preset": "react-native"
   }
 }

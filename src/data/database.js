@@ -1,4 +1,4 @@
-import {combineReducers} from 'redux-immutable';
+import {combineReducers} from 'redux';
 
 import server from './server/reducer';
 import auth from './auth/reducer';

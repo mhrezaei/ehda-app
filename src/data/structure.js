@@ -1,14 +1,11 @@
-import {fromJS} from 'immutable';
 
-
-export default fromJS({
+export default {
     "history": {
         "last_action": null
     },
     "app": {
         "lang": 'fa'
     },
-
     "nav": {
         "current": 'home',
         "default": 'home'
@@ -26,4 +23,4 @@ export default fromJS({
         "last_successful_update": null,
         "force_update": false
     }
-});
+};
