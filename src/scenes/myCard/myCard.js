@@ -18,6 +18,9 @@ import card_src from '../../../res/card.png'
 const view_width = Dimensions.get('window').width;
 
 
+//const encodedData = 'R0lGODlhAQABAIAAAAAA...7';
+//<Image source={{uri: `data:image/gif;base64,${encodedData}`}} />
+
 class Home extends Component {
     constructor(props){
         super(props);
@@ -30,7 +33,7 @@ class Home extends Component {
                     <View style={styles.cardContainer}>
                         <Image style={styles.cardImage} source={card_src}/>
                         <View style={styles.sharingBar}>
-                            <Text>Hello</Text>
+
                         </View>
                     </View>
                 </View>
@@ -49,18 +52,19 @@ const styles = StyleSheet.create({
     },
     cardContainer: {
         flex: 1,
-        borderRadius: 7,
+        borderRadius: 3,
+        backgroundColor: '#ddd',
     },
     cardImage:{
+        flex: 1,
         borderRadius: 3,
-        width: view_width * 0.9,
-        height: 120,
         resizeMode: 'contain'
     },
     sharingBar:{
-        backgroundColor: '#ccc',
         borderRadius: 3,
         marginTop: 3,
+        flex: 1,
+        flexDirection: 'row',
     }
 });
 

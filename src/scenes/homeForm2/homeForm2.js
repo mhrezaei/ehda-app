@@ -1,13 +1,12 @@
 import React, {Component} from 'react';
 
-import {View, StyleSheet, Dimensions, ScrollView, Alert} from 'react-native';
+import {View, StyleSheet, Dimensions, ScrollView} from 'react-native';
 
 
 import {trans} from '../../i18'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as auth_methods from '../../data/auth/methods';
-import * as nav_methods from '../../data/nav/methods';
+import * as app_methods from '../../data/app/methods';
 
 
 import {Button, TextInput, Text} from '../../ui/components';
@@ -27,35 +26,6 @@ class Home extends Component {
             },
             errors: {}
         };
-
-        this.onSubmit = this.onSubmit.bind(this);
-    }
-
-    onSubmit() {
-
-        this.props.auth_methods.checkCodeMelliAsync(this.state.form.code_melli, () => {
-            this.props.nav_methods.goto('myCard');
-        }, () => {
-            this.setState({
-                errors: {
-                    codeMelli: trans('codeMelliNotFound')
-                }
-            });
-            Alert.alert(trans('codeMelliNotFound'), trans('willYouRegister'), [
-                {
-                    text: trans('yes'), onPress: () => {
-                    this.props.nav_methods.goto('register');
-                }
-                },
-                {
-                    text: trans('no'), onPress: () => {
-                }, style: 'cancel'
-                },
-            ], {cancelable: false});
-
-
-            console.log("aax");
-        })
     }
 
     render() {
@@ -65,19 +35,15 @@ class Home extends Component {
                 <View style={styles.container}>
                     <Text style={styles.textDescription}>{trans('requestWithSsn')}</Text>
                     <View style={styles.wrapper}>
-                        <TextInput onChangeText={text => this.setState({form: {code_melli: text}})}
-                                   style={styles.textField}
-                                   placeholder={trans('codeMelli')}
-                                   keyboardType={'numeric'}>
+                        <TextInput onChange={text => this.setState({form: {code_melli: text}})} style={styles.textField}
+                                   placeholder={trans('codeMelli')} keyboardType={'numeric'}>
                             {form.code_melli}
                         </TextInput>
                     </View>
                     {errors.codeMelli && <Text style={styles.textError}>{errors.codeMelli}</Text>}
                     <View style={styles.wrapper}>
-                        <Button title={trans('requestCard')} icon={"card-membership"} onPress={this.onSubmit}/>
-                        <Button title={trans('register')} icon={"perm-identity"} onPress={() => {
-                            this.props.nav_methods.goto('register')
-                        }}/>
+                        <Button title={form.code_melli} icon={"card-membership"}/>
+                        <Button title={trans('register')} icon={"perm-identity"}/>
                     </View>
                 </View>
             </ScrollView>
@@ -95,7 +61,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'center',
         paddingHorizontal: 13,
-        paddingTop: 26,
+        paddingTop:26,
     },
     wrapper: {
         flex: 1,
@@ -106,13 +72,12 @@ const styles = StyleSheet.create({
         flex: 1,
         borderBottomColor: theme.accent,
         borderBottomWidth: 2,
-        paddingHorizontal: 13,
+        paddingHorizontal: 10,
         paddingVertical: 5
     },
 
     textDescription: {
-        textAlign: 'right', paddingHorizontal: 13,
-
+        textAlign: 'right',
     },
     textError: {
         textAlign: 'right',
@@ -126,7 +91,6 @@ export default connect((state) => {
     return {};
 }, (dispatch) => {
     return {
-        auth_methods: bindActionCreators(auth_methods, dispatch),
-        nav_methods: bindActionCreators(nav_methods, dispatch)
+        app_methods: bindActionCreators(app_methods, dispatch)
     };
 })(Home);

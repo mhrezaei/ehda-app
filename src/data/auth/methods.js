@@ -1,24 +1,44 @@
-import * as actions from '../actions';
+import * as actions from '../types';
 
-export const signin_user_async = (user, done, error) => ({
-	type: actions.AUTH_SIGNIN_USER_ASYNC,
-	user
+export const checkCodeMelliAsync = (code_melli, success, failed) => ({
+	type: actions.AUTH_CHECK_CODE_MELLI_ASYNC,
+    code_melli,
+    success,
+    failed
 });
 
-export const signin_user_success = (user) => ({
-	type: actions.AUTH_SIGNIN_USER_SUCCESS,
-	user
-});
-export const signin_user_failed = (error) => ({
-	type: actions.AUTH_SIGNIN_USER_FAILED,
-	error
+export const checkCodeMelliSuccess = (code_melli) => ({
+    type: actions.AUTH_CHECK_CODE_MELLI_SUCCESS,
+    code_melli
 });
 
-export const refresh_token_success = (token) => ({
-	type: actions.AUTH_REFRESH_TOKEN_SUCCESS,
+export const checkCodeMelliFailed = (status) => ({
+	type: actions.AUTH_CHECK_CODE_MELLI_FAILED,
+    status
+});
+
+
+
+export const getCardAsync = (code_melli, success, failed) => ({
+    type: actions.AUTH_CHECK_CODE_MELLI_ASYNC,
+    code_melli,
+    success,
+    failed
+});
+
+export const getCardSuccess = (code_melli) => ({
+    type: actions.AUTH_CHECK_CODE_MELLI_SUCCESS,
+    code_melli
+});
+
+export const getCardFailed = (status) => ({
+    type: actions.AUTH_CHECK_CODE_MELLI_FAILED,
+    status
+});
+
+
+
+export const updateToken = (token) => ({
+	type: actions.AUTH_UPDATE_TOKEN,
 	token
-});
-
-export const signout_user = () => ({
-	type: actions.AUTH_SIGNOUT_USER
 });

@@ -1,5 +1,5 @@
 import {call, put, takeLatest, cancelled, all} from 'redux-saga/effects';
-import * as actions from '../actions';
+import * as actions from '../types';
 
 import * as api from './api';
 import * as methods from './methods';

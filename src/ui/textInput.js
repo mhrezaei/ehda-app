@@ -11,15 +11,14 @@ import {
 import theme from '../theme';
 
 
-const TextInput_Exp = ({style, placeholder, onChange, defaultValue, children}) => {
+const TextInput_Exp = ({style, children, ...props}) => {
 
 
     return (
         <TextInput
             style={StyleSheet.flatten([style, styles.textInput])}
-            onChange={onChange} defaultValue={defaultValue}
-            underlineColorAndroid={theme.accent}
-            placeholder={placeholder}>
+            underlineColorAndroid={theme.transparent}
+            {...props}>
             {children}
         </TextInput>
     );
@@ -27,9 +26,6 @@ const TextInput_Exp = ({style, placeholder, onChange, defaultValue, children}) =
 
 TextInput_Exp.propTypes = {
     style: PropTypes.any,
-    placeholder: PropTypes.string,
-    onChange: PropTypes.func,
-    defaultValue: PropTypes.string,
     children: PropTypes.string
 };
 
@@ -39,7 +35,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: theme.textInvert,
         fontFamily: theme.font,
-        marginTop: 10
+        fontSize: 14,
+        margin: 5,
     }
 });
 

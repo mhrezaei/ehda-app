@@ -1,6 +1,6 @@
-import structure from '../structure';
+import structure from '../initialState';
 
-import * as actions from '../actions';
+import * as actions from '../types';
 
 export default function (state = structure.app, payload) {
     switch (payload.type) {

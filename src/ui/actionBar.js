@@ -98,10 +98,9 @@ const styles = StyleSheet.create({
         fontSize: 16
     },
     actionBar_menuIcon:{
-        width: 20,
-        height: 20,
-        paddingTop:3,
-        marginLeft:20
+        marginLeft:20,
+        marginTop: 4,
+        alignSelf: 'center',
     }
 });
 

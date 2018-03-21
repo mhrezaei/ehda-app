@@ -2,10 +2,8 @@ import structure from '../initialState';
 
 import * as actions from '../types';
 
-export default function (state = structure.nav, payload) {
+export default function (state = structure.cards, payload) {
     switch (payload.type) {
-        case actions.NAV_GOTO_PAGE:
-            return { ...state, current: payload.page };
         default:
             return state;
     }

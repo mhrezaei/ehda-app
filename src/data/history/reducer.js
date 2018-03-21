@@ -1,4 +1,4 @@
-import structure from '../structure';
+import structure from '../initialState';
 
 export default function (state = structure.history, payload) {
 	return {

@@ -107,7 +107,7 @@ class Splash extends Component {
                         main: {opacity: (2 - ratio) / 2}
                     })}
                     side={"right"}
-                    content={Factory.createMenuFromRoutes(routes, this.goTo, trans('somebody'),splash_small_src)}
+                    content={Factory.createMenuFromRoutes(routes, this.store.getState, this.goTo, trans('somebody'),splash_small_src)}
                 >
                     <Provider store={this.store}>
                         <View style={styles.container_app}>

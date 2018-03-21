@@ -1,7 +1,9 @@
-import {filter} from './setup';
+import { expect } from 'chai';
 
-describe('Setup REDUX Store', () => {
-    it('should filter object correctly', () => {
+import {filter} from '../helpers';
+
+describe('helpers', () => {
+    it('filter object should filter and map object correctly', () => {
 
         const temp = {
             name: {
@@ -33,7 +35,6 @@ describe('Setup REDUX Store', () => {
             }
         };
 
-        expect(filter(temp, (v, k) => ['hello', 'docs'].includes(k))).toEqual(filtered);
-
+        expect(filter(temp, (v, k) => ['hello', 'docs'].includes(k))).to.deep.equal(filtered);
     })
 });

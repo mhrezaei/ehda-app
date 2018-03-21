@@ -1,5 +1,5 @@
 import {createStore, applyMiddleware} from 'redux';
-import database from './database';
+import database from './reducers';
 
 
 export default function root(saga, initial_state) {

@@ -5,6 +5,7 @@ import {
     Text,
     View,
     TouchableOpacity,
+    Platform
 } from 'react-native'
 
 
@@ -35,7 +36,8 @@ Button.propTypes = {
 
 const styles = StyleSheet.create({
     button: {
-        flex: 1,marginTop: 10,
+        flex: 1,
+        margin: 5,
         backgroundColor: theme.accent,
         borderRadius: 5,
     },
@@ -44,18 +46,19 @@ const styles = StyleSheet.create({
         flexDirection: 'row-reverse',
         alignContent: 'center',
         paddingHorizontal: 10,
-        paddingVertical: 5
+        justifyContent:'center',
+        paddingVertical: Platform.select({ios:10, android: 5})
     },
     button_text: {
         color: theme.text,
         fontFamily: theme.font,
-        textAlign: 'center'
+        textAlign: 'center',
+        fontSize: 14,
     },
     button_icon: {
         width: 20,
         height: 20,
-        marginLeft: 10,
-        paddingTop: 2
+        marginLeft: 10
     },
 });
 

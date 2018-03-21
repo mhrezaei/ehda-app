@@ -10,6 +10,10 @@ export default {
         "current": 'home',
         "default": 'home'
     },
+    "card": {
+        "pinned": null,
+        "list": []
+    },
     "auth": {
         "token": null,
         "user": null,

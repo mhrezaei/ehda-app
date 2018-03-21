@@ -10,4 +10,10 @@ export default {
     codeMelli: 'کدملی',
     requestCard: 'درخواست کارت',
     myCard: 'کارت من',
+    requestWithSsn: 'برای ادامه و دریافت کارت عضویت کد ملی خود را وارد نمایید:',
+    register: 'ثبت نام',
+    codeMelliNotFound: 'کد ملی وجود ندارد',
+    willYouRegister: 'آیا می خواهید ثبت نام کنید ؟',
+    yes: 'بلی',
+    no: 'خیر',
 };

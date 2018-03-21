@@ -1,36 +1,60 @@
 import {call, put, takeLatest, cancelled, all} from 'redux-saga/effects';
-import * as actions from '../actions';
+import * as actions from '../types';
 
 
 import * as api from './api';
+
+
 import * as methods from './methods';
 
+import {AsyncStorage} from 'react-native';
 
-export function* auth_signin_user(payload) {
+
+export function* checkSSN(payload) {
+
 	try {
-		const token_res = yield call(api.signin_user, payload.user);
-		if (token_res.status === 200) {
-			const token = token_res.data.token;
-			yield put(methods.refresh_token_success(token));
-			yield put(methods.signin_user_success(token_res.data.user));
-		}
+		const tokenReq = yield call(api.getToken, {username: 'admin', password: '123'});
+		if(tokenReq.status === 200){
+		    if(tokenReq.data.status > 0){
+                const token = tokenReq.data.token;
+
+                yield put(methods.updateToken(token));
+                yield AsyncStorage.setItem('application-token', token);
+                const codeMelliReq = yield call(api.checkSSN, {token: token, code_melli: payload.code_melli});
+
+
+                if(codeMelliReq.status === 200) {
+                    if (codeMelliReq.data.status > 0) {
+
+                        yield put(methods.checkCodeMelliSuccess(payload.code_melli));
+                        yield call(payload.success);
+                        return;
+                    }
+                }
+
+            }
+        }
+        yield put(methods.checkCodeMelliFailed());
+		yield call(payload.failed);
 	} catch (error) {
-		yield put(methods.signin_user_failed());
+		yield put(methods.checkCodeMelliFailed());
+        yield call(payload.failed);
 	} finally {
 		if (yield cancelled()) {
-			yield put(methods.signin_user_failed("Request cancelled."));
+			yield put(methods.checkCodeMelliFailed());
+            yield call(payload.failed);
 		}
 	}
 }
 
-export function* watch_auth_signin_user() {
-	yield takeLatest(actions.AUTH_SIGNIN_USER_ASYNC, auth_signin_user);
+export function* watchCheckSSN() {
+	yield takeLatest(actions.AUTH_CHECK_CODE_MELLI_ASYNC, checkSSN);
 }
 
 
 
 export default function* () {
 	yield all([
-        watch_auth_signin_user()
+        watchCheckSSN()
 	]);
 }

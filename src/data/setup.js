@@ -1,10 +1,10 @@
 // data
 import {AsyncStorage} from 'react-native';
 import createSagaMiddleware from 'redux-saga';
-import async_root from './async';
+import async_root from './sagas';
 import configure_store from './store';
-import structure from './structure';
-import * as actions from './actions';
+import structure from './initialState';
+import * as actions from './types';
 
 
 import * as server_methods from './server/methods';
@@ -12,13 +12,7 @@ import * as server_methods from './server/methods';
 const async_middleware = createSagaMiddleware();
 
 
-export const filter = (obj, predicate) =>
-    Object.keys(obj)
-        .filter(key => predicate(obj[key], key))
-        .reduce((res, key) => (res[key] = obj[key], res), {});
-
-
-const timeout = ms => new Promise(res => setTimeout(res, ms));
+import {timeout, filter} from '../helpers';
 
 function keys_to_save(data = structure) {
     return filter(data, (v, k) => ['app', 'auth'].includes(k));
@@ -40,14 +34,15 @@ async function configStore() {
         const state = store.getState();
         const payload = state.history.last_action;
 
-        switch (payload) {
-            case actions.AUTH_REFRESH_TOKEN_SUCCESS:
-                await AsyncStorage.setItem('application-token', state.auth.token);
-                break;
-        }
         if (payload && (payload.startsWith('AUTH_') || payload.startsWith('APP_'))) {
             let map = JSON.parse(await AsyncStorage.getItem('application-state'));
-            await AsyncStorage.setItem('application-state', JSON.stringify(map.merge(keys_to_save(state))));
+
+            global.language = state.app.lang;
+            global.token = state.auth.token;
+
+            console.log(JSON.stringify({...map, ...keys_to_save(state)}));
+
+            await AsyncStorage.setItem('application-state', JSON.stringify({...map, ...keys_to_save(state)}));
         }
     });
 

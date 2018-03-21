@@ -9,5 +9,7 @@ export default {
     textField: '#fff',
     black: '#000',
     white: '#fff',
+    red: '#cc353b',
+    transparent: 'transparent',
     font: 'IRANSansMobile'
 };

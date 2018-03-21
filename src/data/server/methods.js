@@ -1,4 +1,4 @@
-import * as actions from '../actions';
+import * as actions from '../types';
 
 export const request_utc_async = () => ({
 	type: actions.SERVER_REQUEST_UTC_ASYNC
