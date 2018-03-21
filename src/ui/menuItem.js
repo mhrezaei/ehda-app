@@ -35,7 +35,9 @@ MenuItem.propTypes = {
 const styles = StyleSheet.create({
     // menu item
     menuItem: {
-        flex: 1
+        flex: 1,
+        borderBottomColor: '#d8d8d8',
+        borderBottomWidth: 1
     },
     menuItem_direct: {
         flex: 1,

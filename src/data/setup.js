@@ -15,7 +15,7 @@ const async_middleware = createSagaMiddleware();
 import {timeout, filter} from '../helpers';
 
 function keys_to_save(data = structure) {
-    return filter(data, (v, k) => ['app', 'auth'].includes(k));
+    return filter(data, (v, k) => ['app', 'auth', 'nav'].includes(k));
 }
 
 async function configStore() {
@@ -34,13 +34,11 @@ async function configStore() {
         const state = store.getState();
         const payload = state.history.last_action;
 
-        if (payload && (payload.startsWith('AUTH_') || payload.startsWith('APP_'))) {
+        if (payload && (payload.startsWith('AUTH_') || payload.startsWith('APP_')  || payload.startsWith('NAV_'))) {
             let map = JSON.parse(await AsyncStorage.getItem('application-state'));
 
             global.language = state.app.lang;
             global.token = state.auth.token;
-
-            console.log(JSON.stringify({...map, ...keys_to_save(state)}));
 
             await AsyncStorage.setItem('application-state', JSON.stringify({...map, ...keys_to_save(state)}));
         }

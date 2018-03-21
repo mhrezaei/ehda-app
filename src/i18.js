@@ -1,6 +1,7 @@
 import fa from './locales/fa';
 import en from './locales/en';
 
+import {leaf} from './helpers';
 
 const fallback = 'en';
 
@@ -28,7 +29,7 @@ export const to_en = (input) => {
 };
 
 
-const leaf = (obj, path) => (path.split('.').reduce((value,el) => value[el], obj));
+
 
 export const trans = (key, data) => {
     const keys = key.split('.');

@@ -34,6 +34,9 @@ const styles = StyleSheet.create({
     menu: {
         flex: 1,
         backgroundColor: theme.background,
+
+        borderLeftColor: '#d8d8d8',
+        borderLeftWidth: 1
     },
     menu_direct: {
         flex: 1,

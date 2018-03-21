@@ -16,4 +16,5 @@ export default {
     willYouRegister: 'آیا می خواهید ثبت نام کنید ؟',
     yes: 'بلی',
     no: 'خیر',
+    telMobile: 'شماره تماس'
 };

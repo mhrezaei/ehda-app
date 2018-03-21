@@ -32,6 +32,7 @@ TextInput_Exp.propTypes = {
 
 const styles = StyleSheet.create({
     textInput: {
+        backgroundColor: theme.transparent,
         textAlign: 'center',
         color: theme.textInvert,
         fontFamily: theme.font,

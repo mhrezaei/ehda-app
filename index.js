@@ -10,8 +10,7 @@ import {View, Image, StyleSheet, ScrollView, StatusBar} from 'react-native';
 global.language = null;
 
 
-import {ActionBar, TextField} from './src/ui/components';
-import Drawer from './src/ui/drawer';
+import {ActionBar, TextField, Drawer} from './src/ui/components';
 
 
 import * as nav_methods from './src/data/nav/methods';
@@ -99,7 +98,7 @@ class Splash extends Component {
                     ref={(ref) => this.drawer = ref}
                     type="displace"
                     tapToClose={true}
-                    openDrawerOffset={0.3}
+                    openDrawerOffset={0.15}
                     panCloseMask={0.6}
                     closedDrawerOffset={-3}
                     styles={drawerStyles}

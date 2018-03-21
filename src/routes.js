@@ -1,5 +1,9 @@
 import {trans} from './i18'
 
+
+function shouldCardsExist(state) {
+    return state.auth.hasOwnProperty('cards') && state.auth.cards.length > 0;
+}
 export default {
     home: {
         title: trans('home'),
@@ -12,18 +16,19 @@ export default {
         icon: "home",
         component: require('./scenes/homeForm2/homeForm2').default
     },
+    register: {
+        hidden: true,
+        title: trans('register'),
+        component: require('./scenes/register/register').default
+    },
     myCard: {
-        hidden: (state)=>{
-            return state.auth.hasOwnProperty('cards') && state.auth.cards.length > 0;
-        },
+        hidden: shouldCardsExist,
         title: trans('myCard'),
         icon: "account-box",
         component: require('./scenes/myCard/myCard').default
     },
     cardList: {
-        hidden: (state)=>{
-            return state.auth.hasOwnProperty('cards') && state.auth.cards.length > 0;
-        },
+        hidden: shouldCardsExist,
         title: trans('myCards'),
         icon: "list",
         component: require('./scenes/cardList/cardList').default

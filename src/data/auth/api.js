@@ -16,27 +16,5 @@ export const checkSSN = (payload /* { token, code_melli}*/) => {
 
 
 export const getCard = (payload /* { token, code_melli, tel_mobile, birth_date}*/) => {
-    return new Promise((r, e) => {
-        setTimeout(() => {
-            const data = users.filter(x => x.code_melli === payload.code_melli && x.tel_mobile === payload.tel_mobile && x.birth_date === payload.birth_date);
-
-            if (payload.token === someToken && data.length > 0) {
-                r({
-                    status: 200,
-                    data: {
-                        status: codes.OPERATION_SUCCEED,
-                        image: {}
-                    }
-                });
-            } else {
-                r({
-                    status: 200,
-                    data: {
-                        status: codes.USER_NOT_FOUND
-                    }
-                })
-            }
-
-        }, 200);
-    });
+    return axios('POST', 'card/get', {code_melli:payload.code_melli, tel_mobile:payload.tel_mobile, birth_date: payload.birth_date})
 };

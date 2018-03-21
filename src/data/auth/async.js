@@ -13,7 +13,7 @@ import {AsyncStorage} from 'react-native';
 export function* checkSSN(payload) {
 
 	try {
-		const tokenReq = yield call(api.getToken, {username: 'admin', password: '123'});
+		const tokenReq = yield call(api.getToken, {username: 'odeviceapi', password: '123456789'});
 		if(tokenReq.status === 200){
 		    if(tokenReq.data.status > 0){
                 const token = tokenReq.data.token;

@@ -4,3 +4,6 @@ export const filter = (obj, predicate) =>
         .reduce((res, key) => (res[key] = obj[key], res), {});
 
 export const timeout = ms => new Promise(res => setTimeout(res, ms));
+
+
+export const leaf = (obj, path) => (path.split('.').reduce((value,el) => value[el], obj));

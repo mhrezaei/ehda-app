@@ -53,8 +53,6 @@ class Home extends Component {
                 },
             ], {cancelable: false});
 
-
-            console.log("aax");
         })
     }
 
