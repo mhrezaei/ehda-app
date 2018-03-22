@@ -3311,9 +3311,9 @@ module-not-found-error@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/module-not-found-error/-/module-not-found-error-1.0.1.tgz#cf8b4ff4f29640674d6cdd02b0e3bc523c2bbdc0"
 
-momentj@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/momentj/-/momentj-1.0.1.tgz#8c64a9031d1392e4450b6969b92074ab0d4979a2"
+momentj@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/momentj/-/momentj-1.0.3.tgz#74237c963fa2b7b8c461b3457a8c44a65f27b34d"
 
 morgan@^1.9.0:
   version "1.9.0"

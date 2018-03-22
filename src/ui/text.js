@@ -10,7 +10,7 @@ import theme from '../theme';
 
 // button
 const Text_Exp = ({style, children, invert, ...props}) => {
-    return (<Text style={StyleSheet.flatten([style, invert ? styles.text_invert : styles.text])} {...props}>{children}</Text>);
+    return (<Text style={StyleSheet.flatten([invert ? styles.text_invert : styles.text, style])} {...props}>{children}</Text>);
 };
 
 Text_Exp.propTypes = {

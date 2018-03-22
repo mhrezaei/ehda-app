@@ -6,5 +6,6 @@ import Text from './text';
 import TextInput from './textInput';
 import Drawer from './drawer';
 import Calendar from './calendar';
+import Picker from './picker';
 
-export {Text, TextInput, Button, ActionBar, Menu, MenuItem, Drawer, Calendar};
+export {Text, TextInput, Button, ActionBar, Menu, MenuItem, Drawer, Calendar, Picker};

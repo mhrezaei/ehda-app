@@ -15,7 +15,7 @@ import {Button, TextInput, Text} from '../../ui/components';
 import theme from "../../theme";
 
 
-const view_height = Dimensions.get('window').height;
+const view_width = Dimensions.get('window').width;
 
 
 class Home extends Component {
@@ -23,7 +23,7 @@ class Home extends Component {
         super(props);
         this.state = {
             form: {
-                code_melli: '',
+                code_melli: ''
             },
             errors: {}
         };
@@ -102,14 +102,15 @@ const styles = StyleSheet.create({
     },
     textField: {
         flex: 1,
-        borderBottomColor: theme.accent,
+        borderBottomColor: theme.accentLight,
         borderBottomWidth: 2,
         paddingHorizontal: 13,
         paddingVertical: 5
     },
 
     textDescription: {
-        textAlign: 'right', paddingHorizontal: 13,
+        textAlign: 'right',
+        paddingHorizontal: 13,
 
     },
     textError: {

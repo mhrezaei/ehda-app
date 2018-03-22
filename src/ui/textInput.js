@@ -16,7 +16,7 @@ const TextInput_Exp = ({style, children, ...props}) => {
 
     return (
         <TextInput
-            style={StyleSheet.flatten([style, styles.textInput])}
+            style={StyleSheet.flatten([styles.textInput, style])}
             underlineColorAndroid={theme.transparent}
             {...props}>
             {children}
@@ -32,12 +32,13 @@ TextInput_Exp.propTypes = {
 
 const styles = StyleSheet.create({
     textInput: {
-        backgroundColor: theme.transparent,
+        backgroundColor: '#fff',
         textAlign: 'center',
+        borderRadius: 5,
         color: theme.textInvert,
         fontFamily: theme.font,
         fontSize: 14,
-        margin: 5,
+        margin: 5
     }
 });
 
