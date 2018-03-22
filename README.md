@@ -1,27 +1,38 @@
-# ehda-app
+# EHDA APP
 Ehda Android Application (React Native)
 
 
-# install
+# INSTALLATION
 
 ```
-npm install -g react-native-cli
-npm install
+npm install -g yarn
+
+yarn global add react-native-cli
+yarn install
+```
+
+### ANDROID
+
+1) config a proxy at port 1081 then
+2) run an emulator
+```
 react-native run-android
+```
+
+### IOS
+disable global proxy on mac-ox then:
+```
+react-native run-ios
 
 ```
 
 # test
 
 ```
-npm test
+yarn test-watch
 
 ```
 
-# screen shot (development is in progress...)
-
-
-
+# latest changes
 ![alt text](https://github.com/mhrezaei/ehda-app/blob/master/res/app1.png)
-
 ![alt text](https://github.com/mhrezaei/ehda-app/blob/master/res/app2.png)
