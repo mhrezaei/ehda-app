@@ -14,6 +14,8 @@ import theme from '../theme'
 
 import {localize_number, trans} from "../i18";
 
+import lodash from 'lodash';
+
 
 import moment from 'momentj';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -24,18 +26,16 @@ import {Button, TextInput, Text} from './components';
 
 class Picker extends Component {
     static propTypes = {
-        type: PropTypes.oneOf(['static', 'async']),
         data: PropTypes.array,
-        multi: PropTypes.any,
         onChange: PropTypes.func,
-    }
+    };
 
     constructor(props) {
         super(props);
 
         this.state = {
             show: false,
-            data: []
+            selected: null,
         };
 
         this.show = this.show.bind(this);
@@ -45,28 +45,15 @@ class Picker extends Component {
         this.setState({data: this.props.data});
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({data: nextProps.data});
+    }
 
     show(d) {
-        if (!Array.isArray(d)) {
-            let data = this.state.data;
-            for(let i=0;i<data.length;i++){
-                data[i].checked = data[i].id === d;
-            }
-            this.setState({
-                show: true,
-                data
-            });
-        }else{
-            let data = this.state.data;
-            for(let i=0;i<data.length;i++){
-                    data[i].checked = d.includes(data[i].id);
-            }
-            this.setState({
-                show: true,
-                data
-            });
-
-        }
+        this.setState({
+            show: true,
+            selected: d
+        });
     }
 
     hide() {
@@ -75,57 +62,43 @@ class Picker extends Component {
         });
     }
 
-
     render() {
-        const {type, onChange, multi} = this.props;
-
-        const {data} = this.state;
+        const {onChange, data} = this.props;
+        const {selected} = this.state;
 
 
         return (this.state.show &&
             <View style={styles.container}>
                 <ScrollView>
                     <View style={styles.content}>
-                        {type === 'async' ?
-                            <View style={styles.calendar_row}></View>
-                            :
+                        {
                             data.map((x, i) =>
                                 <TouchableOpacity key={i} style={styles.menuItem} onPress={() => {
-                                    let data = this.state.data;
-                                    for (let i = 0; i < data.length; i++) {
-
-                                        if (multi) {
-                                            if (data[i].id === x.id) {
-                                                data[i].checked = !data[i].checked;
-                                            }
-                                        } else {
-                                            data[i].checked = data[i].id === x.id;
-                                        }
-                                    }
-                                    this.setState({data});
-
+                                    onChange(x.id);
+                                    this.setState({selected: x.id});
+                                    this.hide();
                                 }}>
                                     <View style={styles.menuItem_direct}>
-                                        {x.checked && <Icon name={'check'} style={styles.menuItem_icon} size={20}/>}
-                                        <Text style={styles.menuItem_text}>{x.value}</Text>
+                                        {x.id === selected &&
+                                        <Icon name={'check'} style={styles.menuItem_icon} size={20}/>}
+                                        <Text style={styles.menuItem_text}>{x.title}</Text>
                                     </View>
                                 </TouchableOpacity>
                             )
                         }
-
-                        <View style={styles.calendar_row_buttons}>
-                            <Button title={trans('choose')} onPress={() => {
-
-                                onChange(data.filter(x => x.checked).map(x => x.id));
-                                this.hide();
-
-                            }}/>
-                            <Button title={trans('cancel')} onPress={() => {
-                                this.hide();
-                            }}/>
-                        </View>
+                        <TouchableOpacity style={styles.menuItem} onPress={() => {
+                            onChange(null);
+                            this.setState({selected: null});
+                            this.hide();
+                        }}>
+                            <View style={styles.menuItem_direct}>
+                                <Text style={styles.menuItem_text}>{trans('cancel')}</Text>
+                            </View>
+                        </TouchableOpacity>
                     </View>
                 </ScrollView>
+
+
             </View>
         );
     }
@@ -136,7 +109,6 @@ const styles = StyleSheet.create({
     content: {
         padding: 20,
         backgroundColor: '#fff'
-
     },
     container: {
         position: 'absolute',
@@ -144,12 +116,11 @@ const styles = StyleSheet.create({
         top: 0,
         right: 0,
         bottom: 0,
-        maxHeight: 300,
-        backgroundColor: 'rgba(0,0,0,0.5)',
 
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        zIndex: 999
 
     },
-
     calendar_row_buttons: {
         flex: 1,
         marginTop: 20,

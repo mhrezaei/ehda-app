@@ -7,13 +7,14 @@ import {
     TouchableOpacity,
     Platform,
     StatusBar,
+    ActivityIndicator
 } from 'react-native'
 
 import theme from '../theme'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 
-const ActionBar = ({name,title, onPress}) => {
+const ActionBar = ({name, loading, title, onPress}) => {
     return (
         <View style={Platform.select({
             'ios' : styles.actionBar_ios,
@@ -27,13 +28,17 @@ const ActionBar = ({name,title, onPress}) => {
                 <StatusBar backgroundColor={theme.primaryDark}/>
 
                 <View style={styles.actionBar_menuHolder}>
+
                     <TouchableOpacity onPress={onPress}>
                         <Icon name={"menu"} style={styles.actionBar_menuIcon} size={20} color={"#fff"}/>
                     </TouchableOpacity>
+                    {loading ? <ActivityIndicator size="small" color={theme.text} style={styles.actionBar_indicator}/> : <View style={styles.actionBar_indicator}/>}
                     <Text style={styles.actionBar_title}>{title}</Text>
                 </View>
                 <Text style={styles.actionBar_titleLeft}>{name}</Text>
+
             </View>
+
         </View>
     );
 };
@@ -41,7 +46,8 @@ ActionBar.propTypes = {
     title: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     icon: PropTypes.string,
-    onPress: PropTypes.func
+    onPress: PropTypes.func,
+    loading: PropTypes.any
 };
 
 const styles = StyleSheet.create({
@@ -51,6 +57,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    actionBar_indicator:{
+        paddingHorizontal: 10,
     },
     // action bar
     actionBar_ios: {
@@ -98,7 +107,6 @@ const styles = StyleSheet.create({
         fontSize: 16
     },
     actionBar_menuIcon:{
-        marginLeft:20,
         marginTop: 4,
         alignSelf: 'center',
     }

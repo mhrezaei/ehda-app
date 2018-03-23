@@ -3,6 +3,19 @@ import structure from '../initialState';
 
 export default function (state = structure.server, payload) {
 	switch (payload.type) {
+        case actions.SERVER_GET_PROVINCES_LIST_SUCCESS:
+            return {
+                ...state,
+                provinceList: payload.provinceList
+            };
+        case actions.SERVER_GET_CITIES_LIST_SUCCESS:
+            return {
+                ...state,
+                citiesList: {
+                    ...state.citiesList,
+                    [payload.province]: payload.citiesList
+                }
+            };
         case actions.SERVER_CHANGE_FORCE_UPDATE:
 			return {
                 ...state,

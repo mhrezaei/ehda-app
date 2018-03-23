@@ -8,6 +8,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as auth_methods from '../../data/auth/methods';
 import * as nav_methods from '../../data/nav/methods';
+import * as server_methods from '../../data/server/methods';
 
 
 import {Button, TextInput, Text, Calendar, Picker} from '../../ui/components';
@@ -18,6 +19,7 @@ import PropTypes from 'prop-types';
 const view_width = Dimensions.get('window').width;
 
 import moment from 'momentj';
+
 
 const FormInput = ({name, form, errors, placeholder, keyboardType, onChangeText, ...props}) => {
     return (
@@ -47,21 +49,18 @@ FormInput.propTypes = {
 };
 
 class Home extends Component {
-
-
-
     genders = [
         {
             id: 1,
-            value: trans('male')
+            title: trans('male')
         },
         {
             id: 2,
-            value: trans('female')
+            title: trans('female')
         },
         {
             id: 3,
-            value: trans('other')
+            title: trans('other')
         }
     ];
 
@@ -69,42 +68,100 @@ class Home extends Component {
         super(props);
         this.state = {
             form: {
-                code_melli: '',
-                tel_mobile: '',
-                birth_date: moment('1380/1/1','jYYYY/jM/jD').unix(),
-                gender: 3
+                code_melli: null,
+                tel_mobile: null,
+                birth_date: null,
+                province: null,
+                gender: null,
+                name_first: null,
+                name_last: null,
+                name_father: null,
+                home_city: null,
+
             },
-            errors: {}
+            errors: {
+            }
         };
 
         this.onSubmit = this.onSubmit.bind(this);
+        this.onChange = this.onChange.bind(this);
     }
+
+    componentDidMount(){
+        this.props.server_methods.getProvinceListAsync();
+    }
+
+
 
     onSubmit() {
 
     }
 
+    onChange(name, value) {
+        let form = this.state.form;
+        form[name] = value;
+
+        this.setState({
+            form: form
+        })
+
+    }
+
     render() {
+
         const {form, errors} = this.state;
+        const {provinceList, citiesList} = this.props;
+
+        const sProv_l = provinceList.filter(x => x.id === form.province);
+        let sProv = trans('chooseIt');
+        if(sProv_l.length > 0)
+            sProv = sProv_l[0].title;
+
+
+        const sGndr_l = this.genders.filter(x => x.id === form.gender);
+        let sGndr = trans('chooseIt');
+        if(sGndr_l.length > 0)
+            sGndr = sGndr_l[0].title;
+
+
+        const sCity_l = citiesList.hasOwnProperty(form.province) ? citiesList[form.province].filter(x => x.id === form.home_city) : [];
+        let sCity = trans('chooseIt');
+        if(sCity_l.length > 0)
+            sCity = sCity_l[0].title;
+
         return (
             <View style={styles.container_up}>
                 <ScrollView contentContainerStyle={styles.parent}>
                     <View style={styles.container}>
                         <View style={styles.textDescription}/>
+                        <FormInput name={"name_first"} placeholder={trans('nameFirst')}
+                                   form={form} errors={errors}
+                                   onChangeText={text => this.onChange('name_first', text)}/>
+
+
+                        <FormInput name={"name_last"} placeholder={trans('nameLast')}
+                                   form={form} errors={errors}
+                                   onChangeText={text => this.onChange('name_last', text)}/>
+
+                        <FormInput name={"name_father"} placeholder={trans('nameFather')}
+                                   form={form} errors={errors}
+                                       onChangeText={text => this.onChange('name_father', text)}/>
+
+
                         <FormInput name={"code_melli"} placeholder={trans('codeMelli')} keyboardType={'numeric'}
                                    form={form} errors={errors}
-                                   onChangeText={text => this.setState({form: {...form, code_melli: text}})}/>
+                                   onChangeText={text => this.onChange('code_melli', text)}/>
 
                         <FormInput name={"tel_mobile"} placeholder={trans('telMobile')} keyboardType={'numeric'}
                                    form={form} errors={errors}
-                                   onChangeText={text => this.setState({form: {...form, tel_mobile: text}})}/>
+                                   onChangeText={text =>  this.onChange('tel_mobile', text)}/>
 
                         <View style={styles.wrapper_vertical}>
-                            <Text style={styles.textLabel}>{trans('birth_date')}</Text>
+                            <Text style={styles.textLabel}>{trans('birthDate')}</Text>
                             <View style={styles.wrapper}>
                                 <TextInput style={styles.textField} onFocus={()=>{
-                                    const d = moment.unix(form.birth_date);
-                                    this.calendar.show({year: d.jYear(), month: d.jMonth(), day: d.jDate()});
+
+                                    this.calendar.show(form.birth_date);
                                     Keyboard.dismiss();
                                 }}>
                                     {localize_number(moment.unix(form.birth_date).format('jYYYY/jM/jD'))}
@@ -121,25 +178,66 @@ class Home extends Component {
                                     this.genderSelector.show(form.gender);
                                     Keyboard.dismiss();
                                 }}>
-                                    {this.genders.filter(x => x.id === form.gender)[0].value}
+                                    {sGndr}
                                 </TextInput>
                             </View>
                             {errors['gender'] && <Text style={styles.textError}>{errors['gender']}</Text>}
                         </View>
 
-                        <Text>
-                            {JSON.stringify(this.state.form,null, 2)}
-                        </Text>
+
+                        <View style={styles.wrapper_vertical}>
+                            <Text style={styles.textLabel}>{trans('province')}</Text>
+                            <View style={styles.wrapper}>
+                                <TextInput style={styles.textField} onFocus={()=>{
+                                    this.provinceSelector.show(form.province);
+                                    Keyboard.dismiss();
+                                }}>
+                                    {sProv}
+                                </TextInput>
+                            </View>
+                            {errors['province'] && <Text style={styles.textError}>{errors['province']}</Text>}
+                        </View>
+
+
+
+                        <View style={styles.wrapper_vertical}>
+                            <Text style={styles.textLabel}>{trans('homeCity')}</Text>
+                            <View style={styles.wrapper}>
+                                <TextInput style={styles.textField} onFocus={()=>{
+                                    this.citiesSelector.show(form.home_city);
+                                    Keyboard.dismiss();
+                                }}>
+                                    {sCity}
+                                </TextInput>
+                            </View>
+                            {errors['home_city'] && <Text style={styles.textError}>{errors['home_city']}</Text>}
+                        </View>
+
+                    </View>
+                    <View style={styles.wrapper_submit}>
+                        <Button title={trans('requestCard')} icon={"card-membership"} onPress={this.onSubmit}/>
                     </View>
                 </ScrollView>
                 <Calendar ref={x => this.calendar = x} onChange={(date)=>{
                     const d = moment(date.year + '/' + (date.month + 1) + '/' + date.day, 'jYYYY/jMM/jD');
-                    this.setState({form: {...form, birth_date: d.unix()}})
+                    this.onChange('birth_date', d.unix());
                 }}/>
 
-                <Picker ref={x => this.genderSelector = x} type={'static'} multi={false} onChange={(d)=>{
-                    this.setState({form: {...form, gender: d[0]}})
+                <Picker ref={x => this.genderSelector = x} onChange={(d)=>{
+                    this.onChange('gender', d);
                 }} data={this.genders}/>
+
+
+                <Picker ref={x => this.provinceSelector = x} onChange={(d)=>{
+                    this.onChange('province', d);
+                    this.onChange('home_city', null);
+                    this.props.server_methods.getCitiesListAsync(d);
+                }} data={provinceList}/>
+
+
+                <Picker ref={x => this.citiesSelector = x} onChange={(d)=>{
+                    this.onChange('home_city', d);
+                }} data={citiesList.hasOwnProperty(form.province) ? citiesList[form.province] : []}/>
 
             </View>
         );
@@ -168,7 +266,14 @@ const styles = StyleSheet.create({
     wrapper: {
         flex: 1,
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+    },
+    wrapper_submit: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 13,
+        paddingVertical: 5
     },
     textField: {
         flex: 1,
@@ -194,7 +299,8 @@ const styles = StyleSheet.create({
     textError: {
         textAlign: 'right',
         color: theme.red,
-        paddingVertical: 10
+        paddingVertical: 10,
+        alignSelf: 'flex-end'
     },
     textLabel: {
         textAlign: 'right',
@@ -210,11 +316,21 @@ const styles = StyleSheet.create({
     }
 });
 
+Home.defaultProps = {
+    provinceList: [{id:0, title:trans('loading')}],
+    citiesList: {},
+};
+
+
 export default connect((state) => {
-    return {};
+    return {
+        provinceList: state.server.provinceList,
+        citiesList: state.server.citiesList,
+    };
 }, (dispatch) => {
     return {
         auth_methods: bindActionCreators(auth_methods, dispatch),
-        nav_methods: bindActionCreators(nav_methods, dispatch)
+        nav_methods: bindActionCreators(nav_methods, dispatch),
+        server_methods: bindActionCreators(server_methods, dispatch),
     };
 })(Home);

@@ -18,7 +18,7 @@ function keys_to_save(data = structure) {
     return filter(data, (v, k) => ['app', 'auth', 'nav'].includes(k));
 }
 
-async function configStore() {
+async function configStore(upd) {
     const map = await AsyncStorage.getItem('application-state');
     if (!map) {
         await AsyncStorage.setItem('application-state', JSON.stringify(keys_to_save()));
@@ -42,10 +42,12 @@ async function configStore() {
 
             await AsyncStorage.setItem('application-state', JSON.stringify({...map, ...keys_to_save(state)}));
         }
+
+        if(upd) upd(state);
     });
 
     async_middleware.run(async_root);
-    store.dispatch(server_methods.request_utc_async());
+    //store.dispatch(server_methods.request_utc_async());
 
     await timeout(1000);
     return store;

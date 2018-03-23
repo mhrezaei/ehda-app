@@ -34,14 +34,19 @@ class Home extends Component {
     onSubmit() {
 
         this.props.auth_methods.checkCodeMelliAsync(this.state.form.code_melli, () => {
-            this.props.nav_methods.goto('myCard');
-        }, () => {
+            this.props.nav_methods.goto('getCard');
+        }, (err) => {
+            let trnsErr = '';
+            if(err)
+                trnsErr = trans('errors.'+ err);
+            else
+                trnsErr = trans('codeMelliNotFound');
             this.setState({
                 errors: {
-                    codeMelli: trans('codeMelliNotFound')
+                    codeMelli: trnsErr
                 }
             });
-            Alert.alert(trans('codeMelliNotFound'), trans('willYouRegister'), [
+            Alert.alert(trnsErr, trans('willYouRegister'), [
                 {
                     text: trans('yes'), onPress: () => {
                     this.props.nav_methods.goto('register');
@@ -115,6 +120,7 @@ const styles = StyleSheet.create({
     },
     textError: {
         textAlign: 'right',
+        alignSelf: 'flex-end',
         color: theme.red,
         paddingVertical: 10
 

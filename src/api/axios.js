@@ -16,7 +16,7 @@ export default async function(method, route, params={}) {
     // load token stored in Storage
     let token = null;
     try {
-        const data = await AsyncStorage.getItem("authentication_token");
+        const data = await AsyncStorage.getItem("application-token");
         token = data;
     } catch(error){ }
 
@@ -25,10 +25,7 @@ export default async function(method, route, params={}) {
         const result = await axios_instance({
             method,
             url: route,
-            params,
-            headers: {
-                "Authorization":  token ? ("Bearer " + token) : ""
-            }
+            params
         });
         // return valid response
         return {status: result.status, data: result.data};

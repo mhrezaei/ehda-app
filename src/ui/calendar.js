@@ -68,19 +68,26 @@ class Calendar extends Component {
 
     }
 
-    show(date = {year: 1380, month: 1, day: 1}) {
+    show(date) {
+
+
+        let dt = {year: 1380, month: 1, day: 1};
+        if(date){
+            const d = moment.unix(date);
+            dt = {year: d.jYear(), month: d.jMonth(), day: d.jDate()};
+        }
 
         const jm = moment();
         this.today = {year: jm.jYear(), month: jm.jMonth(), day: jm.jDate()};
 
         this.setState({
-            year: date.year,
-            month: date.month,
-            day: date.day,
+            year: dt.year,
+            month: dt.month,
+            day: dt.day,
 
-            sy: date.year,
-            sm: date.month,
-            sd: date.day,
+            sy: dt.year,
+            sm: dt.month,
+            sd: dt.day,
 
             show: true
         });

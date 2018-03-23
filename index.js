@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {AppRegistry, Text} from 'react-native';
 
+import {connect} from 'react-redux';
+
 import ConfigStore from './src/data/setup';
 import {Provider} from 'react-redux';
 
@@ -28,7 +30,6 @@ import splash_small_src from './res/ehda-logo-small.png';
 import splash_src from './res/splash.png';
 
 
-
 class Splash extends Component {
 
 
@@ -39,13 +40,15 @@ class Splash extends Component {
             drawerOpen: false,
             drawerDisabled: false,
             loading: true,
-            route: null
+            route: null,
+            state: {}
         };
 
         this.openDrawer = this.openDrawer.bind(this);
         this.closeDrawer = this.closeDrawer.bind(this);
         this.goTo = this.goTo.bind(this);
         this.onChangeRoute = this.onChangeRoute.bind(this);
+        this.updateState = this.updateState.bind(this);
     }
 
 
@@ -61,9 +64,16 @@ class Splash extends Component {
         this.drawer.open()
     }
 
+    updateState(state){
+        this.setState({
+            ajaxRequests: state.ajax.ajax,
+            ajaxInternet: state.ajax.internet,
+        });
+    }
+
     componentDidMount() {
         this.setState({loading: true});
-        ConfigStore().then((s) => {
+        ConfigStore(this.updateState).then((s) => {
             this.store = s;
             this.setState({loading: false});
         });
@@ -93,34 +103,38 @@ class Splash extends Component {
 
             const routes = require('./src/routes').default;
 
+
             return (
-                <Drawer
-                    ref={(ref) => this.drawer = ref}
-                    type="displace"
-                    tapToClose={true}
-                    openDrawerOffset={0.15}
-                    panCloseMask={0.6}
-                    closedDrawerOffset={-3}
-                    styles={drawerStyles}
-                    tweenHandler={(ratio) => ({
-                        main: {opacity: (2 - ratio) / 2}
-                    })}
-                    side={"right"}
-                    content={Factory.createMenuFromRoutes(routes, this.store.getState, this.goTo, trans('somebody'),splash_small_src)}
-                >
-                    <Provider store={this.store}>
+                <Provider store={this.store}>
+                    <Drawer
+                        ref={(ref) => this.drawer = ref}
+                        type="displace"
+                        tapToClose={true}
+                        openDrawerOffset={0.15}
+                        panCloseMask={0.6}
+                        closedDrawerOffset={-3}
+                        styles={drawerStyles}
+                        tweenHandler={(ratio) => ({
+                            main: {opacity: (2 - ratio) / 2}
+                        })}
+                        side={"right"}
+                        content={Factory.createMenuFromRoutes(routes, this.state.state, this.goTo, trans('somebody'), splash_small_src)}
+                    >
+
                         <View style={styles.container_app}>
-                            <ActionBar name={trans('app')} title={route ? route.title : trans('loading')} onPress={this.openDrawer}/>
+                            <ActionBar name={trans('app')} loading={this.state.ajaxRequests > 0}
+                                       title={route ? route.title : trans('loading')}
+                                       onPress={this.openDrawer}/>
 
                             <Router routes={routes} onChange={this.onChangeRoute}/>
                         </View>
-                    </Provider>
-
-                </Drawer>
+                    </Drawer>
+                </Provider>
             );
         }
     }
 }
+
 //
 
 

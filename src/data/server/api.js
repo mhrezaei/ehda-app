@@ -1,11 +1,17 @@
 
+/*
 export function request_utc() {
-    return new Promise((resolves, rejects)=>{
-        setTimeout(()=>{
-            resolves({
-                status: 200,
-                data: 1212
-            });
-        }, 3000);
-    });
+	return axios('POST', 'server/time/utc');
 }
+
+*/
+
+import axios from '../../api/axios';
+
+export const getProvinceList = (payload /* {token}*/) => {
+    return axios('POST', 'province/get', {token: payload.token});
+};
+
+export const getCitiesList = (payload /* {token, province}*/) => {
+    return axios('POST', 'cities/get', {token: payload.token, province: payload.province});
+};
