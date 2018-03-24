@@ -8,6 +8,7 @@ import * as actions from './types';
 
 
 import * as server_methods from './server/methods';
+import * as auth_methods from './auth/methods';
 
 const async_middleware = createSagaMiddleware();
 
@@ -47,7 +48,7 @@ async function configStore(upd) {
     });
 
     async_middleware.run(async_root);
-    //store.dispatch(server_methods.request_utc_async());
+    store.dispatch(auth_methods.requestTokenAsync());
 
     await timeout(1000);
     return store;

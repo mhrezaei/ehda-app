@@ -38,12 +38,16 @@ class Router extends React.Component {
                 const route = routes[next];
                 if (route.hasOwnProperty('condition') && !route.condition(app_state)) {
                     const to = route.hasOwnProperty('redirect') ? route.redirect : defaultRoute;
-                    this.props.actions.goto(to);
-                    this.props.onChange(routes[to]);
+                    if(to !== current) {
+                        this.props.actions.goto(to);
+                        this.props.onChange(routes[to]);
+                    }
                     return;
                 }
-                this.props.actions.goto(next);
-                this.props.onChange(routes[next]);
+                if(current !== next) {
+                    this.props.actions.goto(next);
+                    this.props.onChange(routes[next]);
+                }
             }
         }
 

@@ -13,66 +13,115 @@ import {Button, TextInput, Text} from '../../ui/components';
 
 import theme from "../../theme";
 
-import card_src from '../../../res/card.png'
+import {decodeImage} from "../../factory";
 
 const view_width = Dimensions.get('window').width;
 
 
-//const encodedData = 'R0lGODlhAQABAIAAAAAA...7';
-//<Image source={{uri: `data:image/gif;base64,${encodedData}`}} />
+import moment from 'momentj';
 
-class Home extends Component {
-    constructor(props){
+
+import {FileIO} from "../../modules";
+
+class MyCard extends Component {
+    constructor(props) {
         super(props);
+        this.state = {
+            card: null
+        };
+        this.myCard = null;
+        this.load = this.load.bind(this);
     }
 
-    render(){
-        return (
-            <ScrollView>
-                <View style={styles.container}>
-                    <View style={styles.cardContainer}>
-                        <Image style={styles.cardImage} source={card_src}/>
-                        <View style={styles.sharingBar}>
+    componentWillReceiveProps(nextProps) {
+        const pinned = this.props.pinned;
+        const pinnedNew = nextProps.pinned;
 
-                        </View>
+        if (pinned !== pinnedNew) {
+            this.load(pinnedNew);
+        }
+
+    }
+
+    componentDidMount() {
+        this.load(this.props.pinned);
+    }
+
+
+    load(pinned) {
+        FileIO.read('ehda/' + pinned + '/mini').then((data) => {
+            this.myCard = decodeImage(data);
+            this.forceUpdate();
+        });
+    }
+    render() {
+        const {cards, pinned} = this.props;
+        return (
+            <View style={styles.container_up}>
+            <ScrollView contentContainerStyle={styles.parent}>
+                <View style={styles.container}>
+
+                    <View style={styles.textDescription}/>
+
+                    <Text>{trans('updatedAt', {date: moment().to(cards[pinned].updated_at)})}</Text>
+                    <Text>{trans('savedAt', {date: moment().to(cards[pinned].saved_at)})}</Text>
+
+                    <View style={styles.imageWrapper}>
+                        <Image style={styles.image} resizeMode={'contain'} source={this.myCard}/>
                     </View>
+
                 </View>
             </ScrollView>
+            </View>
         );
     }
 }
 
 
 const styles = StyleSheet.create({
+    parent: {
+        justifyContent: 'center',
+        paddingBottom:60
+    },
+    container_up: {
+        flex: 1,
+    },
+
+    textDescription: {
+        paddingHorizontal: 13,
+        width: view_width,
+
+    },
     container: {
         flex: 1,
         flexDirection: 'column',
         alignItems: 'center',
-        paddingVertical: 20
+        paddingHorizontal: 13,
+        paddingTop: 26,
     },
-    cardContainer: {
-        flex: 1,
-        borderRadius: 3,
-        backgroundColor: '#ddd',
-    },
-    cardImage:{
-        flex: 1,
-        borderRadius: 3,
-        resizeMode: 'contain'
-    },
-    sharingBar:{
-        borderRadius: 3,
-        marginTop: 3,
+    imageWrapper: {
         flex: 1,
         flexDirection: 'row',
-    }
+        justifyContent: 'center',
+        paddingVertical: 20,
+    },
+    image: {
+        flex: 1,
+        height: 300,
+    },
 });
 
-export default connect((state)=>{
+MyCard.defaultProps = {
+    pinned: null
+};
+
+export default connect((state) => {
     return {
+        pinned: state.auth.pinned,
+        cards: state.auth.cards
     };
-}, (dispatch)=>{
+}, (dispatch) => {
     return {
         app_methods: bindActionCreators(app_methods, dispatch)
     };
-})( Home );
+})(MyCard);

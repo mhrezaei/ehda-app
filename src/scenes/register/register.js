@@ -89,11 +89,15 @@ class Home extends Component {
 
     componentDidMount(){
         this.props.server_methods.getProvinceListAsync();
+
     }
 
 
 
     onSubmit() {
+        const {form} = this.state;
+        delete form['province'];
+
 
     }
 
@@ -189,6 +193,8 @@ class Home extends Component {
                             <Text style={styles.textLabel}>{trans('province')}</Text>
                             <View style={styles.wrapper}>
                                 <TextInput style={styles.textField} onFocus={()=>{
+                                    if(this.props.provinceList.length === 0)
+                                        this.props.server_methods.getProvinceListAsync();
                                     this.provinceSelector.show(form.province);
                                     Keyboard.dismiss();
                                 }}>
@@ -229,9 +235,11 @@ class Home extends Component {
 
 
                 <Picker ref={x => this.provinceSelector = x} onChange={(d)=>{
-                    this.onChange('province', d);
-                    this.onChange('home_city', null);
-                    this.props.server_methods.getCitiesListAsync(d);
+                    if(d) {
+                        this.onChange('province', d);
+                        this.onChange('home_city', null);
+                        this.props.server_methods.getCitiesListAsync(d);
+                    }
                 }} data={provinceList}/>
 
 
@@ -317,13 +325,14 @@ const styles = StyleSheet.create({
 });
 
 Home.defaultProps = {
-    provinceList: [{id:0, title:trans('loading')}],
+    provinceList: [],
     citiesList: {},
 };
 
 
 export default connect((state) => {
     return {
+
         provinceList: state.server.provinceList,
         citiesList: state.server.citiesList,
     };

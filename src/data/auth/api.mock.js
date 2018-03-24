@@ -56,8 +56,6 @@ export const checkSSN = (payload /* { token, code_melli}*/) => {
     return new Promise((r, e) => {
         setTimeout(() => {
             const data = users.filter(x => x.code_melli === payload.code_melli);
-            console.log(data);
-            console.log(payload);
             if (payload.token === someToken && data.length > 0) {
                 r({
                     status: 200,

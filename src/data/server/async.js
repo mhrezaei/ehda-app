@@ -9,21 +9,16 @@ import * as auth_api from '../auth/api';
 import * as methods from './methods';
 import * as auth_methods from '../auth/methods';
 
-import {AsyncStorage} from 'react-native';
 
 
-import {NativeModules} from 'react-native';
-
-const SecurityChamber = NativeModules.SecurityChamber;
+import {SecurityChamber} from '../../modules';
 
 export function* getProvinceList() {
 
     const state = yield select();
 
     try {
-
         let token = state.auth.token;
-
         if(new Date().getTime() - state.auth.datetime > 1200000) {
             const tokenReq = yield call(auth_api.getToken, {
                 username: SecurityChamber.username,
@@ -32,10 +27,7 @@ export function* getProvinceList() {
             if (tokenReq.status === 200) {
                 if (tokenReq.data.status > 0) {
                     token = tokenReq.data.token;
-
                     yield put(auth_methods.updateToken(token));
-                    yield AsyncStorage.setItem('application-token', token);
-
                 }
             }
         }
@@ -84,18 +76,13 @@ export function* getCitiesList(payload) {
                     token = tokenReq.data.token;
 
                     yield put(auth_methods.updateToken(token));
-                    yield AsyncStorage.setItem('application-token', token);
-
                 }
             }
         }
-
-
         if(!state.server.citiesList.hasOwnProperty(payload.province)) {
             const citiesListReq = yield call(api.getCitiesList, {token: token, province: payload.province});
             if (citiesListReq.status === 200) {
                 if (citiesListReq.data.status > 0) {
-                    console.log(payload.province);
                     yield put(methods.getCitiesListSuccess(payload.province, citiesListReq.data.cities));
                     return;
                 }
@@ -103,7 +90,6 @@ export function* getCitiesList(payload) {
         }else {
             yield put(methods.getCitiesListFailed());
         }
-
         yield put(methods.getCitiesListFailed());
     } catch (error) {
         yield put(methods.getCitiesListFailed());

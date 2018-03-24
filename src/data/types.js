@@ -7,6 +7,13 @@ export const AUTH_GET_CARD_SUCCESS = 'AUTH_GET_CARD_SUCCESS';
 export const AUTH_GET_CARD_FAILED = 'AUTH_GET_CARD_FAILED';
 export const AUTH_GET_CARD_ASYNC = 'AUTH_GET_CARD_ASYNC';
 
+
+export const AUTH_REQUEST_TOKEN_ASYNC = 'AUTH_REQUEST_TOKEN_ASYNC';
+export const AUTH_REQUEST_TOKEN_SUCCESS = 'AUTH_REQUEST_TOKEN_SUCCESS';
+export const AUTH_REQUEST_TOKEN_FAILED = 'AUTH_REQUEST_TOKEN_FAILED';
+
+
+
 export const AUTH_UPDATE_TOKEN = 'AUTH_UPDATE_TOKEN';
 // -------------------------------------------------------------------------
 export const SERVER_REQUEST_UTC_ASYNC = 'SERVER_REQUEST_UTC_ASYNC';

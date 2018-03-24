@@ -1,18 +1,17 @@
 import React, {Component} from 'react';
-import {AppRegistry, Text} from 'react-native';
 
 import {connect} from 'react-redux';
 
 import ConfigStore from './src/data/setup';
 import {Provider} from 'react-redux';
 
-import {View, Image, StyleSheet, ScrollView, StatusBar} from 'react-native';
+import {AppRegistry, View, Image, StyleSheet, ScrollView, StatusBar, TouchableOpacity} from 'react-native';
 
 
 global.language = null;
 
 
-import {ActionBar, TextField, Drawer} from './src/ui/components';
+import {ActionBar, TextField, Drawer, Text} from './src/ui/components';
 
 
 import * as nav_methods from './src/data/nav/methods';
@@ -64,10 +63,12 @@ class Splash extends Component {
         this.drawer.open()
     }
 
-    updateState(state){
+    updateState(state) {
+        console.log({action: state.history.last_action, state: state});
         this.setState({
             ajaxRequests: state.ajax.ajax,
             ajaxInternet: state.ajax.internet,
+            state: state,
         });
     }
 
@@ -125,7 +126,18 @@ class Splash extends Component {
                             <ActionBar name={trans('app')} loading={this.state.ajaxRequests > 0}
                                        title={route ? route.title : trans('loading')}
                                        onPress={this.openDrawer}/>
+                            {!this.state.ajaxInternet && <TouchableOpacity style={styles.noNetBar} onPress={() => {
 
+                                try {
+                                    this.store.dispatch(this.state.state.history.last_async);
+                                } catch (x) {
+                                }
+                            }
+                            }>
+                                <View style={styles.noNetBar_direct}>
+                                    <Text invert>{trans('noInternet')}</Text>
+                                </View>
+                            </TouchableOpacity>}
                             <Router routes={routes} onChange={this.onChangeRoute}/>
                         </View>
                     </Drawer>
@@ -158,11 +170,26 @@ const styles = StyleSheet.create({
     },
     titleStyle: {
         fontFamily: theme.font
-    }
+    },
+    noNetBar: {
+        backgroundColor: theme.accent,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    noNetBar_direct: {
+        flex: 1,
+        flexDirection: 'row-reverse',
+        alignContent: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: 20,
+        paddingVertical: 10
+    },
 });
 
 const drawerStyles = {
-    drawer: {shadowColor: theme.black, shadowOpacity: 0.1, shadowRadius: 10},
+    drawer: {},
     main: {backgroundColor: theme.black},
 };
 

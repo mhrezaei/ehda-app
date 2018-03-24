@@ -5,7 +5,7 @@ import path from './url';
 
 export const axios_instance = axios.create({
     baseURL: path,
-    timeout: 500,
+    timeout: 20000,
     headers: {
         "X-Requested-With": "XMLHttpRequest"
     }
@@ -13,13 +13,6 @@ export const axios_instance = axios.create({
 
 // create
 export default async function(method, route, params={}) {
-    // load token stored in Storage
-    let token = null;
-    try {
-        const data = await AsyncStorage.getItem("application-token");
-        token = data;
-    } catch(error){ }
-
     // send pi request
     try {
         const result = await axios_instance({

@@ -19,23 +19,39 @@ export const checkCodeMelliFailed = (status) => ({
 
 
 
-export const getCardAsync = (code_melli, success, failed) => ({
-    type: actions.AUTH_CHECK_CODE_MELLI_ASYNC,
-    code_melli,
+export const getCardAsync = (code_melli, birth_date, tel_mobile, success, failed) => ({
+    type: actions.AUTH_GET_CARD_ASYNC,
+    code_melli, birth_date, tel_mobile,
     success,
     failed
 });
 
-export const getCardSuccess = (code_melli) => ({
-    type: actions.AUTH_CHECK_CODE_MELLI_SUCCESS,
-    code_melli
+export const getCardSuccess = (data) => ({
+    type: actions.AUTH_GET_CARD_SUCCESS,
+    data
 });
 
 export const getCardFailed = (status) => ({
-    type: actions.AUTH_CHECK_CODE_MELLI_FAILED,
+    type: actions.AUTH_GET_CARD_FAILED,
     status
 });
 
+
+
+export const requestTokenAsync = () => ({
+    type: actions.AUTH_REQUEST_TOKEN_ASYNC
+});
+
+
+export const requestTokenSuccess = (token) => ({
+    type: actions.AUTH_REQUEST_TOKEN_SUCCESS,
+    token
+});
+
+
+export const requestTokenFailed = () => ({
+    type: actions.AUTH_REQUEST_TOKEN_FAILED
+});
 
 
 export const updateToken = (token) => ({

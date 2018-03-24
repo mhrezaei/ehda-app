@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import {View, StyleSheet, Dimensions, ScrollView, Alert} from 'react-native';
+import {View, StyleSheet, Dimensions, ScrollView, Alert, Image} from 'react-native';
 
 
 import {trans} from '../../i18'
@@ -18,43 +18,46 @@ import theme from "../../theme";
 const view_width = Dimensions.get('window').width;
 
 
+import {FileIO} from "../../modules";
+
+
+import {encodeImage, decodeImage} from '../../factory';
+
+import axios from 'axios';
+import {Buffer} from 'buffer';
+
 class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            form: {
-                code_melli: ''
-            },
-            errors: {}
+            code_melli: null,
+            code_melli_error: null,
+            img: null
         };
-
         this.onSubmit = this.onSubmit.bind(this);
     }
 
     onSubmit() {
-
-        this.props.auth_methods.checkCodeMelliAsync(this.state.form.code_melli, () => {
-            this.props.nav_methods.goto('getCard');
+        this.props.auth_methods.checkCodeMelliAsync(this.state.code_melli, (code_melli) => {
+            this.props.nav_methods.goto('getCard', {code_melli});
         }, (err) => {
             let trnsErr = '';
-            if(err)
-                trnsErr = trans('errors.'+ err);
+            if (err)
+                trnsErr = trans('errors.' + err);
             else
                 trnsErr = trans('codeMelliNotFound');
             this.setState({
-                errors: {
-                    codeMelli: trnsErr
-                }
+                code_melli_error: trnsErr
             });
             Alert.alert(trnsErr, trans('willYouRegister'), [
                 {
-                    text: trans('yes'), onPress: () => {
-                    this.props.nav_methods.goto('register');
-                }
+                    text: trans('yes'),
+                    onPress: () => {
+                        this.props.nav_methods.goto('register');
+                    }
                 },
                 {
-                    text: trans('no'), onPress: () => {
-                }, style: 'cancel'
+                    text: trans('no'), style: 'cancel'
                 },
             ], {cancelable: false});
 
@@ -62,20 +65,20 @@ class Home extends Component {
     }
 
     render() {
-        const {form, errors} = this.state;
+        const {code_melli, code_melli_error} = this.state;
         return (
             <ScrollView contentContainerStyle={styles.parent}>
                 <View style={styles.container}>
                     <Text style={styles.textDescription}>{trans('requestWithSsn')}</Text>
                     <View style={styles.wrapper}>
-                        <TextInput onChangeText={text => this.setState({form: {code_melli: text}})}
+                        <TextInput onChangeText={text => this.setState({code_melli: text})}
                                    style={styles.textField}
                                    placeholder={trans('codeMelli')}
                                    keyboardType={'numeric'}>
-                            {form.code_melli}
+                            {code_melli}
                         </TextInput>
                     </View>
-                    {errors.codeMelli && <Text style={styles.textError}>{errors.codeMelli}</Text>}
+                    {code_melli_error && <Text style={styles.textError}>{code_melli_error}</Text>}
                     <View style={styles.wrapper}>
                         <Button title={trans('requestCard')} icon={"card-membership"} onPress={this.onSubmit}/>
                         <Button title={trans('register')} icon={"perm-identity"} onPress={() => {
@@ -92,6 +95,14 @@ class Home extends Component {
 const styles = StyleSheet.create({
     parent: {
         justifyContent: 'center'
+    },
+    imageWrapper:{
+        flex: 1,
+        flexDirection:'row',
+        height: 200
+    },
+    image: {
+        flex: 1
     },
     container: {
         flex: 1,

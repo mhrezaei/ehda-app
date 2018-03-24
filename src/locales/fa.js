@@ -27,6 +27,9 @@ export default {
     home: 'خانه',
     news: 'اخبار',
     gender: 'جنسیت',
+    getCard: 'دریافت کارت',
+    updatedAt: 'آخرین استعلام :date',
+    savedAt: 'آخرین دانلود :date',
     birthDate: 'تاریخ تولد',
     aboutUs: 'درباره ما',
     myCards: 'کارت های من',
@@ -53,6 +56,8 @@ export default {
     nameFather: 'نام پدر',
     province: 'استان',
     homeCity: 'شهر محل سکونت',
+    checkCard: 'استعلام کارت',
+    noInternet: 'خطا در برقراری ارتباط...',
 
 
 
