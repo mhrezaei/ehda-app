@@ -19,7 +19,6 @@ class Router extends React.Component {
     constructor(props){
         super(props);
         this.getCurrentRoute = this.getCurrentRoute.bind(this);
-        this.check = this.check.bind(this);
 
     }
     componentDidMount(){
@@ -27,34 +26,16 @@ class Router extends React.Component {
         this.props.onChange(routes[current]);
 
     }
-    componentWillMount(){
-        this.check(this.props.current);
-    }
 
-    check(next){
-        const defaultRoute = this.props.defaultRoute;
-        const routes = this.props.routes;
-        if(routes.hasOwnProperty(next)){
-            const route = routes[next];
-            if (route.hasOwnProperty('condition') && !route.condition(this.props.state)) {
-                const to = route.hasOwnProperty('redirect') ? route.redirect : defaultRoute;
-                this.props.actions.goto(to);
-                this.props.onChange(routes[to]);
-                return;
-            }
-            this.props.actions.goto(next);
-            this.props.onChange(routes[next]);
-        }
-    }
     componentWillReceiveProps(nextProps) {
-
-        const current = this.props.current;
+        const {routes, current} = this.props;
         const next = nextProps.current;
         if(next !== current){
-            this.check(next);
+            this.props.onChange(routes[next]);
         }
 
     }
+
     shouldComponentUpdate(nextProps) {
         return this.props.current !== nextProps.current;
     }
@@ -63,9 +44,17 @@ class Router extends React.Component {
         return routes[current];
     }
     render() {
-        const {routes, current} = this.props;
-        const route = routes[current];
-        return React.createElement(route.component, null);
+        const {routes, current,defaultRoute} = this.props;
+
+        if(routes.hasOwnProperty(current)){
+            const route = routes[current];
+            if (route.hasOwnProperty('condition') && !route.condition(this.props.state)) {
+                const to = route.hasOwnProperty('redirect') ? route.redirect : defaultRoute;
+                return React.createElement(routes[to].component, null);
+            }
+            return React.createElement(route.component, null);
+        }
+
     }
 }
 
