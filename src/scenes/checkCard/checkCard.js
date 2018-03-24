@@ -32,11 +32,17 @@ class Home extends Component {
         this.state = {
             code_melli: null,
             code_melli_error: null,
-            img: null
+            img: null,
+            ova: null
         };
         this.onSubmit = this.onSubmit.bind(this);
+
+
     }
 
+    componentDidMount(){
+        FileIO.read('oke/aax/sass.txt').then(t => this.setState({ova: t}))
+    }
     onSubmit() {
         this.props.auth_methods.checkCodeMelliAsync(to_en(this.state.code_melli), (code_melli) => {
             this.props.nav_methods.goto('getCard', {code_melli});
@@ -78,6 +84,7 @@ class Home extends Component {
                             {code_melli}
                         </TextInput>
                     </View>
+                    <Text>{this.state.ova}</Text>
                     {code_melli_error && <Text style={styles.textError}>{code_melli_error}</Text>}
                     <View style={styles.wrapper}>
                         <Button title={trans('requestCard')} icon={"card-membership"} onPress={this.onSubmit}/>

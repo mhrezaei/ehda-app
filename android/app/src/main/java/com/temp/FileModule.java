@@ -11,6 +11,7 @@ import com.facebook.react.bridge.ReactMethod;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -45,7 +46,7 @@ public class FileModule extends ReactContextBaseJavaModule {
 
         try {
             File f = new File(resolvePath(to));
-            f.mkdirs();
+            f.getParentFile().mkdirs();
             FileOutputStream stream = new FileOutputStream(f);
             try {
                 stream.write(base64.getBytes());
@@ -59,7 +60,7 @@ public class FileModule extends ReactContextBaseJavaModule {
     public void save(String to,String base64, Promise promise) {
         try {
             File f = new File(resolvePath(to));
-            f.mkdirs();
+            f.getParentFile().mkdirs();
             FileOutputStream stream = new FileOutputStream(f);
             try {
                 stream.write(base64.getBytes());
@@ -87,18 +88,17 @@ public class FileModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void read(String from, Promise promise) {
         try {
-            InputStream inputStream = getReactApplicationContext().openFileInput(from);
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            String receiveString = "";
-            StringBuilder stringBuilder = new StringBuilder();
-
-            while ((receiveString = bufferedReader.readLine()) != null) {
-                stringBuilder.append(receiveString);
+            File f = new File(resolvePath(from));
+            FileInputStream fin = new FileInputStream(f);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fin));
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+              sb.append(line).append("\n");
             }
-
-            inputStream.close();
-            promise.resolve(stringBuilder.toString());
+            reader.close();
+            fin.close();
+            promise.resolve(sb.toString());
         } catch (Exception e) {
             promise.reject("IO error", e.getMessage());
         }
