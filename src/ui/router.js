@@ -19,36 +19,39 @@ class Router extends React.Component {
     constructor(props){
         super(props);
         this.getCurrentRoute = this.getCurrentRoute.bind(this);
+        this.check = this.check.bind(this);
+
     }
     componentDidMount(){
         const {routes, current} = this.props;
         this.props.onChange(routes[current]);
 
     }
-    componentWillReceiveProps(nextProps) {
-        const app_state = this.props.state;
-        const routes = this.props.routes;
-        const defaultRoute = this.props.defaultRoute;
-        const current = this.props.current;
+    componentWillMount(){
+        this.check(this.props.current);
+    }
 
+    check(next){
+        const defaultRoute = this.props.defaultRoute;
+        const routes = this.props.routes;
+        if(routes.hasOwnProperty(next)){
+            const route = routes[next];
+            if (route.hasOwnProperty('condition') && !route.condition(this.props.state)) {
+                const to = route.hasOwnProperty('redirect') ? route.redirect : defaultRoute;
+                this.props.actions.goto(to);
+                this.props.onChange(routes[to]);
+                return;
+            }
+            this.props.actions.goto(next);
+            this.props.onChange(routes[next]);
+        }
+    }
+    componentWillReceiveProps(nextProps) {
+
+        const current = this.props.current;
         const next = nextProps.current;
         if(next !== current){
-
-            if(routes.hasOwnProperty(next)){
-                const route = routes[next];
-                if (route.hasOwnProperty('condition') && !route.condition(app_state)) {
-                    const to = route.hasOwnProperty('redirect') ? route.redirect : defaultRoute;
-                    if(to !== current) {
-                        this.props.actions.goto(to);
-                        this.props.onChange(routes[to]);
-                    }
-                    return;
-                }
-                if(current !== next) {
-                    this.props.actions.goto(next);
-                    this.props.onChange(routes[next]);
-                }
-            }
+            this.check(next);
         }
 
     }

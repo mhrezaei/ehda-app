@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import {View, StyleSheet, Dimensions, ScrollView, Alert, Keyboard} from 'react-native';
 
 
-import {localize_number, trans} from '../../i18'
+import {localize_number, trans, to_en} from '../../i18'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as auth_methods from '../../data/auth/methods';
@@ -16,6 +16,7 @@ import {Button, TextInput, Text, Calendar, Picker} from '../../ui/components';
 import theme from "../../theme";
 
 import PropTypes from 'prop-types';
+
 const view_width = Dimensions.get('window').width;
 
 import moment from 'momentj';
@@ -79,24 +80,46 @@ class Home extends Component {
                 home_city: null,
 
             },
-            errors: {
-            }
+            errors: {}
         };
 
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.props.server_methods.getProvinceListAsync();
 
     }
 
 
-
     onSubmit() {
         const {form} = this.state;
         delete form['province'];
+
+
+        this.props.auth_methods.registerAsync(
+            to_en(form.code_melli),
+            to_en(form.birth_date),
+            to_en(form.tel_mobile),
+            form.gender,
+            form.name_first,
+            form.name_last,
+            form.name_father,
+            form.home_city, () => {
+                this.props.nav_methods.goto('cardList');
+            }, (err) => {
+                let trnsErr = '';
+                if (err)
+                    trnsErr = trans('errors.' + err);
+                else
+                    trnsErr = trans('codeMelliNotFound');
+                this.setState({
+                    errors: {
+                        home_city: trnsErr
+                    }
+                });
+            });
 
 
     }
@@ -118,19 +141,19 @@ class Home extends Component {
 
         const sProv_l = provinceList.filter(x => x.id === form.province);
         let sProv = trans('chooseIt');
-        if(sProv_l.length > 0)
+        if (sProv_l.length > 0)
             sProv = sProv_l[0].title;
 
 
         const sGndr_l = this.genders.filter(x => x.id === form.gender);
         let sGndr = trans('chooseIt');
-        if(sGndr_l.length > 0)
+        if (sGndr_l.length > 0)
             sGndr = sGndr_l[0].title;
 
 
         const sCity_l = citiesList.hasOwnProperty(form.province) ? citiesList[form.province].filter(x => x.id === form.home_city) : [];
         let sCity = trans('chooseIt');
-        if(sCity_l.length > 0)
+        if (sCity_l.length > 0)
             sCity = sCity_l[0].title;
 
         return (
@@ -149,7 +172,7 @@ class Home extends Component {
 
                         <FormInput name={"name_father"} placeholder={trans('nameFather')}
                                    form={form} errors={errors}
-                                       onChangeText={text => this.onChange('name_father', text)}/>
+                                   onChangeText={text => this.onChange('name_father', text)}/>
 
 
                         <FormInput name={"code_melli"} placeholder={trans('codeMelli')} keyboardType={'numeric'}
@@ -158,12 +181,12 @@ class Home extends Component {
 
                         <FormInput name={"tel_mobile"} placeholder={trans('telMobile')} keyboardType={'numeric'}
                                    form={form} errors={errors}
-                                   onChangeText={text =>  this.onChange('tel_mobile', text)}/>
+                                   onChangeText={text => this.onChange('tel_mobile', text)}/>
 
                         <View style={styles.wrapper_vertical}>
                             <Text style={styles.textLabel}>{trans('birthDate')}</Text>
                             <View style={styles.wrapper}>
-                                <TextInput style={styles.textField} onFocus={()=>{
+                                <TextInput style={styles.textField} onFocus={() => {
 
                                     this.calendar.show(form.birth_date);
                                     Keyboard.dismiss();
@@ -178,7 +201,7 @@ class Home extends Component {
                         <View style={styles.wrapper_vertical}>
                             <Text style={styles.textLabel}>{trans('gender')}</Text>
                             <View style={styles.wrapper}>
-                                <TextInput style={styles.textField} onFocus={()=>{
+                                <TextInput style={styles.textField} onFocus={() => {
                                     this.genderSelector.show(form.gender);
                                     Keyboard.dismiss();
                                 }}>
@@ -192,8 +215,8 @@ class Home extends Component {
                         <View style={styles.wrapper_vertical}>
                             <Text style={styles.textLabel}>{trans('province')}</Text>
                             <View style={styles.wrapper}>
-                                <TextInput style={styles.textField} onFocus={()=>{
-                                    if(this.props.provinceList.length === 0)
+                                <TextInput style={styles.textField} onFocus={() => {
+                                    if (this.props.provinceList.length === 0)
                                         this.props.server_methods.getProvinceListAsync();
                                     this.provinceSelector.show(form.province);
                                     Keyboard.dismiss();
@@ -205,11 +228,10 @@ class Home extends Component {
                         </View>
 
 
-
                         <View style={styles.wrapper_vertical}>
                             <Text style={styles.textLabel}>{trans('homeCity')}</Text>
                             <View style={styles.wrapper}>
-                                <TextInput style={styles.textField} onFocus={()=>{
+                                <TextInput style={styles.textField} onFocus={() => {
                                     this.citiesSelector.show(form.home_city);
                                     Keyboard.dismiss();
                                 }}>
@@ -220,22 +242,23 @@ class Home extends Component {
                         </View>
 
                     </View>
+                    <Text>{JSON.stringify(form, null, 2)}</Text>
                     <View style={styles.wrapper_submit}>
                         <Button title={trans('requestCard')} icon={"card-membership"} onPress={this.onSubmit}/>
                     </View>
                 </ScrollView>
-                <Calendar ref={x => this.calendar = x} onChange={(date)=>{
+                <Calendar ref={x => this.calendar = x} onChange={(date) => {
                     const d = moment(date.year + '/' + (date.month + 1) + '/' + date.day, 'jYYYY/jMM/jD');
                     this.onChange('birth_date', d.unix());
                 }}/>
 
-                <Picker ref={x => this.genderSelector = x} onChange={(d)=>{
+                <Picker ref={x => this.genderSelector = x} onChange={(d) => {
                     this.onChange('gender', d);
                 }} data={this.genders}/>
 
 
-                <Picker ref={x => this.provinceSelector = x} onChange={(d)=>{
-                    if(d) {
+                <Picker ref={x => this.provinceSelector = x} onChange={(d) => {
+                    if (d) {
                         this.onChange('province', d);
                         this.onChange('home_city', null);
                         this.props.server_methods.getCitiesListAsync(d);
@@ -243,7 +266,7 @@ class Home extends Component {
                 }} data={provinceList}/>
 
 
-                <Picker ref={x => this.citiesSelector = x} onChange={(d)=>{
+                <Picker ref={x => this.citiesSelector = x} onChange={(d) => {
                     this.onChange('home_city', d);
                 }} data={citiesList.hasOwnProperty(form.province) ? citiesList[form.province] : []}/>
 
@@ -256,14 +279,12 @@ class Home extends Component {
 const styles = StyleSheet.create({
     parent: {
         justifyContent: 'center',
-        paddingBottom:60
+        paddingBottom: 60
     },
     container_up: {
         flex: 1,
     },
-    calendar: {
-
-    },
+    calendar: {},
     container: {
         flex: 1,
         flexDirection: 'column',
@@ -313,8 +334,8 @@ const styles = StyleSheet.create({
     textLabel: {
         textAlign: 'right',
         alignSelf: 'flex-end',
-        paddingTop:10,
-        paddingRight:20,
+        paddingTop: 10,
+        paddingRight: 20,
 
     },
     wrapper_vertical: {

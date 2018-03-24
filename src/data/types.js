@@ -13,6 +13,12 @@ export const AUTH_REQUEST_TOKEN_SUCCESS = 'AUTH_REQUEST_TOKEN_SUCCESS';
 export const AUTH_REQUEST_TOKEN_FAILED = 'AUTH_REQUEST_TOKEN_FAILED';
 
 
+export const AUTH_REGISTER_ASYNC = 'AUTH_REGISTER_ASYNC';
+export const AUTH_REGISTER_SUCCESS = 'AUTH_REGISTER_SUCCESS';
+export const AUTH_REGISTER_FAILED = 'AUTH_REGISTER_FAILED';
+
+
+
 
 export const AUTH_UPDATE_TOKEN = 'AUTH_UPDATE_TOKEN';
 // -------------------------------------------------------------------------

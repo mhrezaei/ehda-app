@@ -12,6 +12,7 @@ export default function (state = structure.auth, payload) {
                 temporary: payload.code_melli
             };
 
+        case actions.AUTH_REGISTER_SUCCESS:
         case actions.AUTH_GET_CARD_SUCCESS:
             const code_melli = payload.data.ehda_card_details.code_melli;
             return {

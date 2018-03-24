@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import {View, StyleSheet, Dimensions, ScrollView, Alert, Image} from 'react-native';
 
 
-import {trans} from '../../i18'
+import {trans, to_en} from '../../i18'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as auth_methods from '../../data/auth/methods';
@@ -38,7 +38,7 @@ class Home extends Component {
     }
 
     onSubmit() {
-        this.props.auth_methods.checkCodeMelliAsync(this.state.code_melli, (code_melli) => {
+        this.props.auth_methods.checkCodeMelliAsync(to_en(this.state.code_melli), (code_melli) => {
             this.props.nav_methods.goto('getCard', {code_melli});
         }, (err) => {
             let trnsErr = '';

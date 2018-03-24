@@ -38,6 +38,29 @@ export const getCardFailed = (status) => ({
 
 
 
+
+export const registerAsync = (code_melli, birth_date, tel_mobile, gender, name_first, name_last, name_father, home_city, success, failed) => ({
+    type: actions.AUTH_REGISTER_ASYNC,
+    code_melli, birth_date, tel_mobile, gender, name_first, name_last, name_father, home_city,
+    success,
+    failed
+});
+
+export const registerSuccess = (data) => ({
+    type: actions.AUTH_REGISTER_SUCCESS,
+    data
+});
+
+export const registerFailed = (status) => ({
+    type: actions.AUTH_REGISTER_FAILED,
+    status
+});
+
+
+
+
+
+
 export const requestTokenAsync = () => ({
     type: actions.AUTH_REQUEST_TOKEN_ASYNC
 });

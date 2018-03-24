@@ -25,7 +25,7 @@ export default {
         component: require('./scenes/register/register').default
     },
     myCard: {
-        visibility: state => state.auth.hasOwnProperty('cards') && Object.keys(state.auth.cards).length > 0 && state.auth.cards.hasOwnProperty(state.auth.pinned),
+        visibility: state => state.auth.hasOwnProperty('cards') && Object.keys(state.auth.cards).length > 0 && state.auth.pinned,
         condition: state => state.auth.hasOwnProperty('cards') && Object.keys(state.auth.cards).length > 0 ,
         redirect: 'checkCard',
         title: trans('myCard'),

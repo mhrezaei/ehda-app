@@ -1,10 +1,16 @@
 import React, {Component} from 'react';
-import {View, Text} from 'react-native';
+import {View, FlatList} from 'react-native';
+import {Text } from '../../ui/components';
 
 
 class CardList extends Component {
     render(){
-        return (<View><Text>I am CardList !</Text></View>);
+        return (<View>
+            <FlatList
+                data={[{key: 'a'}, {key: 'b'}]}
+                renderItem={({item}) => <Text>{item.key}</Text>}
+            />
+        </View>);
     }
 }
 

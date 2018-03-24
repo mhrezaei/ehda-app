@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import {View, StyleSheet, Dimensions, ScrollView, Alert, Keyboard} from 'react-native';
 
 
-import {localize_number, trans} from '../../i18'
+import {localize_number, trans, to_en} from '../../i18'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as auth_methods from '../../data/auth/methods';
@@ -70,7 +70,7 @@ class GetCard extends Component {
         const {form} = this.state;
 
 
-        this.props.auth_methods.getCardAsync(form.code_melli,form.birth_date, form.tel_mobile, ()=>{
+        this.props.auth_methods.getCardAsync(to_en(form.code_melli),to_en(form.birth_date), to_en(form.tel_mobile), ()=>{
             this.props.nav_methods.goto('cardList');
         }, (err)=>{
             let trnsErr = '';
@@ -83,7 +83,7 @@ class GetCard extends Component {
                     birth_date: trnsErr
                 }
             });
-        })
+        });
 
 
     }

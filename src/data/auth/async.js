@@ -152,6 +152,68 @@ export function* watchGetCard() {
 }
 
 
+export function* register(payload) {
+
+    const state = yield select();
+    try {
+
+        let token = state.auth.token;
+
+        if(new Date().getTime() - state.auth.datetime > 1200000) {
+            const tokenReq = yield call(api.getToken, {
+                username: SecurityChamber.username,
+                password: SecurityChamber.password
+            });
+            if (tokenReq.status === 200) {
+                if (tokenReq.data.status > 0) {
+                    token = tokenReq.data.token;
+                    yield put(methods.updateToken(token));
+
+                }
+            }
+        }
+        const data = {
+            token: token,
+            code_melli: payload.code_melli,
+            tel_mobile: payload.tel_mobile,
+            birth_date: payload.birth_date,
+            gender: payload.gender,
+            name_first: payload.name_first,
+            name_last: payload.name_last,
+            name_father: payload.name_father,
+            home_city: payload.home_city,
+        };
+        const regReq = yield call(api.register, data);
+
+        console.log(regReq);
+
+        if(regReq.status === 200) {
+            if (regReq.data.status > 0) {
+                yield put(methods.registerSuccess(regReq.data));
+                yield call(payload.success);
+                return;
+            }
+        }
+
+        yield put(methods.registerFailed());
+        yield call(payload.failed, regReq.data.status);
+    } catch (error) {
+        yield put(methods.registerFailed());
+        yield call(payload.failed);
+        yield put({type: actions.SERVER_NO_INTERNET});
+    } finally {
+        if (yield cancelled()) {
+            yield put(methods.registerFailed());
+            yield call(payload.failed);
+        }
+    }
+}
+
+export function* watchRegister() {
+    yield takeLatest(actions.AUTH_REGISTER_ASYNC, register);
+}
+
+
 
 
 export default function* () {
@@ -159,5 +221,6 @@ export default function* () {
         watchCheckSSN(),
         watchRequestToken(),
         watchGetCard(),
+        watchRegister()
 	]);
 }
