@@ -2,6 +2,10 @@ import codes from '../../api/codes';
 import axios from '../../api/axios';
 
 
+
+import axios_d from 'axios';
+
+
 export const getToken = (payload /* { username, password}*/) => {
     return axios('POST', 'getToken', {username: payload.username, password: payload.password});
 };
@@ -33,3 +37,11 @@ export const register = (payload /* { token, code_melli, tel_mobile, birth_date,
         home_city: payload.home_city,
     })
 };
+
+export const download = (payload /* {url} */) => {
+    return axios_d({
+        url: payload.url,
+        responseType: 'arraybuffer',
+
+    });
+}

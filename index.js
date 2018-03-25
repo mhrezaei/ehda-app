@@ -64,7 +64,7 @@ class Splash extends Component {
     }
 
     updateState(state) {
-        console.log({action: state.history.last_action, state: state});
+        //console.log({action: state.history.last_action, state: state});
         this.setState({
             ajaxRequests: state.ajax.ajax,
             ajaxInternet: state.ajax.internet,

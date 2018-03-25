@@ -10,7 +10,8 @@ import * as methods from './methods';
 import {AsyncStorage} from 'react-native';
 
 
-import {SecurityChamber} from '../../modules';
+import {SecurityChamber, FileIO} from '../../modules';
+import {encodeImage} from '../../factory';
 
 export function* requestToken() {
 
@@ -127,6 +128,17 @@ export function* getCard(payload) {
         const cardReq = yield call(api.getCard, {token: token, code_melli: payload.code_melli, tel_mobile: payload.tel_mobile, birth_date: payload.birth_date});
         if(cardReq.status === 200) {
             if (cardReq.data.status > 0) {
+
+                console.log(cardReq.data);
+                const cdm = cardReq.data.ehda_card_details.code_melli;
+                const mini = yield api.download({url: cardReq.data.ehda_card_mini});
+                yield FileIO.save('ehda/'+cdm+'/mini', encodeImage(mini));
+                const single = yield api.download({url: cardReq.data.ehda_card_single});
+                yield FileIO.save('ehda/'+cdm+'/single', encodeImage(single));
+                const social = yield api.download({url: cardReq.data.ehda_card_social});
+                yield FileIO.save('ehda/'+cdm+'/social', encodeImage(social));
+
+
                 yield put(methods.getCardSuccess(cardReq.data));
                 yield call(payload.success);
                 return;
@@ -185,15 +197,26 @@ export function* register(payload) {
         };
         const regReq = yield call(api.register, data);
 
-        console.log(regReq);
 
         if(regReq.status === 200) {
             if (regReq.data.status > 0) {
+
+                const cdm = regReq.data.ehda_card_details.code_melli;
+                const mini = yield api.download({url: regReq.data.ehda_card_mini});
+                yield FileIO.save('ehda/'+cdm+'/mini', encodeImage(mini));
+                const single = yield api.download({url: regReq.data.ehda_card_single});
+                yield FileIO.save('ehda/'+cdm+'/single', encodeImage(single));
+                const social = yield api.download({url: regReq.data.ehda_card_social});
+                yield FileIO.save('ehda/'+cdm+'/social', encodeImage(social));
+
+
                 yield put(methods.registerSuccess(regReq.data));
                 yield call(payload.success);
                 return;
             }
         }
+
+
 
         yield put(methods.registerFailed());
         yield call(payload.failed, regReq.data.status);
