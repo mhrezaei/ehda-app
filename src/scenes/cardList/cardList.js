@@ -61,8 +61,8 @@ class Item extends Component {
                     });
                 });
             } else {
-                this.props.methods.downloadCardAsync(this.props.name, () => {
-
+                this.props.auth_methods.downloadCardAsync(this.props.name, () => {
+                    this.check();
                 }, () => {
                 });
             }
