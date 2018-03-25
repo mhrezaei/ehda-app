@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
 
 export default connect((state) => {
     return {
-        temporary: state.auth.temporary
+        temporary: state.nav.props.code_melli
     };
 }, (dispatch) => {
     return {

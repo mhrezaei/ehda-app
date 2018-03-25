@@ -17,7 +17,7 @@ const Menu = ({title, image, children}) => {
         <ScrollView style={styles.menu}>
             <View style={styles.menu_header}>
                 <Image style={styles.menu_logoImage} source={image} />
-                <Text style={styles.menu_title}>{title}</Text>
+                {title && <Text style={styles.menu_title}>{title}</Text>}
             </View>
             <View style={styles.menu_direct}>
                 {children}

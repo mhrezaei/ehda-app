@@ -28,6 +28,8 @@ export default {
     news: 'اخبار',
     gender: 'جنسیت',
     getCard: 'دریافت کارت',
+    saveCard: 'ذخیره کارت',
+    printCard: 'چاپ کارت',
     updatedAt: 'آخرین استعلام :date',
     savedAt: 'آخرین دانلود :date',
     birthDate: 'تاریخ تولد',

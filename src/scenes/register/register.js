@@ -242,7 +242,6 @@ class Home extends Component {
                         </View>
 
                     </View>
-                    <Text>{JSON.stringify(form, null, 2)}</Text>
                     <View style={styles.wrapper_submit}>
                         <Button title={trans('requestCard')} icon={"card-membership"} onPress={this.onSubmit}/>
                     </View>

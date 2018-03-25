@@ -1,7 +1,7 @@
 import * as actions from '../types';
 
 export const checkCodeMelliAsync = (code_melli, success, failed) => ({
-	type: actions.AUTH_CHECK_CODE_MELLI_ASYNC,
+    type: actions.AUTH_CHECK_CODE_MELLI_ASYNC,
     code_melli,
     success,
     failed
@@ -13,10 +13,9 @@ export const checkCodeMelliSuccess = (code_melli) => ({
 });
 
 export const checkCodeMelliFailed = (status) => ({
-	type: actions.AUTH_CHECK_CODE_MELLI_FAILED,
+    type: actions.AUTH_CHECK_CODE_MELLI_FAILED,
     status
 });
-
 
 
 export const getCardAsync = (code_melli, birth_date, tel_mobile, success, failed) => ({
@@ -37,8 +36,6 @@ export const getCardFailed = (status) => ({
 });
 
 
-
-
 export const registerAsync = (code_melli, birth_date, tel_mobile, gender, name_first, name_last, name_father, home_city, success, failed) => ({
     type: actions.AUTH_REGISTER_ASYNC,
     code_melli, birth_date, tel_mobile, gender, name_first, name_last, name_father, home_city,
@@ -57,8 +54,23 @@ export const registerFailed = (status) => ({
 });
 
 
+export const downloadCardAsync = (code_melli, success, failed) => ({
+    type: actions.AUTH_DOWNLOAD_CARD_ASYNC,
+    code_melli,
+    success,
+    failed
+});
 
 
+export const downloadCardSuccess = (code_melli) => ({
+    type: actions.AUTH_DOWNLOAD_CARD_SUCCESS,
+    code_melli
+});
+
+
+export const downloadCardFailed = () => ({
+    type: actions.AUTH_DOWNLOAD_CARD_FAILED
+});
 
 
 export const requestTokenAsync = () => ({
@@ -78,6 +90,12 @@ export const requestTokenFailed = () => ({
 
 
 export const updateToken = (token) => ({
-	type: actions.AUTH_UPDATE_TOKEN,
-	token
+    type: actions.AUTH_UPDATE_TOKEN,
+    token
+});
+
+
+export const changePinnedCard = (code_melli) => ({
+    type: actions.AUTH_CHANGE_PINNED_CARD,
+    code_melli
 });

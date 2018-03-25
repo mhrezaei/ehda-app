@@ -105,6 +105,12 @@ class Splash extends Component {
             const routes = require('./src/routes').default;
 
 
+            const auth = this.state.state.auth;
+            let title = null;
+            try {
+                title = auth.pinned ? auth.cards[auth.pinned].info.ehda_card_details.full_name : ' ';
+            }catch (x){}
+
             return (
                 <Provider store={this.store}>
                     <Drawer
@@ -119,7 +125,7 @@ class Splash extends Component {
                             main: {opacity: (2 - ratio) / 2}
                         })}
                         side={"right"}
-                        content={Factory.createMenuFromRoutes(routes, this.state.state, this.goTo, trans('somebody'), splash_small_src)}
+                        content={Factory.createMenuFromRoutes(routes, this.state.state, this.goTo, title, splash_small_src)}
                     >
 
                         <View style={styles.container_app}>

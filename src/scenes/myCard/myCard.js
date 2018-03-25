@@ -7,6 +7,7 @@ import {trans} from '../../i18'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as app_methods from '../../data/app/methods';
+import * as auth_methods from '../../data/auth/methods';
 
 
 import {Button, TextInput, Text} from '../../ui/components';
@@ -45,6 +46,12 @@ class MyCard extends Component {
 
     componentDidMount() {
         this.load(this.props.pinned);
+        const last = this.props.cards[this.props.pinned].saved_at || 0;
+        if(new Date().getTime() - last  > 60*60*1000){
+            this.props.auth_methods.downloadCardAsync(this.props.pinned, ()=>{
+                this.load(this.props.pinned);
+            }, ()=>{});
+        }
     }
 
 
@@ -63,14 +70,20 @@ class MyCard extends Component {
 
                     <View style={styles.textDescription}/>
 
-                    <Text>{trans('updatedAt', {date: moment().to(cards[pinned].updated_at)})}</Text>
                     <Text>{trans('savedAt', {date: moment().to(cards[pinned].saved_at)})}</Text>
 
                     <View style={styles.imageWrapper}>
                         <Image style={styles.image} resizeMode={'contain'} source={this.myCard}/>
                     </View>
 
+                    <View style={styles.wrapper}>
+                        <Button title={trans('saveCard')} icon={"save"}/>
+                        <Button title={trans('printCard')} icon={"print"}/>
+                    </View>
+
                 </View>
+
+
             </ScrollView>
             </View>
         );
@@ -87,6 +100,11 @@ const styles = StyleSheet.create({
         flex: 1,
     },
 
+    wrapper: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
     textDescription: {
         paddingHorizontal: 13,
         width: view_width,
@@ -122,6 +140,7 @@ export default connect((state) => {
     };
 }, (dispatch) => {
     return {
-        app_methods: bindActionCreators(app_methods, dispatch)
+        app_methods: bindActionCreators(app_methods, dispatch),
+        auth_methods: bindActionCreators(auth_methods, dispatch),
     };
 })(MyCard);

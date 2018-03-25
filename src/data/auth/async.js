@@ -20,7 +20,6 @@ export function* requestToken() {
         let token = '';
 
 
-        console.log(SecurityChamber.username);
 
         const tokenReq = yield call(api.getToken, {
             username: SecurityChamber.username,
@@ -79,7 +78,7 @@ export function* checkSSN(payload) {
         if(codeMelliReq.status === 200) {
             if (codeMelliReq.data.status > 0) {
                 yield put(methods.checkCodeMelliSuccess(payload.code_melli));
-                yield call(payload.success);
+                yield call(payload.success, payload.code_melli);
                 return;
             }
         }
@@ -129,7 +128,8 @@ export function* getCard(payload) {
         if(cardReq.status === 200) {
             if (cardReq.data.status > 0) {
 
-                console.log(cardReq.data);
+
+                /*
                 const cdm = cardReq.data.ehda_card_details.code_melli;
                 const mini = yield api.download({url: cardReq.data.ehda_card_mini});
                 yield FileIO.save('ehda/'+cdm+'/mini', encodeImage(mini));
@@ -137,10 +137,10 @@ export function* getCard(payload) {
                 yield FileIO.save('ehda/'+cdm+'/single', encodeImage(single));
                 const social = yield api.download({url: cardReq.data.ehda_card_social});
                 yield FileIO.save('ehda/'+cdm+'/social', encodeImage(social));
-
+*/
 
                 yield put(methods.getCardSuccess(cardReq.data));
-                yield call(payload.success);
+                yield call(payload.success, cardReq.data);
                 return;
             }
         }
@@ -201,6 +201,7 @@ export function* register(payload) {
         if(regReq.status === 200) {
             if (regReq.data.status > 0) {
 
+                /*
                 const cdm = regReq.data.ehda_card_details.code_melli;
                 const mini = yield api.download({url: regReq.data.ehda_card_mini});
                 yield FileIO.save('ehda/'+cdm+'/mini', encodeImage(mini));
@@ -208,10 +209,10 @@ export function* register(payload) {
                 yield FileIO.save('ehda/'+cdm+'/single', encodeImage(single));
                 const social = yield api.download({url: regReq.data.ehda_card_social});
                 yield FileIO.save('ehda/'+cdm+'/social', encodeImage(social));
-
+*/
 
                 yield put(methods.registerSuccess(regReq.data));
-                yield call(payload.success);
+                yield call(payload.success, regReq.data);
                 return;
             }
         }
@@ -237,6 +238,36 @@ export function* watchRegister() {
 }
 
 
+export function* downloadCard(payload) {
+
+    const state = yield select();
+    try {
+        const dor = state.auth.cards[payload.code_melli].info;
+        const cdm = payload.code_melli;
+        const mini = yield api.download({url: dor.ehda_card_mini});
+        yield FileIO.save('ehda/'+cdm+'/mini', encodeImage(mini));
+        const single = yield api.download({url: dor.ehda_card_single});
+        yield FileIO.save('ehda/'+cdm+'/single', encodeImage(single));
+        const social = yield api.download({url: dor.ehda_card_social});
+        yield FileIO.save('ehda/'+cdm+'/social', encodeImage(social));
+        yield put(methods.downloadCardSuccess(payload.code_melli));
+        yield call(payload.success);
+
+    } catch (error) {
+        yield put(methods.downloadCardFailed());
+        yield call(payload.failed);
+        yield put({type: actions.SERVER_NO_INTERNET});
+    } finally {
+        if (yield cancelled()) {
+            yield put(methods.downloadCardFailed());
+            yield call(payload.failed);
+        }
+    }
+}
+
+export function* watchDownloadCard() {
+    yield takeLatest(actions.AUTH_DOWNLOAD_CARD_ASYNC, downloadCard);
+}
 
 
 export default function* () {
@@ -244,6 +275,7 @@ export default function* () {
         watchCheckSSN(),
         watchRequestToken(),
         watchGetCard(),
-        watchRegister()
+        watchRegister(),
+        watchDownloadCard()
 	]);
 }
