@@ -1,1 +1,0 @@
-export default "https://ehda.center/api/ehda/";

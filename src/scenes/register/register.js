@@ -3,17 +3,17 @@ import React, {Component} from 'react';
 import {View, StyleSheet, Dimensions, ScrollView, Alert, Keyboard} from 'react-native';
 
 
-import {localize_number, trans, to_en} from '../../i18'
+import {LocalizeNumber, Translate, NumToEn} from '../../../core/i18'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as auth_methods from '../../data/auth/methods';
-import * as nav_methods from '../../data/nav/methods';
-import * as server_methods from '../../data/server/methods';
+import * as auth_methods from '../../data/auth/actions';
+import * as nav_methods from '../../data/nav/actions';
+import * as server_methods from '../../data/server/actions';
 
 
-import {Button, TextInput, Text, Calendar, Picker} from '../../ui/components';
+import {Button, TextInput, Text, Calendar, Picker} from '../../../core/ui/components';
 
-import theme from "../../theme";
+import theme from "../../../core/theme";
 
 import PropTypes from 'prop-types';
 
@@ -53,15 +53,15 @@ class Home extends Component {
     genders = [
         {
             id: 1,
-            title: trans('male')
+            title: Translate('male')
         },
         {
             id: 2,
-            title: trans('female')
+            title: Translate('female')
         },
         {
             id: 3,
-            title: trans('other')
+            title: Translate('other')
         }
     ];
 
@@ -99,9 +99,9 @@ class Home extends Component {
 
 
         this.props.auth_methods.registerAsync(
-            to_en(form.code_melli),
-            to_en(form.birth_date),
-            to_en(form.tel_mobile),
+            NumToEn(form.code_melli),
+            NumToEn(form.birth_date),
+            NumToEn(form.tel_mobile),
             form.gender,
             form.name_first,
             form.name_last,
@@ -111,9 +111,9 @@ class Home extends Component {
             }, (err) => {
                 let trnsErr = '';
                 if (err)
-                    trnsErr = trans('errors.' + err);
+                    trnsErr = Translate('errors.' + err);
                 else
-                    trnsErr = trans('codeMelliNotFound');
+                    trnsErr = Translate('codeMelliNotFound');
                 this.setState({
                     errors: {
                         home_city: trnsErr
@@ -140,19 +140,19 @@ class Home extends Component {
         const {provinceList, citiesList} = this.props;
 
         const sProv_l = provinceList.filter(x => x.id === form.province);
-        let sProv = trans('chooseIt');
+        let sProv = Translate('chooseIt');
         if (sProv_l.length > 0)
             sProv = sProv_l[0].title;
 
 
         const sGndr_l = this.genders.filter(x => x.id === form.gender);
-        let sGndr = trans('chooseIt');
+        let sGndr = Translate('chooseIt');
         if (sGndr_l.length > 0)
             sGndr = sGndr_l[0].title;
 
 
         const sCity_l = citiesList.hasOwnProperty(form.province) ? citiesList[form.province].filter(x => x.id === form.home_city) : [];
-        let sCity = trans('chooseIt');
+        let sCity = Translate('chooseIt');
         if (sCity_l.length > 0)
             sCity = sCity_l[0].title;
 
@@ -161,37 +161,37 @@ class Home extends Component {
                 <ScrollView contentContainerStyle={styles.parent}>
                     <View style={styles.container}>
                         <View style={styles.textDescription}/>
-                        <FormInput name={"name_first"} placeholder={trans('nameFirst')}
+                        <FormInput name={"name_first"} placeholder={Translate('nameFirst')}
                                    form={form} errors={errors}
                                    onChangeText={text => this.onChange('name_first', text)}/>
 
 
-                        <FormInput name={"name_last"} placeholder={trans('nameLast')}
+                        <FormInput name={"name_last"} placeholder={Translate('nameLast')}
                                    form={form} errors={errors}
                                    onChangeText={text => this.onChange('name_last', text)}/>
 
-                        <FormInput name={"name_father"} placeholder={trans('nameFather')}
+                        <FormInput name={"name_father"} placeholder={Translate('nameFather')}
                                    form={form} errors={errors}
                                    onChangeText={text => this.onChange('name_father', text)}/>
 
 
-                        <FormInput name={"code_melli"} placeholder={trans('codeMelli')} keyboardType={'numeric'}
+                        <FormInput name={"code_melli"} placeholder={Translate('codeMelli')} keyboardType={'numeric'}
                                    form={form} errors={errors}
                                    onChangeText={text => this.onChange('code_melli', text)}/>
 
-                        <FormInput name={"tel_mobile"} placeholder={trans('telMobile')} keyboardType={'numeric'}
+                        <FormInput name={"tel_mobile"} placeholder={Translate('telMobile')} keyboardType={'numeric'}
                                    form={form} errors={errors}
                                    onChangeText={text => this.onChange('tel_mobile', text)}/>
 
                         <View style={styles.wrapper_vertical}>
-                            <Text style={styles.textLabel}>{trans('birthDate')}</Text>
+                            <Text style={styles.textLabel}>{Translate('birthDate')}</Text>
                             <View style={styles.wrapper}>
                                 <TextInput style={styles.textField} onFocus={() => {
 
                                     this.calendar.show(form.birth_date);
                                     Keyboard.dismiss();
                                 }}>
-                                    {localize_number(moment.unix(form.birth_date).format('jYYYY/jM/jD'))}
+                                    {LocalizeNumber(moment.unix(form.birth_date).format('jYYYY/jM/jD'))}
                                 </TextInput>
                             </View>
                             {errors['birth_date'] && <Text style={styles.textError}>{errors['birth_date']}</Text>}
@@ -199,7 +199,7 @@ class Home extends Component {
 
 
                         <View style={styles.wrapper_vertical}>
-                            <Text style={styles.textLabel}>{trans('gender')}</Text>
+                            <Text style={styles.textLabel}>{Translate('gender')}</Text>
                             <View style={styles.wrapper}>
                                 <TextInput style={styles.textField} onFocus={() => {
                                     this.genderSelector.show(form.gender);
@@ -213,7 +213,7 @@ class Home extends Component {
 
 
                         <View style={styles.wrapper_vertical}>
-                            <Text style={styles.textLabel}>{trans('province')}</Text>
+                            <Text style={styles.textLabel}>{Translate('province')}</Text>
                             <View style={styles.wrapper}>
                                 <TextInput style={styles.textField} onFocus={() => {
                                     if (this.props.provinceList.length === 0)
@@ -229,7 +229,7 @@ class Home extends Component {
 
 
                         <View style={styles.wrapper_vertical}>
-                            <Text style={styles.textLabel}>{trans('homeCity')}</Text>
+                            <Text style={styles.textLabel}>{Translate('homeCity')}</Text>
                             <View style={styles.wrapper}>
                                 <TextInput style={styles.textField} onFocus={() => {
                                     this.citiesSelector.show(form.home_city);
@@ -243,7 +243,7 @@ class Home extends Component {
 
                     </View>
                     <View style={styles.wrapper_submit}>
-                        <Button title={trans('requestCard')} icon={"card-membership"} onPress={this.onSubmit}/>
+                        <Button title={Translate('requestCard')} icon={"card-membership"} onPress={this.onSubmit}/>
                     </View>
                 </ScrollView>
                 <Calendar ref={x => this.calendar = x} onChange={(date) => {

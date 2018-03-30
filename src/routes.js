@@ -1,53 +1,60 @@
-import {trans} from './i18'
+import {Translate, Helpers} from '../core/index'
 
-
-function shouldCardsExist(state) {
-    return ;
-}
-
-export default {
-    checkCard: {
-        title: trans('checkCard'),
+export const Routes = {
+    searchCard: {
+        title: Translate('searchCard'),
         icon: "home",
-        component: require('./scenes/checkCard/checkCard').default
+        component: require('./scenes/searchCard').default
     },
     getCard: {
         visibility: false,
-        title: trans('getCard'),
-        condition: state => state.auth.temporary !== null,
-        redirect: 'checkCard',
+        redirect: function (redux) {
+            if(!Helpers.leaf(redux, 'navigation.props.codeMelli'))
+                return 'searchCard';
+        },
+        title: Translate('getCard'),
         icon: "account-box",
-        component: require('./scenes/getCard/getCard').default
+        component: require('./scenes/getCard').default
     },
-    register: {
+    registerCard: {
         visibility: false,
-        title: trans('register'),
-        component: require('./scenes/register/register').default
+        title: Translate('registerCard'),
+        component: require('./scenes/registerCard').default
     },
     myCard: {
-        visibility: state => state.auth.hasOwnProperty('cards') && Object.keys(state.auth.cards).length > 0 && state.auth.pinned,
-        condition: state => state.auth.hasOwnProperty('cards') && Object.keys(state.auth.cards).length > 0 ,
-        redirect: 'checkCard',
-        title: trans('myCard'),
+        visibility: function (redux) {
+            return Object.keys(Helpers.leaf(redux, 'auth.cards')).length > 0 && Helpers.leaf(redux, 'auth.pinned');
+        },
+        redirect: function (redux) {
+            if(Object.keys(Helpers.leaf(redux, 'auth.cards')).length === 0)
+                return 'searchCard';
+            else if(!Helpers.leaf(redux, 'auth.pinned'))
+                return 'cardList';
+        },
+        title: Translate('myCard'),
         icon: "account-box",
-        component: require('./scenes/myCard/myCard').default
+        component: require('./scenes/myCard').default
     },
     cardList: {
-        visibility: state => state.auth.hasOwnProperty('cards') && Object.keys(state.auth.cards).length > 0,
-        condition: state => state.auth.hasOwnProperty('cards') && Object.keys(state.auth.cards).length > 0 ,
-        redirect: 'checkCard',
-        title: trans('myCards'),
+        visibility: function (redux) {
+            return Object.keys(Helpers.leaf(redux, 'auth.cards')).length > 0;
+        },
+        redirect: function (redux) {
+            if(Object.keys(Helpers.leaf(redux, 'auth.cards')).length === 0)
+                return 'searchCard';
+        },
+        title: Translate('myCards'),
         icon: "list",
-        component: require('./scenes/cardList/cardList').default
+        //component: require('./scenes/cardList/cardList').default
     },
     news: {
-        title: trans('news'),
+        title: Translate('news'),
         icon: "rss-feed",
-        component: require('./scenes/news/news').default
+        //component: require('./scenes/news/news').default
     },
     about: {
-        title: trans('aboutUs'),
+        title: Translate('aboutUs'),
         icon: "info",
-        component: require('./scenes/about/about').default
+        //component: require('./scenes/about/about').default
     }
 };

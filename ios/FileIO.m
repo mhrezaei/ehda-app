@@ -1,9 +1,8 @@
 //
 //  FileIO.m
+//  ioBridgeModule
 //
-//  temp
-//
-//  Created by Aryan on 3/23/18.
+//  Created by Aryan on 3/27/18.
 //  Copyright © 2018 Facebook. All rights reserved.
 //
 
@@ -19,6 +18,28 @@ RCT_EXPORT_MODULE();
   NSString *fileName = [NSString stringWithFormat:@"%@/%@", documentsDirectory, name];
   return fileName;
 }
+
+RCT_REMAP_METHOD(save, to:(NSString*)to base64:(NSString *)base64 resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject )
+{
+  @try {
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *fileName = [self resolvePath:to];
+    
+    
+    NSURL * _Nullable url = [NSURL fileURLWithPath:fileName];
+    if(url){
+      [fileManager createDirectoryAtURL:[url URLByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    
+    [base64 writeToFile:fileName atomically:YES encoding:NSASCIIStringEncoding error:nil];
+    resolve(@(TRUE));
+  } @catch(NSException *exception) {
+    reject([exception name], [exception reason], NULL);
+  }
+}
+
+
 
 
 
@@ -43,6 +64,18 @@ RCT_EXPORT_METHOD(saveSync:(NSString *)to base64:(NSString *)base64)
 }
 
 
+RCT_REMAP_METHOD(read, from:(NSString*)from resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject )
+{
+  @try {
+    NSString *fileName = [self resolvePath:from];
+    NSString* content = [[NSString alloc] initWithContentsOfFile:fileName encoding:NSASCIIStringEncoding error:nil];
+    resolve(content);
+  } @catch(NSException *exception) {
+    reject([exception name], [exception reason], NULL);
+  }
+}
+
+
 
 RCT_EXPORT_METHOD(delete:(NSString *)from)
 {
@@ -59,13 +92,10 @@ RCT_REMAP_METHOD(exists, name:(NSString*)name resolver:(RCTPromiseResolveBlock)r
     NSString *fileName = [self resolvePath:name];
     BOOL data = [fileManager fileExistsAtPath:fileName];
     if(data == TRUE){
-      NSNumber* temp = @(1);
-      resolve(temp);
+      resolve(@(TRUE));
     }else{
-      NSNumber* temp = @(0);
-      resolve(temp);
+      resolve(@(FALSE));
     }
-    
   } @catch(NSException *exception) {
     reject([exception name], [exception reason], NULL);
   }
@@ -81,38 +111,33 @@ RCT_REMAP_METHOD(path, to:(NSString*)to resolver:(RCTPromiseResolveBlock)resolve
   }
 }
 
-RCT_REMAP_METHOD(read, from:(NSString*)from resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject )
+
+
+RCT_EXPORT_METHOD(saveToGallery: (NSString *)base64)
 {
   @try {
-    NSString *fileName = [self resolvePath:from];
-    NSString* content = [[NSString alloc] initWithContentsOfFile:fileName encoding:NSASCIIStringEncoding error:nil];
-    resolve(content);
+    NSURL *url = [NSURL URLWithString:base64];
+    NSData *imageData = [NSData dataWithContentsOfURL:url];
+    UIImage *image = [UIImage imageWithData:imageData];
+    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
   } @catch(NSException *exception) {
-    reject([exception name], [exception reason], NULL);
   }
 }
 
-RCT_REMAP_METHOD(save, to:(NSString*)to base64:(NSString *)base64 resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject )
+
+RCT_EXPORT_METHOD(saveFileToGallery: (NSString *)path)
 {
   @try {
-    
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSString *fileName = [self resolvePath:to];
-    
-    
-    NSURL * _Nullable url = [NSURL fileURLWithPath:fileName];
-    if(url){
-      [fileManager createDirectoryAtURL:[url URLByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:nil];
-    }
-    
-    
-    [base64 writeToFile:fileName atomically:YES encoding:NSASCIIStringEncoding error:nil];
-    NSNumber* temp = @(1);
-    resolve(temp);
+    NSString *fileName = [self resolvePath:path];
+    NSString* base64 = [[NSString alloc] initWithContentsOfFile:fileName encoding:NSASCIIStringEncoding error:nil];
+    NSURL *url = [NSURL URLWithString:base64];
+    NSData *imageData = [NSData dataWithContentsOfURL:url];
+    UIImage *image = [UIImage imageWithData:imageData];
+    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
   } @catch(NSException *exception) {
-    reject([exception name], [exception reason], NULL);
   }
 }
-
 
 @end
+
+

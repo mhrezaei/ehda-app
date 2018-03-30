@@ -1,20 +1,20 @@
 import React, {Component} from 'react';
 import lodash from 'lodash';
 import {View, FlatList, TouchableOpacity, StyleSheet, Dimensions, Image, ActivityIndicator} from 'react-native';
-import {Text} from '../../ui/components';
+import {Text} from '../../../core/ui/components';
 
 const view_width = Dimensions.get('window').width;
 import {bindActionCreators} from 'redux';
-import * as auth_methods from '../../data/auth/methods';
-import * as nav_methods from '../../data/nav/methods';
+import * as auth_methods from '../../data/auth/actions';
+import * as nav_methods from '../../data/nav/actions';
 
 import {connect} from 'react-redux';
-import {flatten} from "../../helpers";
+import {flatten} from "../../../core/helpers";
 
-import {decodeImage} from "../../factory";
-import theme from '../../theme';
+import {decodeFile} from "../../../core/helpers";
+import theme from '../../../core/theme';
 
-import {FileIO} from "../../modules";
+import {FileIO} from "../../../core/modules";
 
 class Item extends Component {
     constructor(props) {
@@ -57,7 +57,7 @@ class Item extends Component {
             if (ex > 0) {
                 FileIO.read(path).then(data => {
                     this.setState({
-                        image: decodeImage(data)
+                        image: decodeFile(data)
                     });
                 });
             } else {
