@@ -8,7 +8,7 @@ import {
 
 const viewWidth = Dimensions.get('window').width;
 
-const Stretch = ({}) => {
+const Stretch = () => {
     return (
         <View style={styles.stretch}/>
     );

@@ -14,5 +14,5 @@ export default function (state, store) {
     global[APP_LANGUAGE] = lang;
     global[APP_LOCALES] = Locales[lang];
 
-    store.dispatch(Navigation.goTo('registerCard'));
+    //store.dispatch(Navigation.goTo('registerCard'));
 }

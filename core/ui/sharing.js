@@ -10,7 +10,6 @@ import {
 } from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 
-
 import theme from '../theme'
 import {Translate} from "../i18";
 import Text from './text';
@@ -161,11 +160,20 @@ class Sharing extends Component {
                             paddingVertical: 20,
                             paddingHorizontal: 5,
                         }}>
+                            <TouchableOpacity style={{flex: 1}} onPress={x=>this.onShare('instagran')}>
+                                <Image source={icons.instagram} style={{height: 45}} resizeMode={'contain'}/>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{flex: 1}} onPress={x=>this.onShare('telegram')}>
+                                <Image source={icons.telegram} style={{height: 45}} resizeMode={'contain'}/>
+                            </TouchableOpacity>
                             <TouchableOpacity style={{flex: 1}} onPress={x=>this.onShare('facebook')}>
                                 <Image source={icons.facebook} style={{height: 45}} resizeMode={'contain'}/>
                             </TouchableOpacity>
                             <TouchableOpacity style={{flex: 1}} onPress={x=>this.onShare('twitter')}>
                                 <Image source={icons.twitter} style={{height: 45}} resizeMode={'contain'}/>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{flex: 1}} onPress={x=>this.onShare('whatsapp')}>
+                                <Image source={icons.whatsapp} style={{height: 45}} resizeMode={'contain'}/>
                             </TouchableOpacity>
                         </View>
 

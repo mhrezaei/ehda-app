@@ -29,8 +29,6 @@ export class ScrollView extends Component {
     render() {
         return (
             <KeyboardAwareScrollView
-                horizontal={false}
-                alwaysBounceVertical={true}
                 contentContainerStyle={{
                     justifyContent: 'center',
                     paddingBottom: 60
@@ -46,6 +44,7 @@ export class ScrollView extends Component {
                     }]
                 }}>
                     <Stretch/>
+
                     {this.props.children}
                 </Animated.View>
             </KeyboardAwareScrollView>
