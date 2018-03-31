@@ -56,6 +56,6 @@ export const Routes = {
     about: {
         title: Translate('aboutUs'),
         icon: "info",
-        component: require('./scenes/about').default
+        //component: require('./scenes/about').default
     }
 };

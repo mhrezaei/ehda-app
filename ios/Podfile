@@ -1,5 +1,5 @@
 # Uncomment the next line to define a global platform for your project
-# platform :ios, '9.0'
+platform :ios, '11.1'
 
 target 'temp' do
   rn_path = '../node_modules/react-native'
@@ -22,7 +22,7 @@ target 'temp' do
     'RCTVibration',
     'RCTWebSocket',
   ]
-
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
   # React Native third party dependencies podspecs
   pod 'DoubleConversion', :podspec => "#{rn_path}/third-party-podspecs/DoubleConversion.podspec"
   pod 'glog', :podspec => "#{rn_path}/third-party-podspecs/glog.podspec"

@@ -12,7 +12,10 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
+@import GoogleMaps; //add this line if you want to use Google Maps
+
 @implementation AppDelegate
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -20,6 +23,9 @@
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
 
+    [GMSServices provideAPIKey:@"AIzaSyBXrVNK5Ol5qFhhVTqPtuK-iI1_QhgWHG8"];
+    
+    
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"EhdaApp"
                                                initialProperties:nil
