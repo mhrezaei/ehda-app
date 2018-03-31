@@ -1,3 +1,33 @@
+/*
+    Filename: src/routes.js
+    Author: Aryan Alikhani
+    Last Edit: April 1 2018, 3:43 AM
+
+    Description:
+        defines routing and navigation of application. each route has [5] attributes
+
+        [route key] :  {
+            // to get shown on Drawer or not
+            // must be [Boolean] or you can define a function, routers will call it with Redux State as an argument.
+            visibility: true  or  (state) => { return true or false},
+
+            // to stay on route or must redirect to somewhere else depends on state of application
+            // must be  a function, routers will call it with Redux State as an argument.
+            redirect: (state) => { return an another route key },
+
+            // display title of router
+            title: must be a string,
+
+            // icon shown on Drawer
+            icon: must be an icon name, specifically must be MaterialIcon,
+
+            // component attached to route
+            component: must be an react component, you can use require(' .. some .. ').default to import components.
+        }
+
+ */
+
+
 import {Translate, Helpers} from '../core/index'
 
 export const Routes = {
