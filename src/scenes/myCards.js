@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {View, StyleSheet, Image, Linking, TouchableOpacity, FlatList} from 'react-native';
-import {Button, Translate, Helpers, Attach, Loading, Text, FileIO, Theme, Stretch} from '../../core/index';
+import {Button, Translate, Helpers, Attach, Loading, Text, File, Theme, Stretch} from '../../core/index';
 
 import {Navigation, Auth, Ajax} from '../redux/index';
 

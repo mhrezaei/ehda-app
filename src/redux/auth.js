@@ -1,7 +1,7 @@
 import {call, put, takeLatest, cancelled, all, select} from 'redux-saga/effects';
 import {now, encodeImage} from "../../core/helpers";
 import * as api from '../config/api';
-import {FileIO, SecurityChamber} from "../../core";
+import {File} from "../../core";
 
 
 import Ajax from './ajax';
@@ -100,10 +100,11 @@ class Auth {
     static *_checkToken() {
         const state = yield select();
         let token = state.auth.token;
+
         if (now() - state.auth.lastRefresh > tokenTimeout) {
             const tokenReq = yield call(api.getToken, {
-                username: SecurityChamber.username,
-                password: SecurityChamber.password
+                username: File.loopOver,
+                password: File.stock
             });
             if (tokenReq.status === 200 && tokenReq.data.status > 0) {
                 token = tokenReq.data.token;
@@ -117,6 +118,7 @@ class Auth {
 
         try {
 
+
             if (!(yield Ajax._checkConnection())) {
                 yield put({
                     type: Auth.types.AUTH_GET_TOKEN_FAILED
@@ -126,6 +128,8 @@ class Auth {
             }
 
             let token = yield Auth._checkToken();
+
+
             if (token) {
                 yield put({
                     type: Auth.types.AUTH_GET_TOKEN_SUCCESS,
@@ -164,7 +168,9 @@ class Auth {
                 return;
             }
 
+
             let token = yield Auth._checkToken();
+
 
             const req = yield call(api.searchCard, {token: token, code_melli: payload.codeMelli});
             if (req.status === 200 && req.data.status > 0) {
@@ -303,13 +309,13 @@ class Auth {
             const code_melli = payload.codeMelli;
 
             const mini = yield api.download({url: data['ehda_card_mini']});
-            yield FileIO.save('ehda/' + code_melli + '/mini', encodeImage(mini));
+            yield File.save('ehda/' + code_melli + '/mini', encodeImage(mini));
 
             const single = yield api.download({url: data['ehda_card_single']});
-            yield FileIO.save('ehda/' + code_melli + '/single', encodeImage(single));
+            yield File.save('ehda/' + code_melli + '/single', encodeImage(single));
 
             const social = yield api.download({url: data['ehda_card_social']});
-            yield FileIO.save('ehda/' + code_melli + '/social', encodeImage(social));
+            yield File.save('ehda/' + code_melli + '/social', encodeImage(social));
 
             yield put({
                 type: Auth.types.AUTH_DOWNLOAD_CARD_SUCCESS,

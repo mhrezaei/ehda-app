@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {View, StyleSheet, Image, Linking, TouchableOpacity} from 'react-native';
-import {Button, Translate, Helpers, Attach, Loading, Text, FileIO, Theme, Sharing} from '../../core/index';
+import {Button, Translate, Helpers, Attach, Loading, Text, File, Theme, Sharing} from '../../core/index';
 
 import {Navigation, Auth, Ajax} from '../redux/index';
 
@@ -26,7 +26,7 @@ class MyCard extends Component {
         this.LoadCardFromDisk(pinnedCard);
 
         const last = cards[pinnedCard].saved_at || 0;
-        if (Helpers.now() - last > 24* 60 * 60 * 1000) {
+        if (Helpers.now() - last > 24 * 60 * 60 * 1000) {
 
             this.props.dispatch(Ajax.startLoading([Translate('downloadCardDone'), Translate('downloadCardError')]));
 
@@ -48,33 +48,34 @@ class MyCard extends Component {
         }
     }
 
-    onShareButtonClicked(){
+    onShareButtonClicked() {
         const {pinnedCard} = this.props;
-        const url = 'ehda/'+pinnedCard+'/social';
-        FileIO.read(url).then((data) => {
+        const url = 'ehda/' + pinnedCard + '/social';
+        File.read(url).then((data) => {
             this.sharing.show({
                 uri: data,
                 title: Translate('shareMyBonesTtile'),
                 message: Translate('shareMyBones')
             });
-        }).catch(()=>{});
+        }).catch(() => {
+        });
     }
 
-    onSaveButtonClicked(){
+    onSaveButtonClicked() {
         const {pinnedCard, cards} = this.props;
 
-        const url = 'ehda/'+pinnedCard+'/social';
+        const url = 'ehda/' + pinnedCard + '/social';
 
         this.props.dispatch(Ajax.startLoading([Translate('saveCardDone'), Translate('saveCardError')]));
 
 
         this.props.dispatch(Ajax.stopLoading(0, () => {
-            FileIO.saveFileToGallery(url);
+            File.saveFileToGallery(url);
         }));
 
     }
 
-    onPrintButtonClicked(){
+    onPrintButtonClicked() {
         const {pinnedCard, cards} = this.props;
 
         const url = cards[pinnedCard].info.ehda_card_print;
@@ -96,13 +97,13 @@ class MyCard extends Component {
     }
 
     LoadCardFromDisk(pinned) {
-        FileIO.read('ehda/' + pinned + '/mini').then((data) => {
+        File.read('ehda/' + pinned + '/mini').then((data) => {
             this.myCard = Helpers.decodeFile(data);
             this.setState({
                 failed: false
             });
             this.forceUpdate();
-        }).catch(()=>{
+        }).catch(() => {
 
         });
     }
@@ -111,54 +112,17 @@ class MyCard extends Component {
         return (
             <Container>
                 <ScrollView ref={ref => this.container = ref}>
-                    <View style={{
-                        flex: 1,
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        paddingVertical: 20,
-
-                        shadowColor: Theme.black,
-                        shadowOffset: {
-                            width: 3,
-                            height: 5
-                        },
-
-                        elevation: 3,
-
-                        shadowRadius: 10,
-                        shadowOpacity: 0.2
-                    }}>
-                        <Image style={{
-                            flex: 1,
-                            height: 300,
-                            borderRadius: 5,
-
-                        }}
-                               resizeMode={'contain'}
-                               source={this.myCard}/>
-
+                    <View style={styles.imageContainer}>
+                        <Image style={styles.myImage} resizeMode={'contain'} source={this.myCard}/>
                     </View>
 
-
-                    <TouchableOpacity style={{
-                        flex: 1,
-                        flexDirection: 'row-reverse',
-                        justifyContent: 'flex-start',
-                        alignItems: 'center',
-                        paddingHorizontal: 5,
-                    }}
-                    onPress={this.onShareButtonClicked}>
-
-                        <Image source={Sharing.Icons.share} style={{width: 20, height: 20, marginHorizontal: 10}}
+                    <TouchableOpacity style={styles.shareContainer} onPress={this.onShareButtonClicked}>
+                        <Image source={Sharing.Icons.share} style={styles.shareImage}
                                resizeMode={'contain'}/>
-
                         <Text>{Translate('share')}</Text>
                     </TouchableOpacity>
 
-
-
-
-                    <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', paddingTop: 20}}>
+                    <View style={styles.buttonContainer}>
                         <Button title={Translate('saveCard')} onPress={this.onSaveButtonClicked}/>
                         <Button title={Translate('printCard')} onPress={this.onPrintButtonClicked}/>
                     </View>
@@ -170,6 +134,29 @@ class MyCard extends Component {
         );
     }
 }
+
+const styles = StyleSheet.create({
+    imageContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        paddingVertical: 20,
+    },
+    myImage: {
+        flex: 1,
+        height: 300,
+        borderRadius: 5,
+    },
+    shareContainer: {
+        flex: 1,
+        flexDirection: 'row-reverse',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        paddingHorizontal: 5,
+    },
+    shareImage: {width: 20, height: 20, marginHorizontal: 10},
+    buttonContainer: {flex: 1, flexDirection: 'row', alignItems: 'center', paddingTop: 20}
+});
 
 export default Attach({
     'auth.pinned': (pinned, redux) => {

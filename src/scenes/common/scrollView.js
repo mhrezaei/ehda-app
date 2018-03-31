@@ -29,10 +29,7 @@ export class ScrollView extends Component {
     render() {
         return (
             <KeyboardAwareScrollView
-                contentContainerStyle={{
-                    justifyContent: 'center',
-                    paddingBottom: 60
-                }}>
+                contentContainerStyle={styles.container}>
                 <Animated.View style={{
                     flex: 1,
                     flexDirection: 'column',
@@ -51,3 +48,10 @@ export class ScrollView extends Component {
         );
     }
 }
+
+const styles = StyleSheet.create({
+   container: {
+       justifyContent: 'center',
+       paddingBottom: 120
+   },
+});

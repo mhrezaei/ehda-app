@@ -90,8 +90,6 @@ class SearchCard extends Component {
 
     render() {
         const {form, errors} = this.state;
-        const {progress} = this.props;
-
 
         return (
             <Container>

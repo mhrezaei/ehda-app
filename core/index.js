@@ -1,20 +1,19 @@
 import React, {Component} from 'react';
 
-
-import {combineReducers} from 'redux';
 import PropTypes from 'prop-types';
 import {isEqual} from 'lodash';
 
 
-
 // expose ConfigStore
 import {ConfigStore} from "./setup";
+
 export {ConfigStore}
 // end exposing ConfigStore
 
 
 // expose Helpers
 import * as Helpers from "./helpers";
+
 export {Helpers};
 // end exposing Helpers
 
@@ -53,8 +52,8 @@ export {Theme};
 import {NativeModules} from 'react-native';
 
 const SecurityChamber = NativeModules.SecurityChamber;
-const FileIO = NativeModules.FileIO;
-export {SecurityChamber, FileIO};
+const File = NativeModules.File;
+export {SecurityChamber, File};
 
 
 // expose attach: replacement for redux connect
@@ -62,7 +61,7 @@ export {SecurityChamber, FileIO};
 
 // expose attach: replacement for redux connect
 export function Dispatcher(WrappedComponent) {
-    const Component = ({...props}, context)=>{
+    const Component = ({...props}, context) => {
         return <WrappedComponent redux={context.store.getState()} dispatch={context.store.dispatch} {...props}/>
     };
     Component.contextTypes = {
@@ -81,49 +80,45 @@ export function Attach(map) {
 
             constructor(props) {
                 super(props);
-                this.Subscribe = this.Subscribe.bind(this);
+
                 this.Unsubscribe = null;
                 this.redux = {};
-                this.state = {NewProps: {}};
+                this.newProps = {};
+
+                this.Subscribe = this.Subscribe.bind(this);
             }
 
             Subscribe() {
-                this.lastRedux = this.redux;
+                this.lastRedux = this.redux || {};
                 this.redux = this.context.store.getState();
 
-                if (this.redux && this.lastRedux) {
-
-                    let shouldUpdate = false;
+                let shouldUpdate = false;
 
 
-                    Object.keys(map).map((key) => {
-                        if(key.startsWith('^')) {
-                            shouldUpdate = true;
-                            return;
-                        }
-                        const value = map[key];
-
-                        const Leaf1 = Helpers.leaf(this.redux, key);
-                        const Leaf2 = Helpers.leaf(this.lastRedux, key);
-
-                        if (!isEqual(Leaf1, Leaf2)) {
-                            shouldUpdate = true;
-
-                            if (value) {
-                                this.setState({
-                                    NewProps: {
-                                        ...this.state.NewProps,
-                                        ...(value(Leaf1, this.redux, this.context.store.dispatch) || {})
-                                    }
-                                });
-                            }
-                        }
-
-                    });
-
-                    if (shouldUpdate) {
-                        this.forceUpdate();
+                Object.keys(map).map((key) => {
+                    if (key.startsWith('^')) {
+                        shouldUpdate = true;
+                        return;
                     }
+                    const value = map[key];
+
+                    const Leaf1 = Helpers.leaf(this.redux, key, {});
+                    const Leaf2 = Helpers.leaf(this.lastRedux, key, {});
+
+                    if (!isEqual(Leaf1, Leaf2)) {
+
+                        shouldUpdate = true;
+
+
+                        if (value) {
+                            this.newProps = Object.assign({}, this.newProps, value(Leaf1, this.redux, this.context.store.dispatch));
+                        }
+                    }
+
+                });
+
+                if (shouldUpdate) {
+                    this.forceUpdate();
                 }
             }
 
@@ -144,7 +139,7 @@ export function Attach(map) {
 
             render() {
                 return <WrappedComponent redux={this.redux}
-                                         dispatch={this.context.store.dispatch} {...this.state.NewProps} {...this.props} />;
+                                         dispatch={this.context.store.dispatch}  {...this.props} {...this.newProps}/>;
             }
         };
 

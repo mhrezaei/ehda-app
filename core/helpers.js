@@ -4,7 +4,7 @@ export const filter = (obj, predicate) => Object.keys(obj).filter(key => predica
 
 export const timeout = ms => new Promise(res => setTimeout(res, ms));
 
-export const leaf = (obj, path, def=null) => path.split('.').reduce((value, el) => value ? value[el] : def, obj);
+export const leaf = (obj, path, def=null) => path.split('.').reduce((value, el) => value ? value[el] : def, obj) || def;
 
 
 export const flatten = (obj) => Object.keys(obj).map(key => {

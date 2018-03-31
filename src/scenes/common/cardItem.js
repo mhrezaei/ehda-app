@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 
 import {View, Image, ActivityIndicator, TouchableOpacity} from 'react-native';
 
-import {Theme, FileIO, Helpers} from '../../../core';
+import {Theme, File, Helpers} from '../../../core';
 
 import {Navigation, Auth, Ajax} from '../../redux/index';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -23,9 +23,9 @@ export class CardItem extends Component {
     componentDidMount() {
         const path = 'ehda/' + this.props.name + '/single';
         this.setState({loading: true});
-        FileIO.exists(path).then(result => {
+        File.exists(path).then(result => {
             if (result > 0) {
-                FileIO.read(path).then(data => {
+                File.read(path).then(data => {
                     this.setState({
                         image: Helpers.decodeFile(data),
                         loading: false
@@ -34,7 +34,7 @@ export class CardItem extends Component {
             } else {
                 this.props.dispatch(Auth.downloadCard(this.props.name, (result) => {
                     if (result) {
-                        FileIO.read(path).then(data => {
+                        File.read(path).then(data => {
                             this.setState({
                                 image: Helpers.decodeFile(data),
                                 loading: false

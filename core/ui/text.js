@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
     StyleSheet,
     Text as TextParent,
+    Platform,
 } from 'react-native'
 
 
@@ -23,11 +24,16 @@ Text.propTypes = {
 const styles = StyleSheet.create({
     text: {
         color: theme.textInvert,
-        fontFamily: theme.font
+        fontFamily: theme.font,
+
+        textAlign: Platform.OS === 'ios' ? 'justify' : 'right',
+        writingDirection:'rtl',
     },
     text_invert: {
         color: theme.text,
-        fontFamily: theme.font
+        fontFamily: theme.font,
+        textAlign: Platform.OS === 'ios' ? 'justify' : 'right',
+        writingDirection:'rtl',
     }
 });
 

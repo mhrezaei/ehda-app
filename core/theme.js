@@ -10,9 +10,22 @@ export default {
     background: '#fafafa',
     textField: '#fff',
     black: '#000',
+    gray: '#b4b4b4',
+    grayDark: '#7a7a7a',
     white: '#fff',
     border: '#f0f0f0',
     red: '#cc353b',
     transparent: 'transparent',
-    font: 'IRANSansMobile'
+    font: 'IRANSansMobile',
+    shadow: {
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+
+        shadowRadius: 3,
+        shadowOpacity: 0.3,
+        elevation: 1
+    }
 };

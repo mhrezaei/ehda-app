@@ -10,14 +10,14 @@ import {
     ActivityIndicator
 } from 'react-native'
 
-import theme from '../theme'
+import Theme from '../theme'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 
 const ActionBar = ({name, loading, title, onPress}) => {
     return (
         <View style={{
-            backgroundColor: Platform.OS === 'ios' ? theme.primaryDark : theme.primary,
+            backgroundColor: Platform.OS === 'ios' ? Theme.primaryDark : Theme.primary,
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
@@ -26,34 +26,25 @@ const ActionBar = ({name, loading, title, onPress}) => {
             <View  style={
                 {
                     flex: 1,
-                    backgroundColor: theme.primary,
+                    backgroundColor: Theme.primary,
                     flexDirection: 'row-reverse',
                     alignContent: 'center',
                     justifyContent: 'space-between',
                     alignItems:'center',
                     paddingHorizontal:20,
                     paddingVertical:15,
-
-                    shadowColor: theme.black,
-                    shadowOffset: {
-                        width: 0,
-                        height: 2
-                    },
-
-                    shadowRadius: 3,
-                    shadowOpacity: 0.3,
-                    elevation: 1
+                    ...Theme.shadow
                 }
             }>
 
-                <StatusBar backgroundColor={theme.primaryDark}/>
+                <StatusBar backgroundColor={Theme.primaryDark}/>
 
                 <View style={styles.actionBar_menuHolder}>
 
                     <TouchableOpacity style={styles.actionBar_menuIcon} onPress={onPress}>
                         <Icon name={"menu"} size={25} color={"#fff"}/>
                     </TouchableOpacity>
-                    {loading ? <ActivityIndicator size="small" color={theme.text} style={styles.actionBar_indicator}/> : <View style={styles.actionBar_indicator}/>}
+                    {loading ? <ActivityIndicator size="small" color={Theme.text} style={styles.actionBar_indicator}/> : <View style={styles.actionBar_indicator}/>}
                     <Text style={styles.actionBar_title}>{title}</Text>
                 </View>
                 <Text style={styles.actionBar_titleLeft}>{name}</Text>
@@ -83,16 +74,16 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start'
     },
     actionBar_title:{
-        color: theme.text,
-        fontFamily: theme.font,
+        color: Theme.text,
+        fontFamily: Theme.font,
         fontSize: 16,
         alignSelf: 'flex-end',
         textAlign: 'right',
     },
     actionBar_titleLeft:{
-        color: theme.text,
+        color: Theme.text,
         alignSelf: 'center',
-        fontFamily: theme.font,
+        fontFamily: Theme.font,
         textAlign: 'left',
         fontSize: 16
     },

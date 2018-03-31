@@ -5,7 +5,6 @@ import {AppRegistry} from 'react-native';
 import {ConfigStore} from "./core";
 import Store from './src/redux';
 import Splash from './src/scenes/splash';
-import Text from "./core/ui/text";
 
 class Root extends Component {
     static childContextTypes = {

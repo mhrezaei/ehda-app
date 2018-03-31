@@ -35,7 +35,7 @@ export const Routes = {
         icon: "account-box",
         component: require('./scenes/myCard').default
     },
-    cardList: {
+    myCards: {
         visibility: function (redux) {
             return Object.keys(Helpers.leaf(redux, 'auth.cards')).length > 0;
         },
@@ -47,15 +47,19 @@ export const Routes = {
         icon: "list",
         component: require('./scenes/myCards').default
     },
-    /*
     news: {
         title: Translate('news'),
         icon: "rss-feed",
-        //component: require('./scenes/news/news').default
-    },*/
+        component: require('./scenes/news').default
+    },
+    contact: {
+        title: Translate('contactUs'),
+        icon: "phone",
+        component: require('./scenes/contact').default
+    },
     about: {
         title: Translate('aboutUs'),
         icon: "info",
-        //component: require('./scenes/about').default
+        component: require('./scenes/about').default
     }
 };
