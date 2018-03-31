@@ -4,8 +4,8 @@
 
 # Xcode
 #
-Pods/
-build/
+ios/Pods/
+ios/build/
 *.pbxuser
 !default.pbxuser
 *.mode1v3
@@ -21,7 +21,6 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
-project.xcworkspace
 
 # Android/IntelliJ
 #
