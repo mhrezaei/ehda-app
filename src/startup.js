@@ -1,5 +1,5 @@
 /*
-    Filename: src/startus.js
+    Filename: src/startup.js
     Author: Aryan Alikhani
     Last Edit: April 1 2018, 3:43 AM
 
