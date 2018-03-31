@@ -1,7 +1,7 @@
 /*
     Filename: src/routes.js
     Author: Aryan Alikhani
-    Last Edit: April 1 2018, 3:43 AM
+    Last Edit: April 1 2018, 4:06 AM
 
     Description:
         defines routing and navigation of application. each route has [5] attributes
