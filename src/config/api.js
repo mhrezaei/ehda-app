@@ -1,3 +1,14 @@
+/*
+    Filename: src/config/api.js
+    Author: Aryan Alikhani
+    Last Edit: April 1 2018, 4:01 AM
+
+    Description:
+        here is EhdaApp bridge to api, using axios to handle connection.
+
+ */
+
+
 import axios from './axios';
 
 export const getProvince = (payload) => {
