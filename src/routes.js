@@ -45,16 +45,17 @@ export const Routes = {
         },
         title: Translate('myCards'),
         icon: "list",
-        //component: require('./scenes/cardList/cardList').default
+        component: require('./scenes/myCards').default
     },
+    /*
     news: {
         title: Translate('news'),
         icon: "rss-feed",
         //component: require('./scenes/news/news').default
-    },
+    },*/
     about: {
         title: Translate('aboutUs'),
         icon: "info",
-        //component: require('./scenes/about/about').default
+        component: require('./scenes/about').default
     }
 };

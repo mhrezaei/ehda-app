@@ -59,7 +59,6 @@ export async function ConfigStore(Store) {
         const state = store.getState();
         const action = state.history.lastAction;
 
-        console.log(state.history.payload);
 
 
         if (matchAction(action, offlineKeys)) {

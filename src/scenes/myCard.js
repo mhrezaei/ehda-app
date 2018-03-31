@@ -26,7 +26,7 @@ class MyCard extends Component {
         this.LoadCardFromDisk(pinnedCard);
 
         const last = cards[pinnedCard].saved_at || 0;
-        if (Helpers.now() - last > 60 * 60 * 1000) {
+        if (Helpers.now() - last > 24* 60 * 60 * 1000) {
 
             this.props.dispatch(Ajax.startLoading([Translate('downloadCardDone'), Translate('downloadCardError')]));
 
@@ -49,12 +49,15 @@ class MyCard extends Component {
     }
 
     onShareButtonClicked(){
-        this.sharing.show({
-            url: Sharing.Icons.share,
-            title: "React Native",
-            message: "Hola mundo",
-            subject: "Share Link"
-        });
+        const {pinnedCard} = this.props;
+        const url = 'ehda/'+pinnedCard+'/social';
+        FileIO.read(url).then((data) => {
+            this.sharing.show({
+                uri: data,
+                title: Translate('shareMyBonesTtile'),
+                message: Translate('shareMyBones')
+            });
+        }).catch(()=>{});
     }
 
     onSaveButtonClicked(){
@@ -108,8 +111,6 @@ class MyCard extends Component {
         return (
             <Container>
                 <ScrollView ref={ref => this.container = ref}>
-
-
                     <View style={{
                         flex: 1,
                         flexDirection: 'row',

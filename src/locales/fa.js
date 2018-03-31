@@ -28,6 +28,9 @@ export default {
     noInternet: 'خطا در برقراری ارتباط...',
     share: 'به اشتراک بگذارید',
 
+    shareMyBones: 'مایلم اعضای بدنم را پس از مرگم اهدا کنم.',
+    shareMyBonesTitle: 'کارت اهدای عضو من',
+
 
 
     saveCardDone: 'عکس کارت در گالری تلفن همراه ذخیره شد.',

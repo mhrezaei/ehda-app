@@ -3,6 +3,7 @@ export default {
     cancel: 'برگشت',
     pleaseWait: 'لطفا منتظر بمانید...',
     shareWith: 'به اشتراک بگذارید :',
+    other: 'دیگر',
     calendar: [
         'فروردین',
         'اردیبهشت',

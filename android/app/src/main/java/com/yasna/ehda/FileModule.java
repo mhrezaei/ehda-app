@@ -2,9 +2,13 @@ package com.yasna.ehda;
 
 
 
+import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -13,12 +17,14 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableMap;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -155,7 +161,6 @@ public class FileModule extends ReactContextBaseJavaModule {
         } catch (Exception e) {
         }
     }
-
 
 
     @Override

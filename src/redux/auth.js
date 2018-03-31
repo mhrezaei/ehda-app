@@ -15,6 +15,7 @@ class Auth {
         "token": null,
         "lastRefresh": 0,
         "pinned": null,
+        "handle": 0,
         "cards": {}
     };
 
@@ -360,7 +361,8 @@ class Auth {
                 const codeMelli = payload.data.ehda_card_details.code_melli;
                 return {
                     ...state,
-                    pinned: state.pinned ? state.pinned : codeMelli,
+                    pinned: codeMelli,
+                    handle: state.handle+1,
                     cards: {
                         ...state.cards,
                         [codeMelli]: {

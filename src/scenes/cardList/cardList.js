@@ -10,11 +10,9 @@ import * as nav_methods from '../../data/nav/actions';
 
 import {connect} from 'react-redux';
 import {flatten} from "../../../core/helpers";
-
 import {decodeFile} from "../../../core/helpers";
 import theme from '../../../core/theme';
-
-import {FileIO} from "../../../core/modules";
+import {FileIO} from "../../../core";
 
 class Item extends Component {
     constructor(props) {
@@ -84,7 +82,6 @@ class Item extends Component {
         );
     }
 }
-
 class CardList extends Component {
     constructor(props) {
         super(props);
@@ -135,8 +132,7 @@ class CardList extends Component {
                 scrollEventThrottle={1000}
                 extraData={this.state}
                 keyExtractor={(item, index) => index.toString()}
-                renderItem={({item, index}) => <Item auth_methods={this.props.auth_methods} nav_methods={this.props.nav_methods}  index={index} name={item.key} value={item.value}
-                                                     state={this.state}/>}
+                renderItem={({item, index}) => <Item auth_methods={this.props.auth_methods} nav_methods={this.props.nav_methods}  index={index} name={item.key} value={item.value} state={this.state}/>}
             />
         </View>);
     }
@@ -148,9 +144,8 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff'
     },
-
     textDescription: {
-        width: view_width,
+        width: view_width
 
     },
     container: {
@@ -161,14 +156,14 @@ const styles = StyleSheet.create({
     imageWrapper: {
         flex: 1,
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
     indicator:{
-        paddingVertical: 20,
+        paddingVertical: 20
     },
     image: {
         flex: 1,
-        height: 200,
+        height: 200
     },
 });
 

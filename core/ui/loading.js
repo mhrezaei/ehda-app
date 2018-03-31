@@ -31,7 +31,7 @@ const Loading = ({progress = false}) => {
                     alignItems: 'center'
                 }}>
 
-                    <ActivityIndicator size={0} color={Theme.accent}/>
+                    <ActivityIndicator size="large" color={Theme.accent} animating={true}/>
                     <Text style={{
                         padding: 20,
                         fontSize: 20,

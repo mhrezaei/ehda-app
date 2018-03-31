@@ -29,6 +29,7 @@ export default class Ajax {
             messages: messages
         }
     }
+
     static stopLoading(status, callback){
         return {
             type: Ajax.types.AJAX_STOP_LOADING,
@@ -57,7 +58,7 @@ export default class Ajax {
             type: Ajax.types.AJAX_CHANGE_PHASE,
             phase: 1
         });
-        yield Helpers.timeout(2500);
+        yield Helpers.timeout(1400);
 
         yield put({
             type: Ajax.types.AJAX_LOADING_DONE
