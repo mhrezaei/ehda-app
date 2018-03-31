@@ -1,3 +1,17 @@
+/*
+    Filename: index.js
+    Author: Aryan Alikhani
+    Last Edit: April 1 2018, 3:36 AM
+
+    Description: display a splash before configuring store.
+
+    Issues:
+        [x] render method had unusual behaviour with React.createElement, removing it fixed the problem.
+        [ ] loading and initializing components after configuring store may lead application to unusual behaviour.
+
+ */
+
+
 import React, {Component} from 'react';
 import {AppRegistry} from 'react-native';
 import PropTypes from 'prop-types';
