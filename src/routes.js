@@ -39,6 +39,7 @@ export const Routes = {
     getCard: {
         visibility: false,
         redirect: function (redux) {
+            // redirect back to searchCard because there is no data provided with route.
             if(!Helpers.leaf(redux, 'navigation.props.codeMelli'))
                 return 'searchCard';
         },
@@ -53,13 +54,16 @@ export const Routes = {
     },
     myCard: {
         visibility: function (redux) {
+            // must not show this link when there is no card available !
             return Object.keys(Helpers.leaf(redux, 'auth.cards')).length > 0 && Helpers.leaf(redux, 'auth.pinned');
         },
         redirect: function (redux) {
+            // redirect to searchCard when there is no card available.
             if(Object.keys(Helpers.leaf(redux, 'auth.cards')).length === 0)
                 return 'searchCard';
+            // check if there is no pinned card available then return to cards
             else if(!Helpers.leaf(redux, 'auth.pinned'))
-                return 'cardList';
+                return 'myCards';
         },
         title: Translate('myCard'),
         icon: "account-box",
@@ -67,9 +71,11 @@ export const Routes = {
     },
     myCards: {
         visibility: function (redux) {
+            // must not show this link when there is no card available !
             return Object.keys(Helpers.leaf(redux, 'auth.cards')).length > 0;
         },
         redirect: function (redux) {
+            // redirect to searchCard when there is no card available.
             if(Object.keys(Helpers.leaf(redux, 'auth.cards')).length === 0)
                 return 'searchCard';
         },
