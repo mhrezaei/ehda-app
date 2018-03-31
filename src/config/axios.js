@@ -1,3 +1,14 @@
+/*
+    Filename: src/config/axios.js
+    Author: Aryan Alikhani
+    Last Edit: April 1 2018, 3:43 AM
+
+    Description:
+        axios used to send and receive xhtml requests.
+        used an axios instance to provide simpler interface for EhdaApp.
+
+ */
+
 
 import axios from 'axios';
 
@@ -12,7 +23,7 @@ export const axiosInstance = axios.create({
     }
 });
 
-export default async function(method, route, params={}) {
+export default async function (method, route, params = {}) {
     try {
         const result = await axiosInstance({
             method,
@@ -20,7 +31,7 @@ export default async function(method, route, params={}) {
             params
         });
         return {status: result.status, data: result.data};
-    } catch(e) {
+    } catch (e) {
         return {status: e.response.status, data: e.response.data};
     }
 };
