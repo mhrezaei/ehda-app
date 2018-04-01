@@ -1,5 +1,5 @@
 /*
-    Filename: src/redux/data.js
+    Filename: src/models/data.js
     Author: Aryan Alikhani
     Last Edit: April 1 2018, 4:43 AM
 

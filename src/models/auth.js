@@ -1,5 +1,5 @@
 /*
-    Filename: src/redux/auth.js
+    Filename: src/models/auth.js
     Author: Aryan Alikhani
     Last Edit: April 1 2018, 4:43 AM
 

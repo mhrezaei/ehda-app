@@ -1,3 +1,13 @@
+/*
+    Filename: src/scenes/menu/menu.js
+    Author: Aryan Alikhani
+    Last Edit: April 1 2018, 5:07 AM
+
+    Description:
+        Sidebar menu, generate view from src/routes.js
+
+ */
+
 import React, {Component} from 'react';
 
 import PropTypes from 'prop-types';
@@ -11,11 +21,10 @@ import {Text, Theme} from '../../../core/index';
 
 import splashMenu from '../../resources/splashMenu';
 
-import {Navigation} from '../../redux/index';
+import {Navigation} from '../../models/index';
 
 
 const Menu = ({title, redux, dispatch, onPress, routes}) => {
-
     return (
         <ScrollView style={styles.menu}>
             <View style={styles.menu_header}>
@@ -24,19 +33,26 @@ const Menu = ({title, redux, dispatch, onPress, routes}) => {
             </View>
             <View style={styles.menu_direct}>
                 {Object.keys(routes).map((key, i) => {
+
                     const route = routes[key];
+
+                    // check if route must be visible
                     let visible = !route.hasOwnProperty('visibility');
 
+                    // if still have visibility attribute then
                     if (visible === false) {
+                        // check if it's boolean
                         if (route.visibility instanceof Boolean)
                             visible = route.visibility;
+                        // check if it's a function
                         else if (route.visibility instanceof Function)
                             visible = route.visibility(redux);
                     }
 
 
+                    // if it's visible then return it's child
                     if(visible) {
-                        return (<MenuItem key={i} title={route.title} icon={route.icon} onPress={() => {
+                        return (<MenuItem key={'menuItem:'+i} title={route.title} icon={route.icon} onPress={() => {
                             dispatch(Navigation.goTo(key));
                             onPress(key);
                         }}/>);

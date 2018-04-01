@@ -1,11 +1,26 @@
+/*
+    Filename: src/views/common/scrollView.js
+    Author: Aryan Alikhani
+    Last Edit: April 1 2018, 4:51 AM
+
+    Description: just a scroll view.
+
+ */
+
+
+
 import React, {Component} from 'react';
 
-import {View, Animated, StyleSheet, Keyboard} from 'react-native';
+import {Animated, StyleSheet} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Stretch} from '../../../core';
+import PropTypes from 'prop-types';
 
 
 export class ScrollView extends Component {
+    static propTypes = {
+        children: PropTypes.any
+    };
     constructor(props) {
         super(props);
         this.state = {
@@ -15,6 +30,7 @@ export class ScrollView extends Component {
 
     }
 
+    // shake view on error.
     wiggle(){
         this.state.resonance.setValue(0.8);
         Animated.spring(

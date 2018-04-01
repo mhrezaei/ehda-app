@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import Drawer from 'react-native-drawer';
 import {Attach, Theme, Helpers, Text, ActionBar, Translate, Router, Loading} from "../../core/index";
-import {Auth, Navigation} from '../redux/index';
+import {Auth, Navigation} from '../models/index';
 import {Routes} from '../routes';
 import {Menu} from "./menu/menu";
 import Icon from 'react-native-vector-icons/MaterialIcons';

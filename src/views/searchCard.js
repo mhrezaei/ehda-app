@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Button, Translate, Helpers, Attach, Loading, Text, Dispatcher} from '../../core/index';
 
-import {Navigation, Auth, Ajax} from '../redux/index';
+import {Navigation, Auth, Ajax} from '../models/index';
 
 import {CreateForm} from "./common/formInput";
 import {Container} from "./common/container";

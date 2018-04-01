@@ -34,7 +34,7 @@ export const Routes = {
     searchCard: {
         title: Translate('searchCard'),
         icon: "home",
-        component: require('./scenes/searchCard').default
+        component: require('./views/searchCard').default
     },
     getCard: {
         visibility: false,
@@ -45,12 +45,12 @@ export const Routes = {
         },
         title: Translate('getCard'),
         icon: "account-box",
-        component: require('./scenes/getCard').default
+        component: require('./views/getCard').default
     },
     registerCard: {
         visibility: false,
         title: Translate('registerCard'),
-        component: require('./scenes/registerCard').default
+        component: require('./views/registerCard').default
     },
     myCard: {
         visibility: function (redux) {
@@ -67,7 +67,7 @@ export const Routes = {
         },
         title: Translate('myCard'),
         icon: "account-box",
-        component: require('./scenes/myCard').default
+        component: require('./views/myCard').default
     },
     myCards: {
         visibility: function (redux) {
@@ -81,21 +81,21 @@ export const Routes = {
         },
         title: Translate('myCards'),
         icon: "list",
-        component: require('./scenes/myCards').default
+        component: require('./views/myCards').default
     },
     news: {
         title: Translate('news'),
         icon: "rss-feed",
-        component: require('./scenes/news').default
+        component: require('./views/news').default
     },
     contact: {
         title: Translate('contactUs'),
         icon: "phone",
-        component: require('./scenes/contact').default
+        component: require('./views/contact').default
     },
     about: {
         title: Translate('aboutUs'),
         icon: "info",
-        component: require('./scenes/about').default
+        component: require('./views/about').default
     }
 };

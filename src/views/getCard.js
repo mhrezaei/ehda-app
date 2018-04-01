@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {View, Animated, StyleSheet, Keyboard} from 'react-native';
 import {Button, Translate, Attach, Helpers, Calendar, Loading, LocalizeNumber, Dispatcher} from '../../core/index';
 
-import {Navigation, Auth, Ajax} from '../redux';
+import {Navigation, Auth, Ajax} from '../models';
 import {CreateForm} from "./common/formInput";
 
 import {ScrollView} from "./common/scrollView";
@@ -116,12 +116,7 @@ class GetCard extends Component {
                         this.container.wiggle();
                     }));
                 }
-
-
-
             }));
-
-
         } else {
             this.container.wiggle();
         }

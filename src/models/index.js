@@ -1,5 +1,5 @@
 /*
-    Filename: src/redux/index.js
+    Filename: src/models/index.js
     Author: Aryan Alikhani
     Last Edit: April 1 2018, 4:45 AM
 

@@ -1,5 +1,5 @@
 /*
-    Filename: src/redux/history.js
+    Filename: src/models/history.js
     Author: Aryan Alikhani
     Last Edit: April 1 2018, 4:45 AM
 

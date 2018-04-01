@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {View, Animated, StyleSheet, Keyboard} from 'react-native';
 import {Button, Translate, Attach, Helpers, Calendar, LocalizeNumber, Loading, Picker} from '../../core/index';
 
-import {Navigation, Auth, Ajax, Data} from '../redux/index';
+import {Navigation, Auth, Ajax, Data} from '../models/index';
 import {CreateDatePicker, CreateForm} from "./common/formInput";
 
 import {ScrollView} from "./common/scrollView";

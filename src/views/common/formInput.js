@@ -1,10 +1,19 @@
+/*
+    Filename: src/views/common/formInput.js
+    Author: Aryan Alikhani
+    Last Edit: April 1 2018, 4:51 AM
+
+    Description:
+        used to simplify input creation.
+
+ */
+
 import React, {Component} from 'react';
-
 import {View, StyleSheet} from 'react-native';
-
 import {Text, TextInput, Theme, Translate, LocalizeNumber, NumToEn} from '../../../core/index';
 
 
+// scaffold a simple form layout
 export function CreateForm(name, form, errors, onChangeText, props = {}) {
     const placeholder = Translate('fields.'+name);
     return (

@@ -1,5 +1,5 @@
 /*
-    Filename: src/redux/ajax.js
+    Filename: src/models/ajax.js
     Author: Aryan Alikhani
     Last Edit: April 1 2018, 3:43 AM
 

@@ -1,12 +1,20 @@
+/*
+    Filename: src/scenes/menu/menuItem.js
+    Author: Aryan Alikhani
+    Last Edit: April 1 2018, 5:08 AM
+
+    Description:
+        Sidebar menuItem used to display links in menu
+
+*/
+
+
 import React, {Component} from 'react';
-
 import PropTypes from 'prop-types';
-
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
-
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
 import {Text, Theme} from '../../../core/index';
+
 
 const MenuItem = ({title, icon, onPress}) => {
     return (<TouchableOpacity style={styles.menuItem} onPress={onPress}>

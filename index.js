@@ -23,10 +23,10 @@ import {ConfigStore} from "./core";
 
 
 // Loading Store
-import Store from './src/redux';
+import Store from './src/models';
 
 // Loading Splash Screen
-import Splash from './src/scenes/splash';
+import Splash from './src/views/splash';
 
 
 // this is our main element, application starts from here.
@@ -70,7 +70,7 @@ class Root extends Component {
 
             // Then we load our application here, we must load it here after startup call, to prevent conflicting with
             // store not being loaded, we don't want data loss or unusual behavior.
-            this.App = require('./src/scenes/app').default;
+            this.App = require('./src/views/app').default;
 
             // Done, store loaded successfully.
             this.setState({

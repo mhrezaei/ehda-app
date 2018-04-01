@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {View, StyleSheet, Image, Linking, TouchableOpacity} from 'react-native';
 import {Button, Translate, Helpers, Attach, Loading, Text, File, Theme, Sharing} from '../../core/index';
 
-import {Navigation, Auth, Ajax} from '../redux/index';
+import {Navigation, Auth, Ajax} from '../models/index';
 
 import {Container} from "./common/container";
 import {ScrollView} from "./common/scrollView";
