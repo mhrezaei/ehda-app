@@ -99,11 +99,9 @@ class GetCard extends Component {
             this.props.dispatch(Ajax.startLoading([Translate('getCardDone'), Translate('getCardError')]));
             this.props.dispatch(Auth.getCard(form, (success, response) => {
                 if (success) {
-
                     this.props.dispatch(Ajax.stopLoading(0, ()=>{
                         this.props.dispatch(Navigation.goTo('myCard'));
                     }));
-
                 } else {
 
                     this.props.dispatch(Ajax.stopLoading(1, ()=>{
