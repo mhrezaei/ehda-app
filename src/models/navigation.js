@@ -11,8 +11,8 @@ export default class Navigation {
     static save = true;
 
     static initialState = {
-        "current": 'myCard',
-        "default": 'myCard',
+        "current": 'searchCard',
+        "default": 'searchCard',
         "props": null
     };
 

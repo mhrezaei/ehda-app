@@ -378,7 +378,7 @@ class Auth {
                         ...state.cards,
                         [payload.codeMelli]: {
                             ...state.cards[payload.codeMelli],
-                            saved_at: now()
+                            saved_at: Helpers.now()
                         }
                     }
                 };
@@ -394,7 +394,7 @@ class Auth {
                         [codeMelli]: {
                             ...state.cards[codeMelli],
                             info: payload.data,
-                            updated_at: now()
+                            updated_at: Helpers.now()
                         }
                     }
                 };
@@ -408,7 +408,7 @@ class Auth {
                 return {
                     ...state,
                     token: payload.token,
-                    datetime: now()
+                    datetime: Helpers.now()
                 };
             default:
                 return state;
