@@ -1,3 +1,12 @@
+/*
+    Filename: src/redux/data.js
+    Author: Aryan Alikhani
+    Last Edit: April 1 2018, 4:43 AM
+
+    Description: data storage.
+ */
+
+
 import {call, put, takeLatest, cancelled} from 'redux-saga/effects';
 
 import Auth from './auth';
@@ -28,6 +37,8 @@ export default class Data {
         DATA_GET_CITIES_FAILED: 'DATA_GET_CITIES_FAILED'
     };
 
+    // methods
+
     static getProvince() {
         return {
           type: Data.types.DATA_GET_PROVINCE_ASYNC
@@ -40,6 +51,10 @@ export default class Data {
             province: province
         };
     }
+
+
+
+    // async
 
 
     static *_getProvince() {
@@ -128,6 +143,7 @@ export default class Data {
     }
 
 
+    // sagas
 
     static sagas() {
         return [
@@ -135,6 +151,8 @@ export default class Data {
             takeLatest(Data.types.DATA_GET_CITIES_ASYNC, Data._getCities)
         ];
     }
+
+    // reducers
 
     static reducer(state = Data.initialState, payload) {
         switch (payload.type) {

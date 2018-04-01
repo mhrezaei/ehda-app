@@ -1,7 +1,14 @@
-import {call, put, takeLatest, cancelled, all, select} from 'redux-saga/effects';
-import {now, encodeImage} from "../../core/helpers";
+/*
+    Filename: src/redux/auth.js
+    Author: Aryan Alikhani
+    Last Edit: April 1 2018, 4:43 AM
+
+    Description: store cards, handle registration, and other async operations.
+ */
+
+import {call, put, takeLatest, cancelled, select} from 'redux-saga/effects';
+import {Helpers, File} from "../../core";
 import * as api from '../config/api';
-import {File} from "../../core";
 
 
 import Ajax from './ajax';
@@ -9,6 +16,7 @@ import Ajax from './ajax';
 const tokenTimeout = 1200000;
 
 class Auth {
+    // save offline
     static save = true;
 
     static initialState = {
@@ -43,6 +51,8 @@ class Auth {
         AUTH_UPDATE_TOKEN: 'AUTH_UPDATE_TOKEN',
         AUTH_CHANGE_PINNED_CARD: 'AUTH_CHANGE_PINNED_CARD',
     };
+
+    // + methods
 
     static searchCard(codeMelli, callback) {
         return {
@@ -96,12 +106,16 @@ class Auth {
         };
     }
 
+    // - methods
+
+
+    // + async operations
 
     static *_checkToken() {
         const state = yield select();
         let token = state.auth.token;
 
-        if (now() - state.auth.lastRefresh > tokenTimeout) {
+        if (Helpers.now() - state.auth.lastRefresh > tokenTimeout) {
             const tokenReq = yield call(api.getToken, {
                 username: File.loopOver,
                 password: File.stock
@@ -309,13 +323,13 @@ class Auth {
             const code_melli = payload.codeMelli;
 
             const mini = yield api.download({url: data['ehda_card_mini']});
-            yield File.save('ehda/' + code_melli + '/mini', encodeImage(mini));
+            yield File.save('ehda/' + code_melli + '/mini', Helpers.encodeImage(mini));
 
             const single = yield api.download({url: data['ehda_card_single']});
-            yield File.save('ehda/' + code_melli + '/single', encodeImage(single));
+            yield File.save('ehda/' + code_melli + '/single', Helpers.encodeImage(single));
 
             const social = yield api.download({url: data['ehda_card_social']});
-            yield File.save('ehda/' + code_melli + '/social', encodeImage(social));
+            yield File.save('ehda/' + code_melli + '/social', Helpers.encodeImage(social));
 
             yield put({
                 type: Auth.types.AUTH_DOWNLOAD_CARD_SUCCESS,
@@ -339,6 +353,10 @@ class Auth {
         }
     }
 
+    // - async operations
+
+
+    //  + sagas
     static sagas() {
         return [
             takeLatest(Auth.types.AUTH_GET_TOKEN_ASYNC, Auth._getToken),
@@ -348,6 +366,8 @@ class Auth {
             takeLatest(Auth.types.AUTH_DOWNLOAD_CARD_ASYNC, Auth._downloadCard),
         ];
     }
+
+    //  + reducers
 
     static reducer(state = Auth.initialState, payload) {
         switch (payload.type) {

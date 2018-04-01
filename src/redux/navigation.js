@@ -1,3 +1,12 @@
+/*
+    Filename: src/redux/navigation.js
+    Author: Aryan Alikhani
+    Last Edit: April 1 2018, 4:45 AM
+
+    Description: navigation and routing storage.
+ */
+
+
 export default class Navigation {
     static save = true;
 

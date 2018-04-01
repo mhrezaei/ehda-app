@@ -1,3 +1,11 @@
+/*
+    Filename: src/redux/history.js
+    Author: Aryan Alikhani
+    Last Edit: April 1 2018, 4:45 AM
+
+    Description: saves application history and async payloads.
+ */
+
 export default class History {
     static initialState = {
         "lastAction": null,

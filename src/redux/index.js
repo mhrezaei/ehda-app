@@ -1,3 +1,11 @@
+/*
+    Filename: src/redux/index.js
+    Author: Aryan Alikhani
+    Last Edit: April 1 2018, 4:45 AM
+
+    Description: defines application data fragments.
+ */
+
 
 module.exports = {
     Ajax: require('./ajax').default,

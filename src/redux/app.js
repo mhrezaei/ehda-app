@@ -1,3 +1,13 @@
+/*
+    Filename: src/redux/app.js
+    Author: Aryan Alikhani
+    Last Edit: April 1 2018, 4:33 AM
+
+    Description: App data model.
+ */
+
+
+
 export default class App {
     static save = true;
 
@@ -10,7 +20,8 @@ export default class App {
     };
 
 
-    static switchLanguage(page, props={}){
+    // used tp switch app locale.
+    static switchLanguage(page){
         return {
             type: App.types.APP_SWITCH_LANGUAGE
         };
