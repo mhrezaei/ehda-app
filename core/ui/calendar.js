@@ -15,7 +15,7 @@ import theme from '../theme'
 
 import {LocalizeNumber, Translate} from "../i18";
 
-import {Helpers} from '../index';
+import {Helpers, Jalali} from '../index';
 
 
 import moment from 'momentj';
@@ -66,7 +66,6 @@ class Calendar extends Component {
         this.renderDisable = this.renderDisable.bind(this);
         this.show = this.show.bind(this);
         this.hide = this.hide.bind(this);
-        this.loadDate = this.loadDate.bind(this);
 
 
     }
@@ -87,14 +86,12 @@ class Calendar extends Component {
 
         let dt = {year: 1380, month: 1, day: 1};
         if(date){
-            
-            const d = moment.utc(l.getUTCSeconds());
-
-            dt = {year: d.jYear(), month: d.jMonth(), day: d.jDate()};
+            const d = Jalali.fromPhp(date);
+            dt = {year: d.jy, month: d.jm, day: d.jd};
         }
 
-        const jm = moment().utc();
-        this.today = {year: jm.jYear(), month: jm.jMonth(), day: jm.jDate()};
+        const jm = Jalali.now();
+        this.today = {year: jm.jy, month: jm.jm, day: jm.jd};
 
         this.setState({
             year: dt.year,
@@ -139,6 +136,7 @@ class Calendar extends Component {
     renderDay(i, date) {
         const {sy, sm, sd} = this.state;
 
+
         const bl = date.year === sy && date.month === sm && date.current === sd;
         const td = date.year === this.today.year && date.month === this.today.month && date.current === this.today.day;
 
@@ -149,20 +147,6 @@ class Calendar extends Component {
                   style={bl || td ? styles.calendar_dayTextSelected : styles.calendar_dayText}>{LocalizeNumber(date.current)}</Text>
         </TouchableOpacity>);
     }
-
-
-
-
-    loadDate() {
-        const {year, month, day} = this.state;
-
-
-        const from = year + '/' + (month + 1) + '/' + day;
-        const format = 'jYYYY/jM/jD';
-
-        return moment(from, format);
-    }
-
 
     renderDisable(i) {
         return (<TouchableOpacity key={i} style={styles.calendar_dayStyleOther}>
@@ -175,9 +159,7 @@ class Calendar extends Component {
     render() {
         const {year, month, day} = this.state;
 
-        const date = this.loadDate();
-
-        const startDayOfMonth = convertWeek(date.startOf('jmonth').isoWeekday());
+        const startDayOfMonth = convertWeek(Jalali.startDayOfMonth(year, month));
         const monthLength = month < 11 ? monthLengths[month] : (((year - 1395) % 4 === 0) ? 30 : 29);
 
         let cache = [];
@@ -239,37 +221,45 @@ class Calendar extends Component {
                     }}>
                         <View style={styles.calendar_row_nav}>
                             <TouchableOpacity style={styles.calendar_dayStyleIcon} onPress={() => {
-                                const date = this.loadDate();
-                                const jm = date.subtract(1, 'jyear');
-                                this.setState({year: jm.jYear(), month: jm.jMonth(), day: jm.jDate()});
+                                let {year} = this.state;
+                                year--;
+                                if(year < 1300)
+                                    year = this.today.year;
+                                this.setState({year});
                             }}>
                                 <Icon name={"fast-forward"} size={20} color={theme.textInvert}/>
                             </TouchableOpacity>
 
                             <TouchableOpacity style={styles.calendar_dayStyleIcon} onPress={() => {
-                                const date = this.loadDate();
-                                const jm = date.subtract(1, 'jmonth');
-                                this.setState({year: jm.jYear(), month: jm.jMonth(), day: jm.jDate()});
+                                let {month} = this.state;
+                                month--;
+                                if(month < 1)
+                                    month = monthLength;
+                                this.setState({month});
                             }}>
                                 <Icon name={"skip-next"} size={20} color={theme.textInvert}/>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => {
-                                const jm = this.loadDate();
-                                this.setState({year: jm.jYear(), month: jm.jMonth(), day: jm.jDate()});
+                                const jm = Jalali.now();
+                                this.setState({year: jm.jy, month: jm.jm, day: jm.jd});
                             }}>
                                 <Text>{months[month] + ' ' + LocalizeNumber(year)}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.calendar_dayStyleIcon} onPress={() => {
-                                const date = this.loadDate();
-                                const jm = date.add(1, 'jmonth');
-                                this.setState({year: jm.jYear(), month: jm.jMonth(), day: jm.jDate()});
+                                let {month} = this.state;
+                                month++;
+                                if(month > monthLength)
+                                    month = 1;
+                                this.setState({month});
                             }}>
                                 <Icon name={"skip-previous"} size={20} color={theme.textInvert}/>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.calendar_dayStyleIcon} onPress={() => {
-                                const date = this.loadDate();
-                                const jm = date.add(1, 'jyear');
-                                this.setState({year: jm.jYear(), month: jm.jMonth(), day: jm.jDate()});
+                                let {year} = this.state;
+                                year++;
+                                if(year > this.today.year)
+                                    year = 1300;
+                                this.setState({year});
                             }}>
                                 <Icon name={"fast-rewind"} size={20} color={theme.textInvert}/>
                             </TouchableOpacity>
@@ -284,17 +274,8 @@ class Calendar extends Component {
                             <Button title={Translate('choose')} onPress={() => {
                                 const {sy, sm, sd} = this.state;
 
-                                const from = sy + '/' + (sm + 1) + '/' + sd;
-                                const format = 'jYYYY/jM/jD';
-
-                                const data = moment(from, format).utc().set({hour: 0, minute: 0});
-
-                                const date = Helpers.date(data.toISOString()) / 1000;
-
-                                console.log(date);
-
                                 if (this.props.onChange)
-                                    this.props.onChange(date);
+                                    this.props.onChange(Jalali.toPhp(sy, sm, sd));
 
 
                                 this.hide();

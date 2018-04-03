@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "mocha --require babel-core/register  --require babel-polyfill ./core/__tests__/**/*.js ./src/__tests__/**/*.js"
+    "test": "mocha --require js:babel-core/register  --require js:babel-polyfill ./core/__tests__/**/*.js"
   },
   "dependencies": {
     "axios": "^0.18.0",

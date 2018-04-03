@@ -11,6 +11,13 @@ export {ConfigStore}
 // end exposing ConfigStore
 
 
+// expose Jalali
+import * as Jalali from "./jalali";
+
+export {Jalali};
+// end exposing Jalali
+
+
 // expose Helpers
 import * as Helpers from "./helpers";
 
