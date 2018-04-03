@@ -19,7 +19,7 @@ class GetCard extends Component {
             form: {
                 code_melli: null,
                 birth_date: null,
-                tel_mobile: null,
+                //tel_mobile: null,
             },
             errors: {}
         };
@@ -46,12 +46,13 @@ class GetCard extends Component {
     }
 
     onBirthDateChanged(date) {
-        const d = moment(date.year + '/' + (date.month + 1) + '/' + date.day, 'jYYYY/jMM/jD');
-        this.onChangeText('birth_date', d.unix());
+        this.onChangeText('birth_date', date);
     }
 
-    mutateDate(value){
-        return LocalizeNumber(moment.unix(value).format('jYYYY/jM/jD'));
+    mutateDate(value) {
+        if(!value)
+            return '';
+        return LocalizeNumber(moment.utc(value).format('jYYYY/jM/jD'));
     }
 
     onChangeText(key, value) {
@@ -89,7 +90,6 @@ class GetCard extends Component {
     }
 
 
-
     onSubmit() {
         const errors = this.checkErrors();
         const {form} = this.state;
@@ -99,12 +99,12 @@ class GetCard extends Component {
             this.props.dispatch(Ajax.startLoading([Translate('getCardDone'), Translate('getCardError')]));
             this.props.dispatch(Auth.getCard(form, (success, response) => {
                 if (success) {
-                    this.props.dispatch(Ajax.stopLoading(0, ()=>{
+                    this.props.dispatch(Ajax.stopLoading(0, () => {
                         this.props.dispatch(Navigation.goTo('myCard'));
                     }));
                 } else {
 
-                    this.props.dispatch(Ajax.stopLoading(1, ()=>{
+                    this.props.dispatch(Ajax.stopLoading(1, () => {
 
                         const err = Translate('errors.' + response);
                         const errors = {
@@ -128,8 +128,11 @@ class GetCard extends Component {
             <Container>
                 <ScrollView ref={ref => this.container = ref}>
 
-                    {CreateForm('code_melli', form, errors, this.onChangeText)}
-                    {CreateForm('tel_mobile', form, errors, this.onChangeText, {keyboardType: 'numeric'})}
+                    {CreateForm('code_melli', form, errors, this.onChangeText, {
+                        editable: false,
+                        selectTextOnFocus: false
+                    })}
+
                     {CreateForm('birth_date', form, errors, this.onChangeText, {
                         format: this.mutateDate,
                         onFocus: this.onBirthDateFocused
@@ -146,3 +149,6 @@ class GetCard extends Component {
 }
 
 export default Dispatcher(GetCard);
+
+
+// {CreateForm('tel_mobile', form, errors, this.onChangeText, {keyboardType: 'numeric'})}

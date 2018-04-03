@@ -23,8 +23,25 @@ export const keysToSave = (offline, data) => filter(data, (v, k) => offline.incl
 
 export const matchAction = (action, offline) => action && offline.includes(action.substring(0, action.indexOf('_')).toLowerCase());
 
+export function now()
+{
+    const nw = new Date();
+    const time = nw.getTime();
+    let offset = nw.getTimezoneOffset();
+    offset = offset * 60000;
+    return time - offset;
+}
 
-export const now = () => new Date().getTime();
+export function date(from)
+{
+    const nw = new Date(from);
+    const time = nw.getTime();
+    let offset = nw.getTimezoneOffset();
+    offset = offset * 60000;
+    return time - offset;
+}
+
+
 
 export const min = (a, b) => a > b ? b : a;
 export const max = (a, b) => a > b ? a : b;

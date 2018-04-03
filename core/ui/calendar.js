@@ -15,6 +15,8 @@ import theme from '../theme'
 
 import {LocalizeNumber, Translate} from "../i18";
 
+import {Helpers} from '../index';
+
 
 import moment from 'momentj';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -22,6 +24,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import Text from './text';
 import Button from './button';
+import Data from "../../src/models/data";
 
 
 const convertWeek = (g) => {
@@ -63,6 +66,7 @@ class Calendar extends Component {
         this.renderDisable = this.renderDisable.bind(this);
         this.show = this.show.bind(this);
         this.hide = this.hide.bind(this);
+        this.loadDate = this.loadDate.bind(this);
 
 
     }
@@ -83,11 +87,13 @@ class Calendar extends Component {
 
         let dt = {year: 1380, month: 1, day: 1};
         if(date){
-            const d = moment.unix(date);
+            
+            const d = moment.utc(l.getUTCSeconds());
+
             dt = {year: d.jYear(), month: d.jMonth(), day: d.jDate()};
         }
 
-        const jm = moment();
+        const jm = moment().utc();
         this.today = {year: jm.jYear(), month: jm.jMonth(), day: jm.jDate()};
 
         this.setState({
@@ -144,18 +150,34 @@ class Calendar extends Component {
         </TouchableOpacity>);
     }
 
+
+
+
+    loadDate() {
+        const {year, month, day} = this.state;
+
+
+        const from = year + '/' + (month + 1) + '/' + day;
+        const format = 'jYYYY/jM/jD';
+
+        return moment(from, format);
+    }
+
+
     renderDisable(i) {
         return (<TouchableOpacity key={i} style={styles.calendar_dayStyleOther}>
             <Text allowFontScaling={false} style={styles.calendar_dayText}>{' '}</Text>
         </TouchableOpacity>);
     }
 
+
+
     render() {
         const {year, month, day} = this.state;
 
-        const date = moment(year + '/' + (month + 1) + '/' + day, 'jYYYY/jM/jD');
+        const date = this.loadDate();
 
-        const startDayOfMonth = convertWeek(date.startOf('jmonth').weekday());
+        const startDayOfMonth = convertWeek(date.startOf('jmonth').isoWeekday());
         const monthLength = month < 11 ? monthLengths[month] : (((year - 1395) % 4 === 0) ? 30 : 29);
 
         let cache = [];
@@ -186,6 +208,7 @@ class Calendar extends Component {
                 cache = [];
             }
         }
+
         const weeks = Translate('weeksShort');
         const months = Translate('calendar');
         return (this.state.show &&
@@ -216,32 +239,36 @@ class Calendar extends Component {
                     }}>
                         <View style={styles.calendar_row_nav}>
                             <TouchableOpacity style={styles.calendar_dayStyleIcon} onPress={() => {
-                                const jm = moment(year + '/' + (month + 1) + '/' + day, 'jYYYY/jM/jD').subtract(1, 'jyear');
+                                const date = this.loadDate();
+                                const jm = date.subtract(1, 'jyear');
                                 this.setState({year: jm.jYear(), month: jm.jMonth(), day: jm.jDate()});
                             }}>
                                 <Icon name={"fast-forward"} size={20} color={theme.textInvert}/>
                             </TouchableOpacity>
 
                             <TouchableOpacity style={styles.calendar_dayStyleIcon} onPress={() => {
-                                const jm = moment(year + '/' + (month + 1) + '/' + day, 'jYYYY/jM/jD').subtract(1, 'jmonth');
+                                const date = this.loadDate();
+                                const jm = date.subtract(1, 'jmonth');
                                 this.setState({year: jm.jYear(), month: jm.jMonth(), day: jm.jDate()});
                             }}>
                                 <Icon name={"skip-next"} size={20} color={theme.textInvert}/>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => {
-                                const jm = moment();
+                                const jm = this.loadDate();
                                 this.setState({year: jm.jYear(), month: jm.jMonth(), day: jm.jDate()});
                             }}>
                                 <Text>{months[month] + ' ' + LocalizeNumber(year)}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.calendar_dayStyleIcon} onPress={() => {
-                                const jm = moment(year + '/' + (month + 1) + '/' + day, 'jYYYY/jM/jD').add(1, 'jmonth');
+                                const date = this.loadDate();
+                                const jm = date.add(1, 'jmonth');
                                 this.setState({year: jm.jYear(), month: jm.jMonth(), day: jm.jDate()});
                             }}>
                                 <Icon name={"skip-previous"} size={20} color={theme.textInvert}/>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.calendar_dayStyleIcon} onPress={() => {
-                                const jm = moment(year + '/' + (month + 1) + '/' + day, 'jYYYY/jM/jD').add(1, 'jyear');
+                                const date = this.loadDate();
+                                const jm = date.add(1, 'jyear');
                                 this.setState({year: jm.jYear(), month: jm.jMonth(), day: jm.jDate()});
                             }}>
                                 <Icon name={"fast-rewind"} size={20} color={theme.textInvert}/>
@@ -256,8 +283,20 @@ class Calendar extends Component {
                         <View style={styles.calendar_row_buttons}>
                             <Button title={Translate('choose')} onPress={() => {
                                 const {sy, sm, sd} = this.state;
+
+                                const from = sy + '/' + (sm + 1) + '/' + sd;
+                                const format = 'jYYYY/jM/jD';
+
+                                const data = moment(from, format).utc().set({hour: 0, minute: 0});
+
+                                const date = Helpers.date(data.toISOString()) / 1000;
+
+                                console.log(date);
+
                                 if (this.props.onChange)
-                                    this.props.onChange({year: sy, month: sm, day: sd});
+                                    this.props.onChange(date);
+
+
                                 this.hide();
 
                             }}/>

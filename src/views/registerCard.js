@@ -60,6 +60,12 @@ class RegisterCard extends Component {
     }
 
 
+    componentDidMount() {
+        const form = this.state.form;
+        form['code_melli'] = Helpers.leaf(this.props.redux, 'navigation.props.codeMelli');
+        this.setState({form});
+    }
+
 
     onHomeCityFocused() {
         const {form} = this.state;
@@ -249,7 +255,10 @@ class RegisterCard extends Component {
 
 
 
-                    {CreateForm('code_melli', form, errors, this.onChangeText)}
+                    {CreateForm('code_melli', form, errors, this.onChangeText, {
+                        editable: false,
+                        selectTextOnFocus: false
+                    })}
                     {CreateForm('tel_mobile', form, errors, this.onChangeText, {keyboardType: 'numeric'})}
                     {CreateForm('birth_date', form, errors, null, {
                         format: this.mutateBirthDate,

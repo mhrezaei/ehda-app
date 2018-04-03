@@ -21,7 +21,7 @@ class SearchCard extends Component {
         };
         this.onSubmit = this.onSubmit.bind(this);
         this.onChangeText = this.onChangeText.bind(this);
-        this.goToRegister = this.goToRegister.bind(this);
+        //this.goToRegister = this.goToRegister.bind(this);
         this.checkErrors = this.checkErrors.bind(this);
 
 
@@ -51,10 +51,12 @@ class SearchCard extends Component {
 
         return errors;
     }
+    /*
 
     goToRegister() {
         this.props.dispatch(Navigation.goTo('register'));
     }
+    */
 
     onSubmit() {
         const errors = this.checkErrors();
@@ -70,6 +72,8 @@ class SearchCard extends Component {
                 } else {
                     this.props.dispatch(Ajax.stopLoading(1, ()=>{
 
+
+                        /*
                         const err = Translate('errors.' + response);
                         const errors = {
                             code_melli: err
@@ -77,6 +81,10 @@ class SearchCard extends Component {
                         this.setState({errors});
 
                         this.container.wiggle();
+
+                        */
+
+                        this.props.dispatch(Navigation.goTo('registerCard', {codeMelli: response}));
                     }));
                 }
 
@@ -101,7 +109,6 @@ class SearchCard extends Component {
 
                         <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', paddingTop: 20}}>
                             <Button title={Translate('requestCard')} onPress={this.onSubmit}/>
-                            <Button title={Translate('registerCard')} onPress={this.goToRegister}/>
                         </View>
                 </ScrollView>
 
@@ -110,3 +117,7 @@ class SearchCard extends Component {
     }
 }
 export default Dispatcher(SearchCard);
+
+
+
+// <Button title={Translate('registerCard')} onPress={this.goToRegister}/>
