@@ -23,8 +23,6 @@ class SearchCard extends Component {
         this.onChangeText = this.onChangeText.bind(this);
         //this.goToRegister = this.goToRegister.bind(this);
         this.checkErrors = this.checkErrors.bind(this);
-
-
     }
 
     onChangeText(key, value) {
@@ -84,7 +82,7 @@ class SearchCard extends Component {
 
                         */
 
-                        this.props.dispatch(Navigation.goTo('registerCard', {codeMelli: response}));
+                        this.props.dispatch(Navigation.goTo('registerCard', {codeMelli: form.code_melli}));
                     }));
                 }
 
@@ -108,7 +106,7 @@ class SearchCard extends Component {
                         {CreateForm('code_melli', form, errors, this.onChangeText)}
 
                         <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', paddingTop: 20}}>
-                            <Button title={Translate('requestCard')} onPress={this.onSubmit}/>
+                            <Button title={Translate('searchCard')} onPress={this.onSubmit}/>
                         </View>
                 </ScrollView>
 

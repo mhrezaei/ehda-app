@@ -7,7 +7,7 @@ export function toGregorian(jy, jm, jd) {
 export function now() {
 
     const date = new Date();
-    return toJalaali(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+    return toJalaali(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate());
 }
 
 export function toJalaali(gy, gm, gd) {
@@ -16,17 +16,17 @@ export function toJalaali(gy, gm, gd) {
 
 export function startDayOfMonth(year, month){
     const std = toGregorian(year, month, 1);
-    const stdM = new Date(std.gy, std.gm-1, std.gd);
+    const stdM = new Date(std.gy, std.gm-1, std.gd-1);
 
     return stdM.getDay();
 }
 export function fromDate(date) {
-    return toJalaali(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate());
+    return toJalaali(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate() + 1);
 }
 
 export function fromPhp(time) {
     const date = new Date(time * 1000);
-    return toJalaali(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate());
+    return toJalaali(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate() + 1);
 }
 
 

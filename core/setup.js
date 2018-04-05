@@ -61,6 +61,7 @@ export async function ConfigStore(Store) {
 
 
 
+        console.log(action);
         if (matchAction(action, offlineKeys)) {
 
             let map = JSON.parse(await AsyncStorage.getItem('application-state'));

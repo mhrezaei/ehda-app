@@ -4,6 +4,7 @@ import {
     StyleSheet,
     View,
     TouchableOpacity,
+    TouchableWithoutFeedback,
     Keyboard,
     Animated,
     Image
@@ -15,7 +16,6 @@ import {Translate} from "../i18";
 import Text from './text';
 
 import Share from 'react-native-share';
-
 
 const icons = {
     googleplus: {
@@ -40,7 +40,8 @@ const icons = {
 
 class Sharing extends Component {
     static propTypes = {
-        data: PropTypes.array
+        visible: PropTypes.bool,
+        value: PropTypes.object
     };
 
     constructor(props) {
@@ -57,38 +58,44 @@ class Sharing extends Component {
         this.onShare = this.onShare.bind(this);
     }
 
-    onShare(to){
-        let options = {
-            url: this.state.content.uri,
-            type: 'image/png',
-            message: this.state.content.message,
-            title: this.state.content.title,
-            subject: 'Share to:',
-            social: to
-        };
+    onShare(to) {
         try {
-            if (['twitter', 'facebook', 'whatsapp', 'googleplus', 'email'].includes(to))
-                Share.shareSingle(options);
-            else
-                Share.open(options);
-        }catch(x){
+            let options = {
+                url: this.state.content.uri,
+                type: 'image/png',
+                message: this.state.content.message,
+                title: this.state.content.title,
+                subject: 'Share to:',
+                social: to
+            };
+            try {
+                if (['twitter', 'facebook', 'whatsapp', 'googleplus', 'email'].includes(to))
+                    Share.shareSingle(options).catch(x=>{});
+                else
+                    Share.open(options).catch(x=>{});
+            } catch (x) {
+
+            }
+        }catch (x){
 
         }
     }
-    onCancelClicked(){
+
+    onCancelClicked() {
         this.hide();
     }
-    componentDidMount() {
-        this.setState({data: this.props.data});
-    }
-
     componentWillReceiveProps(nextProps) {
-        this.setState({data: nextProps.data});
+
+        if(nextProps.visible){
+            this.show(nextProps.value);
+        }else{
+            this.hide();
+        }
     }
 
     show(content) {
 
-        if(!content)
+        if (!content)
             return;
 
         Keyboard.dismiss();
@@ -128,100 +135,91 @@ class Sharing extends Component {
     render() {
 
         return (this.state.show &&
-            <Animated.View style={{
-                position: 'absolute',
-                left: 0,
-                top: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: 'rgba(0,0,0,0.5)',
-                zIndex: 999,
-                opacity: this.state.translateY.interpolate({
-                    inputRange: [-1, 0],
-                    outputRange: [0, 1]
-                })
+            <TouchableWithoutFeedback onPress={() => {
+                if(this.props.hide)
+                    this.props.hide();
             }}>
-                <KeyboardAwareScrollView
-                    contentContainerStyle={{
-                        flexGrow: 1, flexDirection: 'column-reverse', justifyContent: 'space-between'
-                    }}>
-                    <Animated.View style={{
-                        padding: 20,
-                        backgroundColor: '#fff',
-                        transform: [{
-                            translateY: this.state.translateY.interpolate({
-                                inputRange: [-1, 0],
-                                outputRange: [300, 0]
-                            })
-                        }]
-                    }}>
-
-
-                        <View style={{
-                            flex: 1,
-                            flexDirection: 'row-reverse',
-                            justifyContent: 'flex-start',
-                            alignItems: 'center',
-                            paddingHorizontal: 5,
+                <Animated.View collapsable={false} style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0,0,0,0.5)',
+                    zIndex: 999,
+                    opacity: this.state.translateY.interpolate({
+                        inputRange: [-1, 0],
+                        outputRange: [0, 1]
+                    })
+                }}>
+                    <KeyboardAwareScrollView
+                        contentContainerStyle={{
+                            flexGrow: 1, flexDirection: 'column-reverse', justifyContent: 'space-between'
                         }}>
 
-                            <Image source={icons.share} style={{width: 20, height: 20, marginHorizontal: 10}}
-                                   resizeMode={'contain'}/>
-
-                            <Text>{Translate('shareWith')}</Text>
-                        </View>
-
-
-                        <View style={{
-                            flex: 1,
-                            flexDirection: 'row-reverse',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            paddingVertical: 20,
-                            paddingHorizontal: 5,
+                        <TouchableWithoutFeedback onPress={() => {
                         }}>
-                            <TouchableOpacity style={{flex: 1}} onPress={x=>this.onShare('instagram')}>
-                                <Image source={icons.instagram} style={{height: 45}} resizeMode={'contain'}/>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{flex: 1}} onPress={x=>this.onShare('telegram')}>
-                                <Image source={icons.telegram} style={{height: 45}} resizeMode={'contain'}/>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{flex: 1}} onPress={x=>this.onShare('facebook')}>
-                                <Image source={icons.facebook} style={{height: 45}} resizeMode={'contain'}/>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{flex: 1}} onPress={x=>this.onShare('googleplus')}>
-                                <Image source={icons.googleplus} style={{height: 45}} resizeMode={'contain'}/>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity style={{flex: 1}} onPress={x=>this.onShare('other')}>
-                                <Image source={icons.other} style={{height: 45}} resizeMode={'contain'}/>
-                            </TouchableOpacity>
-                        </View>
-
-                        <TouchableOpacity style={{flex: 1}} onPress={this.onCancelClicked}>
-                            <View style={{
-                                flex: 1,
-                                flexDirection: 'row-reverse',
-                                justifyContent:'center',
-                                alignContent: 'center',
-                                alignItems: 'center',
-                                paddingHorizontal: 20,
-                                paddingVertical: 5
+                            <Animated.View style={{
+                                padding: 20,
+                                zIndex: 999,
+                                backgroundColor: '#fff',
+                                transform: [{
+                                    translateY: this.state.translateY.interpolate({
+                                        inputRange: [-1, 0],
+                                        outputRange: [300, 0]
+                                    })
+                                }]
                             }}>
-                                <Text style={{
-                                    fontFamily: theme.font,
-                                    textAlign: 'center',
-                                    fontSize: 16
-                                }}>{Translate('cancel')}</Text>
-                            </View>
-                        </TouchableOpacity>
 
 
-                    </Animated.View>
-                </KeyboardAwareScrollView>
+                                <View style={{
+                                    flex: 1,
+                                    flexDirection: 'row-reverse',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center',
+                                    paddingHorizontal: 5,
+                                }}>
+
+                                    <Image source={icons.share} style={{width: 20, height: 20, marginHorizontal: 10}}
+                                           resizeMode={'contain'}/>
+
+                                    <Text>{Translate('shareWith')}</Text>
+                                </View>
 
 
-            </Animated.View>
+                                <View style={{
+                                    flex: 1,
+                                    flexDirection: 'row-reverse',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    paddingVertical: 20,
+                                    paddingHorizontal: 5,
+                                }}>
+                                    <TouchableOpacity style={{flex: 1}} onPress={x => this.onShare('instagram')}>
+                                        <Image source={icons.instagram} style={{height: 45}} resizeMode={'contain'}/>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{flex: 1}} onPress={x => this.onShare('telegram')}>
+                                        <Image source={icons.telegram} style={{height: 45}} resizeMode={'contain'}/>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{flex: 1}} onPress={x => this.onShare('facebook')}>
+                                        <Image source={icons.facebook} style={{height: 45}} resizeMode={'contain'}/>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{flex: 1}} onPress={x => this.onShare('googleplus')}>
+                                        <Image source={icons.googleplus} style={{height: 45}} resizeMode={'contain'}/>
+                                    </TouchableOpacity>
+
+                                    <TouchableOpacity style={{flex: 1}} onPress={x => this.onShare('other')}>
+                                        <Image source={icons.other} style={{height: 45}} resizeMode={'contain'}/>
+                                    </TouchableOpacity>
+                                </View>
+
+                            </Animated.View>
+                        </TouchableWithoutFeedback>
+                    </KeyboardAwareScrollView>
+
+
+                </Animated.View>
+            </TouchableWithoutFeedback>
         );
     }
 };

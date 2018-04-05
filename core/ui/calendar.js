@@ -4,27 +4,27 @@ import {
     StyleSheet,
     View,
     TouchableOpacity,
+    TouchableWithoutFeedback,
     Keyboard,
-    Animated
+    Animated,
+    Dimensions
 } from 'react-native'
 
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 
 
-import theme from '../theme'
+import Theme from '../theme'
 
 import {LocalizeNumber, Translate} from "../i18";
 
 import {Helpers, Jalali} from '../index';
 
 
-import moment from 'momentj';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 
 import Text from './text';
-import Button from './button';
-import Data from "../../src/models/data";
 
 
 const convertWeek = (g) => {
@@ -37,16 +37,24 @@ const convertWeek = (g) => {
 const monthLengths = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29];
 
 
+import {min, clamp} from "../../core/helpers";
+
+const window = Dimensions.get("window");
+
+const size = min(window.width, window.height);
+
 class Calendar extends Component {
     static propTypes = {
-        onChange: PropTypes.func
+        onChange: PropTypes.func,
+        visible: PropTypes.bool,
+        value: PropTypes.number
     };
 
     constructor(props) {
         super(props);
 
-        const jm = moment();
-        this.today = {year: jm.jYear(), month: jm.jMonth(), day: jm.jDate()};
+        const jm = Jalali.now();
+        this.today = {year: jm.jy, month: jm.jm, day: jm.jd};
 
         this.state = {
             year: this.today.year,
@@ -58,7 +66,8 @@ class Calendar extends Component {
             sd: this.today.day,
             show: false,
 
-            translateY: new Animated.Value(-1)
+            view: 0,
+            translateY: new Animated.Value(-2)
 
         };
 
@@ -66,7 +75,35 @@ class Calendar extends Component {
         this.renderDisable = this.renderDisable.bind(this);
         this.show = this.show.bind(this);
         this.hide = this.hide.bind(this);
+        this.renderCalendar = this.renderCalendar.bind(this);
+        this.renderMonthPicker = this.renderMonthPicker.bind(this);
 
+
+    }
+
+    componentWillMount() {
+        const data = [];
+        const current = this.today.year;
+
+        for (let i = 0; i < 100; i++) {
+            data.push({
+                id: current - i,
+                title: LocalizeNumber(current - i)
+            });
+        }
+        this.years = data;
+        this.weeks = Translate('weeksShort');
+        this.months = Translate('calendar');
+
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.visible){
+            this.show(nextProps.value);
+        }else{
+
+               this.hide();
+        }
 
     }
 
@@ -85,7 +122,7 @@ class Calendar extends Component {
 
 
         let dt = {year: 1380, month: 1, day: 1};
-        if(date){
+        if (date) {
             const d = Jalali.fromPhp(date);
             dt = {year: d.jy, month: d.jm, day: d.jd};
         }
@@ -101,13 +138,15 @@ class Calendar extends Component {
             sy: dt.year,
             sm: dt.month,
             sd: dt.day,
+            view: 0,
 
             show: true
         });
+
+        this.forceUpdate();
     }
 
     hide() {
-
         this.state.translateY.setValue(0);
         Animated.timing(
             this.state.translateY,
@@ -115,7 +154,12 @@ class Calendar extends Component {
                 toValue: -1,
                 duration: 500,
             }
-        ).start(()=>{
+        ).start(() => {
+
+            const {sy,sm,sd} = this.state;
+
+            if (this.props.onChange)
+                this.props.onChange(Jalali.toPhp(sy, sm, sd));
 
             this.setState({
                 show: false
@@ -131,6 +175,11 @@ class Calendar extends Component {
             sd: date.current,
         });
 
+        if (this.props.onChange)
+            this.props.onChange(Jalali.toPhp(date.year, date.month, date.current));
+
+        if(this.props.hide)
+        this.props.hide();
     }
 
     renderDay(i, date) {
@@ -154,13 +203,97 @@ class Calendar extends Component {
         </TouchableOpacity>);
     }
 
+    shouldComponentUpdate() {
+        return this.state.show;
+    }
+
+    renderMonthPicker() {
 
 
-    render() {
+        let cache = [];
+        let rows = [];
+
+        for (let i = 0; i < 12; i++) {
+            cache.push(<TouchableOpacity key={i} style={styles.monthItemContainer} onPress={() => {
+                this.setState({month: i + 1, view: 0});
+            }}>
+                <View style={styles.monthItem}>
+                    <Text style={styles.monthItemText}>{this.months[i]}</Text>
+                </View>
+            </TouchableOpacity>);
+
+
+            if ((i + 1) % 3 === 0) {
+                rows.push(<View key={i} style={styles.monthRow}>
+                    {cache}
+                </View>);
+                cache = [];
+            }
+
+        }
+
+
+        return (<Animated.View style={{
+            padding: 20,
+            backgroundColor: '#fff',
+            alignSelf: 'center',
+            width: size,
+            transform: [{
+                translateY: this.state.translateY.interpolate({
+                    inputRange: [-1, 0],
+                    outputRange: [-600, 0]
+                })
+            }]
+        }}>
+            {rows}
+        </Animated.View>);
+    }
+
+    renderPicker() {
+
+
+        return (<Animated.View style={{
+            padding: 20,
+            backgroundColor: '#fff',
+            width: size,
+
+            alignSelf: 'center',
+            transform: [{
+                translateY: this.state.translateY.interpolate({
+                    inputRange: [-1, 0],
+                    outputRange: [-600, 0]
+                })
+            }]
+        }}>
+            {
+                this.years.map((x, i) =>
+                    <TouchableOpacity key={i} style={styles.menuItem} onPress={() => {
+                        this.setState({year: x.id, view: 0});
+                    }}>
+                        <View style={styles.menuItem_direct}>
+                            <Text style={styles.menuItem_text}>{x.title}</Text>
+                        </View>
+                    </TouchableOpacity>
+                )
+            }
+            <TouchableOpacity style={{
+                flex: 1
+            }} onPress={() => {
+                this.setState({view: 0});
+            }}>
+                <View style={styles.menuItem_direct}>
+                    <Text style={styles.menuItem_textReturn}>{Translate('cancel')}</Text>
+                </View>
+            </TouchableOpacity>
+
+        </Animated.View>);
+    }
+
+    renderCalendar() {
         const {year, month, day} = this.state;
 
         const startDayOfMonth = convertWeek(Jalali.startDayOfMonth(year, month));
-        const monthLength = month < 11 ? monthLengths[month] : (((year - 1395) % 4 === 0) ? 30 : 29);
+        const monthLength = month < 11 ? monthLengths[month - 1] : (((year - 1395) % 4 === 0) ? 30 : 29);
 
         let cache = [];
         let row = [];
@@ -191,103 +324,97 @@ class Calendar extends Component {
             }
         }
 
-        const weeks = Translate('weeksShort');
-        const months = Translate('calendar');
-        return (this.state.show &&
-            <Animated.View style={{
-                position: 'absolute',
-                left: 0,
-                top: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: 'rgba(0,0,0,0.5)',
-
-                zIndex: 999,
-                opacity: this.state.translateY.interpolate({
+        return (<Animated.View style={{
+            padding: 20,
+            backgroundColor: '#fff',
+            width: size,
+            alignSelf: 'center',
+            transform: [{
+                translateY: this.state.translateY.interpolate({
                     inputRange: [-1, 0],
-                    outputRange: [0, 1]
+                    outputRange: [-600, 0]
                 })
+            }]
+        }}>
+
+            <View style={styles.calendar_row_nav}>
+
+                <TouchableOpacity style={styles.headerButtonContainer} onPress={() => {
+                    this.setState({view: 1})
+                }}>
+                    <Text style={styles.headerButton}>{LocalizeNumber(year)}</Text>
+                    <Icon name={'arrow-drop-down'} size={30} color={Theme.gray}/>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.headerButtonContainer} onPress={() => {
+                    this.setState({view: 2})
+                }}>
+                    <Text style={styles.headerButton}>{this.months[month - 1]}</Text>
+                    <Icon name={'arrow-drop-down'} size={30} color={Theme.gray}/>
+                </TouchableOpacity>
+
+            </View>
+            <View style={styles.calendar_row}>
+                {this.weeks.map((x, i) => <TouchableOpacity key={i} style={styles.calendar_dayStyleOther}>
+                    <Text allowFontScaling={false} style={styles.calendar_dayText}>{x}</Text>
+                </TouchableOpacity>)}
+            </View>
+            {row}
+        </Animated.View>);
+    }
+
+    render() {
+        const {view} = this.state;
+
+        let child = null;
+
+
+        switch (view) {
+            case 0:
+                child = this.renderCalendar();
+                break;
+            case 1:
+                child = this.renderPicker();
+                break;
+            case 2:
+                child = this.renderMonthPicker();
+                break;
+        }
+        return (this.state.show &&
+            <TouchableWithoutFeedback onPress={() => {
+                if (view !== 0) {
+                    this.setState({view: 0});
+                } else {
+
+                    if(this.props.hide)
+                        this.props.hide();
+                }
             }}>
-                <KeyboardAwareScrollView>
-                    <Animated.View style={{
-                        padding: 20,
-                        backgroundColor: '#fff',
-                        transform: [{
-                            translateY: this.state.translateY.interpolate({
-                                inputRange: [-1, 0],
-                                outputRange: [-600, 0]
-                            })
-                        }]
-                    }}>
-                        <View style={styles.calendar_row_nav}>
-                            <TouchableOpacity style={styles.calendar_dayStyleIcon} onPress={() => {
-                                let {year} = this.state;
-                                year--;
-                                if(year < 1300)
-                                    year = this.today.year;
-                                this.setState({year});
-                            }}>
-                                <Icon name={"fast-forward"} size={20} color={theme.textInvert}/>
-                            </TouchableOpacity>
+                <Animated.View style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0,0,0,0.5)',
+                    zIndex: 999,
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    opacity: this.state.translateY.interpolate({
+                        inputRange: [-1, 0],
+                        outputRange: [0, 1]
+                    })
+                }}>
 
-                            <TouchableOpacity style={styles.calendar_dayStyleIcon} onPress={() => {
-                                let {month} = this.state;
-                                month--;
-                                if(month < 1)
-                                    month = monthLength;
-                                this.setState({month});
-                            }}>
-                                <Icon name={"skip-next"} size={20} color={theme.textInvert}/>
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => {
-                                const jm = Jalali.now();
-                                this.setState({year: jm.jy, month: jm.jm, day: jm.jd});
-                            }}>
-                                <Text>{months[month] + ' ' + LocalizeNumber(year)}</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.calendar_dayStyleIcon} onPress={() => {
-                                let {month} = this.state;
-                                month++;
-                                if(month > monthLength)
-                                    month = 1;
-                                this.setState({month});
-                            }}>
-                                <Icon name={"skip-previous"} size={20} color={theme.textInvert}/>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.calendar_dayStyleIcon} onPress={() => {
-                                let {year} = this.state;
-                                year++;
-                                if(year > this.today.year)
-                                    year = 1300;
-                                this.setState({year});
-                            }}>
-                                <Icon name={"fast-rewind"} size={20} color={theme.textInvert}/>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.calendar_row}>
-                            {weeks.map((x, i) => <TouchableOpacity key={i} style={styles.calendar_dayStyleOther}>
-                                <Text allowFontScaling={false} style={styles.calendar_dayText}>{x}</Text>
-                            </TouchableOpacity>)}
-                        </View>
-                        {row}
-                        <View style={styles.calendar_row_buttons}>
-                            <Button title={Translate('choose')} onPress={() => {
-                                const {sy, sm, sd} = this.state;
+                    <KeyboardAwareScrollView>
+                        <TouchableWithoutFeedback onPress={() => {
+                        }}>
+                            {child}
+                        </TouchableWithoutFeedback>
+                    </KeyboardAwareScrollView>
 
-                                if (this.props.onChange)
-                                    this.props.onChange(Jalali.toPhp(sy, sm, sd));
-
-
-                                this.hide();
-
-                            }}/>
-                            <Button title={Translate('cancel')} onPress={() => {
-                                this.hide();
-                            }}/>
-                        </View>
-                    </Animated.View>
-                </KeyboardAwareScrollView>
-            </Animated.View>
+                </Animated.View>
+            </TouchableWithoutFeedback>
         );
     }
 };
@@ -295,10 +422,79 @@ class Calendar extends Component {
 Calendar.propTypes = {};
 
 
+const dayStyleCommon = {
+    flex: 1,
+    borderRadius: 50,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    margin: 2,
+    alignItems: 'center',
+    alignContent: 'center',
+
+    paddingVertical: 6
+};
+
+const dayStyleTextCommon = {
+    textAlign: 'center',
+    alignSelf: 'center',
+    fontSize: 18,
+};
+
 const styles = StyleSheet.create({
     content: {
-        padding: 20,
+        padding: 10,
         backgroundColor: '#fff'
+    },
+    monthRow: {
+        flex: 1,
+        alignSelf: 'center',
+        flexDirection: 'row-reverse',
+        justifyContent: 'center',
+        alignContent: 'center'
+    },
+    monthItemContainer: {
+        flex: 1,
+        flexDirection: 'row-reverse',
+        justifyContent: 'center',
+        alignContent: 'center'
+    },
+    monthItem: {
+        paddingHorizontal: 0,
+        paddingVertical: 20,
+    },
+    monthItemText: {
+        fontSize: 20
+    },
+
+    menuItem: {
+        flex: 1,
+        borderBottomColor: Theme.border,
+        borderBottomWidth: 1
+    },
+    menuItem_direct: {
+        flex: 1,
+        flexDirection: 'row-reverse',
+        alignContent: 'center',
+        alignSelf: 'center',
+        paddingHorizontal: 20,
+        paddingVertical: 20
+    },
+
+    menuItem_text: {
+        fontSize: 20,
+        textAlign: 'center'
+    },
+    menuItem_textReturn: {color: Theme.gray, fontSize: 20},
+    headerButtonContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingBottom: 10
+    },
+    headerButton: {
+        fontSize: 20
     },
     calendar: {
         position: 'absolute',
@@ -320,7 +516,7 @@ const styles = StyleSheet.create({
     calendar_row_nav: {
         flex: 1,
         flexDirection: 'row-reverse',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         alignItems: 'center'
     },
     calendar_row_buttons: {
@@ -331,84 +527,92 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     calendar_dayStyleOther: {
-        flex: 1,
-        width: 30,
-        height: 30,
-        borderRadius: 20,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        backgroundColor: theme.background,
-        alignSelf: 'center',
-        margin: 5,
-        alignItems: 'center',
-        alignContent: 'center'
+        ...dayStyleCommon,
+        backgroundColor: Theme.background
     },
 
     calendar_dayStyleSelected: {
-
-        flex: 1,
-        width: 30,
-        height: 30,
-        borderRadius: 20,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        backgroundColor: theme.red,
-        alignSelf: 'center',
-        margin: 5,
-        alignItems: 'center',
-        alignContent: 'center'
+        ...dayStyleCommon,
+        backgroundColor: Theme.red
     },
     calendar_dayStyle: {
-        flex: 1,
-        width: 30,
-        height: 30,
-        borderRadius: 20,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        backgroundColor: theme.backgroundDark,
-        alignSelf: 'center',
-        margin: 5,
-        alignItems: 'center',
-        alignContent: 'center'
-    },
-    calendar_dayStyleIcon: {
-        flex: 1,
-        width: 30,
-        height: 30,
-        borderRadius: 20,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        backgroundColor: theme.backgroundDark,
-        alignSelf: 'center',
-        margin: 5,
-        alignItems: 'center',
-        alignContent: 'center'
+        ...dayStyleCommon,
+        backgroundColor: Theme.backgroundDark,
     },
     calendar_dayStyleToday: {
-        flex: 1,
-        width: 30,
-        height: 30,
-        borderRadius: 20,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        backgroundColor: theme.accent,
-        alignSelf: 'center',
-        margin: 5,
-        alignItems: 'center',
-        alignContent: 'center'
+        ...dayStyleCommon,
+        backgroundColor: Theme.accent,
     },
     calendar_dayText: {
-        textAlign: 'center',
-        color: theme.textInvert,
-        alignSelf: 'center'
+        ...dayStyleTextCommon,
+        color: Theme.textInvert,
 
     },
     calendar_dayTextSelected: {
-        textAlign: 'center',
-        color: theme.text,
-        alignSelf: 'center'
+        ...dayStyleTextCommon,
+        color: Theme.text,
     }
 });
 
 
 export default Calendar;
+
+
+/*
+ <TouchableOpacity style={styles.calendar_dayStyleIcon} onPress={() => {
+                                let {year} = this.state;
+                                year--;
+                                if(year < 1300)
+                                    year = this.today.year;
+                                this.setState({year});
+                            }}>
+                                <Icon name={"fast-forward"} size={20} color={theme.textInvert}/>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={styles.calendar_dayStyleIcon} onPress={() => {
+                                let {year, month} = this.state;
+                                month--;
+                                if(month < 1) {
+                                    month = 12;
+                                    year--;
+                                    if(year < 1300)
+                                        year = this.today.year;
+                                }
+
+
+                                this.setState({year, month});
+                            }}>
+                                <Icon name={"skip-next"} size={20} color={theme.textInvert}/>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => {
+                                const jm = Jalali.now();
+                                this.setState({year: jm.jy, month: jm.jm, day: jm.jd});
+                            }}>
+                                <Text>{months[month-1] + ' ' + LocalizeNumber(year)}</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.calendar_dayStyleIcon} onPress={() => {
+                                let {year, month} = this.state;
+                                month++;
+                                if(month > 12) {
+                                    month = 1;
+                                    year++;
+                                    if(year > this.today.year)
+                                        year = 1300;
+                                }
+
+
+                                this.setState({year, month});
+                            }}>
+                                <Icon name={"skip-previous"} size={20} color={theme.textInvert}/>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.calendar_dayStyleIcon} onPress={() => {
+                                let {year} = this.state;
+                                year++;
+                                if(year > this.today.year)
+                                    year = 1300;
+                                this.setState({year});
+                            }}>
+                                <Icon name={"fast-rewind"} size={20} color={theme.textInvert}/>
+                            </TouchableOpacity>
+
+ */

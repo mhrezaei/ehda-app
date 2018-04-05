@@ -18,9 +18,6 @@ class MyCards extends Component {
         }
     }
 
-    componentDidMount() {
-    }
-
     render() {
         return (
             <Container>

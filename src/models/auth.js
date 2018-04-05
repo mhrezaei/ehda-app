@@ -86,9 +86,10 @@ class Auth {
         };
     }
 
-    static getToken() {
+    static getToken(callback) {
         return {
-            type: Auth.types.AUTH_GET_TOKEN_ASYNC
+            type: Auth.types.AUTH_GET_TOKEN_ASYNC,
+            callback: callback
         };
     }
 
@@ -131,41 +132,42 @@ class Auth {
     static *_getToken(payload) {
 
         try {
-
-
             if (!(yield Ajax._checkConnection())) {
                 yield put({
                     type: Auth.types.AUTH_GET_TOKEN_FAILED
                 });
                 yield put(Ajax.connectionFailed(0));
+                yield call(payload.callback, false, -99);
                 return;
             }
 
             let token = yield Auth._checkToken();
-
 
             if (token) {
                 yield put({
                     type: Auth.types.AUTH_GET_TOKEN_SUCCESS,
                     token: token
                 });
+                yield call(payload.callback, true, token);
                 return;
             }
 
             yield put({
                 type: Auth.types.AUTH_GET_TOKEN_FAILED
             });
+            yield call(payload.callback, false, -99);
         } catch (error) {
             yield put({
                 type: Auth.types.AUTH_GET_TOKEN_FAILED
             });
-
             yield put(Ajax.connectionFailed(1));
+            yield call(payload.callback, false, -99);
         } finally {
             if (yield cancelled()) {
                 yield put({
                     type: Auth.types.AUTH_GET_TOKEN_FAILED
                 });
+                yield call(payload.callback, false, -99);
             }
         }
     }
@@ -216,7 +218,7 @@ class Auth {
         }
     }
 
-    static *_getCard(payload) {
+    static * _getCard(payload) {
         try {
 
             if (!(yield Ajax._checkConnection())) {

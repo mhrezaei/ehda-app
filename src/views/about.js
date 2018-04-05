@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import {View, StyleSheet, Image, Linking, TouchableOpacity, Platform} from 'react-native';
+import {View, StyleSheet, Image, WebView, Platform} from 'react-native';
 
 import {Text, Translate} from '../../core';
 
@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
     text:{
         padding: 15,
         fontSize: 16,
+        direction: 'rtl',
         textAlign: Platform.OS === 'ios' ? 'justify' : 'right',
         writingDirection:'rtl',
         lineHeight: 30

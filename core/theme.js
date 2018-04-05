@@ -26,6 +26,6 @@ export default {
 
         shadowRadius: 3,
         shadowOpacity: 0.3,
-        elevation: 1
+        elevation: 3
     }
 };

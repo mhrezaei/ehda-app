@@ -2,11 +2,12 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import Drawer from 'react-native-drawer';
-import {Attach, Theme, Helpers, Text, ActionBar, Translate, Router, Loading} from "../../core/index";
-import {Auth, Navigation} from '../models/index';
+import {Attach, Theme, Helpers, Text, ActionBar, Translate, Router, Loading, Calendar, Sharing} from "../../core/index";
+import {Auth, Navigation, Ajax, Dialog} from '../models/index';
 import {Routes} from '../routes';
 import {Menu} from "./menu/menu";
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {LocalizeNumber} from "../../core/i18";
 
 
 class App extends Component {
@@ -28,6 +29,7 @@ class App extends Component {
         this.closeDrawer = this.closeDrawer.bind(this);
         this.onItemClicked = this.onItemClicked.bind(this);
         this.gotoSearchCard = this.gotoSearchCard.bind(this);
+        this.onInternetBannerClicked = this.onInternetBannerClicked.bind(this);
 
     }
 
@@ -41,6 +43,18 @@ class App extends Component {
 
     gotoSearchCard(){
         this.props.dispatch(Navigation.goTo('searchCard'));
+    }
+    onInternetBannerClicked(){
+
+        this.props.dispatch(Ajax.startLoading([Translate('internetConnected'), Translate('internetError')]));
+
+
+        this.props.dispatch(Auth.getToken((status) => {
+            if(status)
+                this.props.dispatch(Ajax.stopLoading(0));
+            else
+                this.props.dispatch(Ajax.stopLoading(1));
+        }));
     }
     openDrawer() {
         this.drawer.open();
@@ -57,7 +71,7 @@ class App extends Component {
     }
 
     render() {
-        const {redux, ajaxRequests, progress, ajaxInternet, currentRoute, defaultRoute, ownerName, dispatch} = this.props;
+        const {redux,sharing, calendar, cardsCount, ajaxRequests, progress, ajaxInternet, currentRoute, defaultRoute, ownerName, dispatch} = this.props;
         return (
             <Drawer
                 ref={(ref) => this.drawer = ref}
@@ -76,7 +90,7 @@ class App extends Component {
                     <ActionBar name={Translate('app')} loading={ajaxRequests > 0} title={Routes[currentRoute].title}
                                onPress={this.openDrawer}/>
 
-                    {ajaxInternet === false && <TouchableOpacity style={styles.banner}>
+                    {ajaxInternet === false && <TouchableOpacity style={styles.banner} onPress={this.onInternetBannerClicked}>
                         <View style={styles.bannerDirect}>
                             <Text invert>{Translate('noInternet')}</Text>
                         </View>
@@ -84,11 +98,27 @@ class App extends Component {
 
                     <Router routes={Routes} defaultRoute={defaultRoute} current={currentRoute} redux={redux}/>
 
+
+
+
                     {['myCard', 'myCards', 'contact', 'about'].includes(currentRoute) && <View style={styles.floatingButtonContainer}>
                         <TouchableOpacity style={styles.floatingButtonIcon} onPress={this.gotoSearchCard}>
                             <Icon name={'add'} color={Theme.white} size={20}/>
+                            {cardsCount && <View style={styles.cardsCountContainer}><Text style={styles.cardsCount}>{LocalizeNumber(cardsCount.toString())}</Text></View>}
                         </TouchableOpacity>
                     </View>}
+
+
+                    <Calendar hide={()=>{
+                        this.props.dispatch(Dialog.closeCalendar());
+                    }} visible={calendar.visible} value={calendar.value}  onChange={calendar.action}/>
+
+
+                    <Sharing hide={()=>{
+                        this.props.dispatch(Dialog.closeSharing());
+                    }} visible={sharing.visible} value={sharing.value} />
+
+
                     <Loading progress={progress}/>
                 </View>
 
@@ -119,17 +149,35 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         backgroundColor: Theme.background,
     },
+    cardsCountContainer:{
+        position: 'absolute',
+        width: 25,
+        height: 25,
+        borderRadius: 40,
+        backgroundColor: Theme.accentLight,
+        alignContent: 'center',
+        justifyContent: 'center'
+    },
+    cardsCount: {
+        position: 'relative',
+        color: Theme.white,
+        alignSelf: 'center',
+        fontSize: 14,
+        textAlign: 'center',
+    },
     floatingButtonIcon: {
         backgroundColor: Theme.accent,
         padding: 18,
-        borderRadius: 100,
+        borderRadius: 40,
         ...Theme.shadow
     },
     floatingButtonContainer:{
         position: 'absolute',
-        left: 20,
-        bottom: 20,
-        zIndex: 898
+        bottom: 0,
+        left: 0,
+        paddingLeft: 20,
+        paddingBottom: 20,
+        zIndex: 888
     },
     banner:{
         backgroundColor: Theme.accent,
@@ -148,9 +196,20 @@ const styles = StyleSheet.create({
 });
 
 export default Attach({
+    'dialog.calendar': (calendar) => {
+        return {
+            calendar: calendar
+        }
+    },
+    'dialog.sharing': (sharing) => {
+        return {
+            sharing: sharing
+        }
+    },
     'auth.pinned': (pinned, redux) => {
         return {
-            ownerName: Helpers.leaf(redux, 'auth.cards.'+ pinned + '.info.ehda_card_details.full_name', '')
+            ownerName: Helpers.leaf(redux, 'auth.cards.'+ pinned + '.info.ehda_card_details.full_name', ''),
+            cardsCount: Object.keys(Helpers.leaf(redux, 'auth.cards', {})).length,
         };
     },
     'ajax': (ajax) => {

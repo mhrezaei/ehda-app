@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
 
 
 function Container({children}) {
-    return (<View style={{flex:1}}>{children}</View>);
+    return (<View style={{flex:1, zIndex: 2}}>{children}</View>);
 }
 
 

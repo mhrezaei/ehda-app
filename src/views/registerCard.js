@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import {View, Animated, StyleSheet, Keyboard} from 'react-native';
-import {Button, Translate, Attach, Helpers, Calendar, LocalizeNumber, Loading, Picker} from '../../core/index';
+import {View, Animated, StyleSheet, Keyboard, DatePickerIOS} from 'react-native';
+import {Button, Translate, Attach, Helpers, LocalizeNumber, Text, Picker, Jalali} from '../../core/index';
 
-import {Navigation, Auth, Ajax, Data} from '../models/index';
-import {CreateDatePicker, CreateForm} from "./common/formInput";
+import {Navigation, Auth, Ajax, Data, Dialog} from '../models/index';
+import {CreateForm} from "./common/formInput";
 
 import {ScrollView} from "./common/scrollView";
 import {Container} from "./common/container";
@@ -17,7 +17,6 @@ class RegisterCard extends Component {
         provinces: [],
         cities: []
     };
-
     constructor(props) {
         super(props);
         this.state = {
@@ -38,6 +37,7 @@ class RegisterCard extends Component {
         this.genderTypes = Translate('genderTypes');
 
         this.onSubmit = this.onSubmit.bind(this);
+        this.onBack = this.onBack.bind(this);
         this.onChangeText = this.onChangeText.bind(this);
         this.checkErrors = this.checkErrors.bind(this);
         this.onBirthDateFocused = this.onBirthDateFocused.bind(this);
@@ -60,6 +60,10 @@ class RegisterCard extends Component {
     }
 
 
+    onBack() {
+        this.props.dispatch(Navigation.goTo('searchCard'));
+    }
+
     componentDidMount() {
         const form = this.state.form;
         form['code_melli'] = Helpers.leaf(this.props.redux, 'navigation.props.codeMelli');
@@ -79,7 +83,7 @@ class RegisterCard extends Component {
 
     mutateHomeCity(value) {
 
-        let tmp = Translate('chooseIt');
+        let tmp = '';
 
         const tmpList = this.props.cities.filter(x => x.id === value);
 
@@ -90,11 +94,8 @@ class RegisterCard extends Component {
     }
 
 
-
-
-
     onProvinceFocused() {
-        if(this.props.provinces.length === 0)
+        if (this.props.provinces.length === 0)
             this.props.dispatch(Data.getProvince());
 
         const {form} = this.state;
@@ -104,7 +105,7 @@ class RegisterCard extends Component {
     onProvinceChanged(value) {
         const old = this.state.form.province;
 
-        if(old !== value){
+        if (old !== value) {
             this.props.dispatch(Data.getCities(value));
         }
         this.onChangeText('province', value);
@@ -112,7 +113,7 @@ class RegisterCard extends Component {
 
 
     mutateProvince(value) {
-        let tmp = Translate('chooseIt');
+        let tmp = '';
 
         const tmpList = this.props.provinces.filter(x => x.id === value);
 
@@ -135,7 +136,7 @@ class RegisterCard extends Component {
 
     mutateGender(value) {
         const tmpList = this.genderTypes.filter(x => x.id === value);
-        let tmp = Translate('chooseIt');
+        let tmp = '';
         if (tmpList.length > 0)
             tmp = tmpList[0].title;
         return tmp;
@@ -144,18 +145,25 @@ class RegisterCard extends Component {
 
     onBirthDateFocused() {
         const {form} = this.state;
-        this.calendar.show(form.birth_date);
+
+        if(this.container.hasOwnProperty('focus'))
+            this.container.focus();
+        this.props.dispatch(Dialog.openCalendar(form.birth_date, this.onBirthDateChanged))
     }
 
     onBirthDateChanged(date) {
-        const d = moment(date.year + '/' + (date.month + 1) + '/' + date.day, 'jYYYY/jMM/jD');
-        this.onChangeText('birth_date', d.unix());
+
+        if(this.container.hasOwnProperty('focus'))
+            this.container.focus();
+        this.onChangeText('birth_date', date);
     }
 
     mutateBirthDate(value) {
-        return LocalizeNumber(moment.unix(value).format('jYYYY/jM/jD'));
+        if (!value)
+            return '';
+        const date = Jalali.fromPhp(value);
+        return LocalizeNumber(date.jy + '/' + date.jm + '/' + date.jd);
     }
-
 
     onChangeText(key, value) {
         const form = this.state.form;
@@ -200,16 +208,17 @@ class RegisterCard extends Component {
         if (Object.keys(errors).length === 0) {
 
 
-            this.props.dispatch(Ajax.startLoading([Translate('registerCardDone'),Translate('registerCardError')]));
+            delete form['province'];
+            this.props.dispatch(Ajax.startLoading([Translate('registerCardDone'), Translate('registerCardError')]));
             this.props.dispatch(Auth.registerCard(form, (success, response) => {
                 if (success) {
-                    this.props.dispatch(Ajax.stopLoading(0, ()=>{
+                    this.props.dispatch(Ajax.stopLoading(0, () => {
 
                         this.props.dispatch(Navigation.goTo('myCard'));
                     }));
                 } else {
 
-                    this.props.dispatch(Ajax.stopLoading(1, ()=>{
+                    this.props.dispatch(Ajax.stopLoading(1, () => {
 
                         const err = Translate('errors.' + response);
                         const errors = {
@@ -240,19 +249,18 @@ class RegisterCard extends Component {
                     {CreateForm('gender', form, errors, null, {
                         format: this.mutateGender,
                         onFocus: this.onGenderFocused
-                    })}
+                    },{name: 'arrow-drop-down'})}
 
                     {CreateForm('province', form, errors, null, {
                         format: this.mutateProvince,
                         onFocus: this.onProvinceFocused
-                    })}
+                    },{name: 'arrow-drop-down'})}
 
 
                     {form['province'] && CreateForm('home_city', form, errors, null, {
                         format: this.mutateHomeCity,
                         onFocus: this.onHomeCityFocused
-                    })}
-
+                    },{name: 'arrow-drop-down'})}
 
 
                     {CreateForm('code_melli', form, errors, this.onChangeText, {
@@ -263,14 +271,14 @@ class RegisterCard extends Component {
                     {CreateForm('birth_date', form, errors, null, {
                         format: this.mutateBirthDate,
                         onFocus: this.onBirthDateFocused
-                    })}
+                    }, {name: 'arrow-drop-down'})}
 
-                    <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', paddingTop: 20}}>
-                        <Button title={Translate('requestCard')} onPress={this.onSubmit}/>
+                    <View style={{flex: 1, flexDirection: 'row-reverse', alignItems: 'center', paddingTop: 20}}>
+                        <Button title={Translate('registerCard')} onPress={this.onSubmit}/>
+                        <Button title={Translate('cancel')} onPress={this.onBack}/>
                     </View>
                 </ScrollView>
 
-                <Calendar ref={x => this.calendar = x} onChange={this.onBirthDateChanged}/>
                 <Picker ref={x => this.genderSelector = x} onChange={this.onGenderChanged} data={this.genderTypes}/>
                 <Picker ref={x => this.provinceSelector = x} onChange={this.onProvinceChanged} data={provinces}/>
                 <Picker ref={x => this.homeCitySelector = x} onChange={this.onHomeCityChanged} data={cities}/>
@@ -282,12 +290,12 @@ class RegisterCard extends Component {
 }
 
 export default Attach({
-    'data.provinces.handle': (data,redux) => {
+    'data.provinces.handle': (data, redux) => {
         return {
             provinces: Helpers.leaf(redux, 'data.provinces.list')
         }
     },
-    'data.cities.handle': (data,redux) => {
+    'data.cities.handle': (data, redux) => {
         return {
             cities: Helpers.leaf(redux, 'data.cities.list')
         }

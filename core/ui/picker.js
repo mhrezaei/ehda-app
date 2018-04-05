@@ -4,19 +4,19 @@ import {
     StyleSheet,
     View,
     TouchableOpacity,
+    TouchableWithoutFeedback,
     Keyboard,
     Animated
 } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 
 
-import theme from '../theme'
+import Theme from '../theme'
 
 import {Translate} from "../i18";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import Text from './text';
-
 
 
 class Picker extends Component {
@@ -40,11 +40,12 @@ class Picker extends Component {
         this.onCancelClicked = this.onCancelClicked.bind(this);
     }
 
-    onCancelClicked(){
-            this.props.onChange(null);
-            this.setState({selected: null});
-            this.hide();
+    onCancelClicked() {
+        this.props.onChange(null);
+        this.setState({selected: null});
+        this.hide();
     }
+
     componentDidMount() {
         this.setState({data: this.props.data});
     }
@@ -67,7 +68,6 @@ class Picker extends Component {
         ).start();
 
 
-
         this.setState({
             show: true,
             selected: d
@@ -84,7 +84,7 @@ class Picker extends Component {
                 toValue: -1,
                 duration: 500,
             }
-        ).start(()=>{
+        ).start(() => {
 
             this.setState({
                 show: false
@@ -92,63 +92,74 @@ class Picker extends Component {
         });
     }
 
+
     render() {
         const {onChange, data} = this.props;
         const {selected} = this.state;
 
 
+
         return (this.state.show &&
-            <Animated.View style={{
-                position: 'absolute',
-                left: 0,
-                top: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: 'rgba(0,0,0,0.5)',
-                zIndex: 999,
-                opacity: this.state.translateY.interpolate({
-                    inputRange: [-1, 0],
-                    outputRange: [0, 1]
-                })
+            <TouchableWithoutFeedback onPress={()=>{
+                this.hide();
             }}>
-                <KeyboardAwareScrollView>
-                    <Animated.View style={{
-                        padding: 20,
-                        backgroundColor: '#fff',
-                        transform: [{
-                            translateY: this.state.translateY.interpolate({
-                                inputRange: [-1, 0],
-                                outputRange: [-600, 0]
-                            })
-                        }]
-                    }}>
-                        {
-                            data.map((x, i) =>
-                                <TouchableOpacity key={i} style={styles.menuItem} onPress={() => {
-                                    onChange(x.id);
-                                    this.setState({selected: x.id});
-                                    this.hide();
-                                }}>
-                                    <View style={styles.menuItem_direct}>
-                                        {x.id === selected &&
-                                        <Icon name={'check'} style={styles.menuItem_icon} size={20}/>}
-                                        <Text style={styles.menuItem_text}>{x.title}</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            )
-                        }
-                        <TouchableOpacity style={{
-                            flex: 1
-                        }} onPress={this.onCancelClicked}>
-                            <View style={styles.menuItem_direct}>
-                                <Text style={styles.menuItem_text}>{Translate('cancel')}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </Animated.View>
-                </KeyboardAwareScrollView>
+                <Animated.View style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0,0,0,0.5)',
+                    zIndex: 999,
+                    opacity: this.state.translateY.interpolate({
+                        inputRange: [-1, 0],
+                        outputRange: [0, 1]
+                    })
+                }}>
+                    <KeyboardAwareScrollView>
+
+                        <TouchableWithoutFeedback onPress={() => {
+                        }}>
+                        <Animated.View style={{
+                            padding: 20,
+                            backgroundColor: '#fff',
+                            transform: [{
+                                translateY: this.state.translateY.interpolate({
+                                    inputRange: [-1, 0],
+                                    outputRange: [-600, 0]
+                                })
+                            }]
+                        }}>
+                            {
+                                data.map((x, i) =>
+                                    <TouchableOpacity key={i} style={styles.menuItem} onPress={() => {
+                                        onChange(x.id);
+                                        this.setState({selected: x.id});
+                                        this.hide();
+                                    }}>
+                                        <View style={styles.menuItem_direct}>
+                                            {x.id === selected &&
+                                            <Icon name={'check'} style={styles.menuItem_icon} size={20}/>}
+                                            <Text style={styles.menuItem_text}>{x.title}</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                )
+                            }
+                            <TouchableOpacity style={{
+                                flex: 1
+                            }} onPress={this.onCancelClicked}>
+                                <View style={styles.menuItem_direct}>
+                                    <Text style={{color: Theme.gray}}>{Translate('cancel')}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </Animated.View>
+
+                        </TouchableWithoutFeedback>
+                    </KeyboardAwareScrollView>
 
 
-            </Animated.View>
+                </Animated.View>
+            </TouchableWithoutFeedback>
         );
     }
 };
@@ -164,8 +175,11 @@ const styles = StyleSheet.create({
     },
     menuItem: {
         flex: 1,
-        borderBottomColor: theme.border,
+        borderBottomColor: Theme.border,
         borderBottomWidth: 1
+    },
+    menuItem_text: {
+      fontSize: 16,
     },
     menuItem_direct: {
         flex: 1,
@@ -173,9 +187,6 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         paddingHorizontal: 20,
         paddingVertical: 20
-    },
-    menuItem_text: {
-        fontFamily: theme.font
     },
     menuItem_icon: {
         width: 20,

@@ -9,6 +9,7 @@
 
 module.exports = {
     Ajax: require('./ajax').default,
+    Dialog: require('./dialog').default,
     App: require('./app').default,
     Auth: require('./auth').default,
     Data: require('./data').default,

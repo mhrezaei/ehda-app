@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {View, Animated, StyleSheet, Keyboard} from 'react-native';
-import {Button, Translate, Attach, Helpers, Calendar, Loading, LocalizeNumber, Dispatcher} from '../../core/index';
+import {Button, Translate, Attach,Text, Helpers, Loading, LocalizeNumber, Dispatcher, Jalali} from '../../core/index';
 
-import {Navigation, Auth, Ajax} from '../models';
-import {CreateForm} from "./common/formInput";
+import {Navigation, Auth, Ajax, Dialog} from '../models';
+import {CreateForm, CreateFormDate} from "./common/formInput";
 
 import {ScrollView} from "./common/scrollView";
 import {Container} from "./common/container";
@@ -29,9 +29,17 @@ class GetCard extends Component {
         this.onBirthDateFocused = this.onBirthDateFocused.bind(this);
         this.onBirthDateChanged = this.onBirthDateChanged.bind(this);
         this.mutateDate = this.mutateDate.bind(this);
+        this.onBack = this.onBack.bind(this);
+
 
 
     }
+
+
+    onBack(){
+        this.props.dispatch(Navigation.goTo('searchCard'));
+    }
+
 
     componentDidMount() {
         const form = this.state.form;
@@ -42,17 +50,22 @@ class GetCard extends Component {
 
     onBirthDateFocused() {
         const {form} = this.state;
-        this.calendar.show(form.birth_date);
+        if(this.container.hasOwnProperty('focus'))
+        this.container.focus();
+        this.props.dispatch(Dialog.openCalendar(form.birth_date, this.onBirthDateChanged));
     }
 
     onBirthDateChanged(date) {
+        if(this.container.hasOwnProperty('focus'))
+        this.container.focus();
         this.onChangeText('birth_date', date);
     }
 
     mutateDate(value) {
         if(!value)
             return '';
-        return LocalizeNumber(moment.utc(value).format('jYYYY/jM/jD'));
+        const date = Jalali.fromPhp(value);
+        return LocalizeNumber(date.jy + '/'+date.jm+'/'+date.jd);
     }
 
     onChangeText(key, value) {
@@ -76,9 +89,9 @@ class GetCard extends Component {
                     if (!value)
                         errors[key] = Translate('errors.-98');
                     break;
-                case 'tel_mobile':
+                /*case 'tel_mobile':
                     if (!value || !/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/.test(value))
-                        errors[key] = Translate('errors.-97');
+                        errors[key] = Translate('errors.-97');*/
                     break;
             }
 
@@ -126,23 +139,19 @@ class GetCard extends Component {
 
         return (
             <Container>
-                <ScrollView ref={ref => this.container = ref}>
+                <ScrollView  ref={ref => this.container = ref}>
+                    {CreateForm('code_melli', form, errors, null, {
 
-                    {CreateForm('code_melli', form, errors, this.onChangeText, {
-                        editable: false,
-                        selectTextOnFocus: false
                     })}
-
-                    {CreateForm('birth_date', form, errors, this.onChangeText, {
+                    {CreateForm('birth_date', form, errors, null, {
                         format: this.mutateDate,
                         onFocus: this.onBirthDateFocused
-                    })}
-
-                    <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', paddingTop: 20}}>
+                    },{name: 'arrow-drop-down'})}
+                    <View   style={{flex: 1, flexDirection: 'row-reverse', alignItems: 'center', paddingTop: 20}}>
                         <Button title={Translate('requestCard')} onPress={this.onSubmit}/>
+                        <Button title={Translate('cancel')} onPress={this.onBack}/>
                     </View>
                 </ScrollView>
-                <Calendar ref={x => this.calendar = x} onChange={this.onBirthDateChanged}/>
             </Container>
         );
     }

@@ -1,6 +1,7 @@
 package com.ehdaapp;
 
 import android.app.Application;
+import android.content.res.Configuration;
 
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
@@ -15,6 +16,7 @@ import cl.json.ShareApplication;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class MainApplication extends Application implements ReactApplication, ShareApplication {
 
@@ -52,6 +54,8 @@ public class MainApplication extends Application implements ReactApplication, Sh
     @Override
     public void onCreate() {
         super.onCreate();
+
+
         SoLoader.init(this, /* native exopackage */ false);
     }
 }

@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {View, StyleSheet, Image, Linking, TouchableOpacity} from 'react-native';
-import {Button, Translate, Helpers, Attach, Loading, Text, File, Theme, Sharing} from '../../core/index';
+import {Button, Translate, Helpers, Attach, Loading, Text, File, Sharing} from '../../core/index';
 
-import {Navigation, Auth, Ajax} from '../models/index';
+import {Dialog, Auth, Ajax} from '../models/index';
 
 import {Container} from "./common/container";
 import {ScrollView} from "./common/scrollView";
@@ -52,11 +52,11 @@ class MyCard extends Component {
         const {pinnedCard} = this.props;
         const url = 'ehda/' + pinnedCard + '/social';
         File.read(url).then((data) => {
-            this.sharing.show({
+            this.props.dispatch(Dialog.openSharing({
                 uri: data,
                 title: Translate('shareMyBonesTtile'),
                 message: Translate('shareMyBones')
-            });
+            }));
         }).catch(() => {
         });
     }
@@ -126,10 +126,8 @@ class MyCard extends Component {
                         <Button title={Translate('saveCard')} onPress={this.onSaveButtonClicked}/>
                         <Button title={Translate('printCard')} onPress={this.onPrintButtonClicked}/>
                     </View>
-
                 </ScrollView>
 
-                <Sharing ref={ref => this.sharing = ref}/>
             </Container>
         );
     }

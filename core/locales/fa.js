@@ -1,6 +1,6 @@
 export default {
     choose: 'انتخاب',
-    cancel: 'برگشت',
+    cancel: 'بازگشت',
     pleaseWait: 'لطفا منتظر بمانید...',
     shareWith: 'به اشتراک بگذارید :',
     other: 'دیگر',

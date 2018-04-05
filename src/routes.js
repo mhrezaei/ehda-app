@@ -83,11 +83,11 @@ export const Routes = {
         icon: "list",
         component: require('./views/myCards').default
     },
-    news: {
+    /*news: {
         title: Translate('news'),
         icon: "rss-feed",
         component: require('./views/news').default
-    },
+    },*/
     contact: {
         title: Translate('contactUs'),
         icon: "phone",
