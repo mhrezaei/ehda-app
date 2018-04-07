@@ -56,6 +56,7 @@ class Calendar extends Component {
         const jm = Jalali.now();
         this.today = {year: jm.jy, month: jm.jm, day: jm.jd};
 
+
         this.state = {
             year: this.today.year,
             month: this.today.month,
@@ -85,7 +86,7 @@ class Calendar extends Component {
         const data = [];
         const current = this.today.year;
 
-        for (let i = 0; i < 100; i++) {
+        for (let i = 1; i < 100; i++) {
             data.push({
                 id: current - i,
                 title: LocalizeNumber(current - i)
@@ -101,8 +102,7 @@ class Calendar extends Component {
         if(nextProps.visible){
             this.show(nextProps.value);
         }else{
-
-               this.hide();
+           this.hide();
         }
 
     }
@@ -175,11 +175,14 @@ class Calendar extends Component {
             sd: date.current,
         });
 
+
+        console.log(date);
+
         if (this.props.onChange)
             this.props.onChange(Jalali.toPhp(date.year, date.month, date.current));
 
         if(this.props.hide)
-        this.props.hide();
+            this.props.hide();
     }
 
     renderDay(i, date) {
@@ -268,7 +271,7 @@ class Calendar extends Component {
             {
                 this.years.map((x, i) =>
                     <TouchableOpacity key={i} style={styles.menuItem} onPress={() => {
-                        this.setState({year: x.id, view: 0});
+                        this.setState({year: x.id, view: 2});
                     }}>
                         <View style={styles.menuItem_direct}>
                             <Text style={styles.menuItem_text}>{x.title}</Text>

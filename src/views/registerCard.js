@@ -209,7 +209,7 @@ class RegisterCard extends Component {
 
 
             delete form['province'];
-            this.props.dispatch(Ajax.startLoading([Translate('registerCardDone'), Translate('registerCardError')]));
+            this.props.dispatch(Ajax.startLoading([Translate('registerCardDone'), Translate('registerCardError'), Translate('internetError')]));
             this.props.dispatch(Auth.registerCard(form, (success, response) => {
                 if (success) {
                     this.props.dispatch(Ajax.stopLoading(0, () => {
@@ -218,15 +218,26 @@ class RegisterCard extends Component {
                     }));
                 } else {
 
-                    this.props.dispatch(Ajax.stopLoading(1, () => {
 
-                        const err = Translate('errors.' + response);
-                        const errors = {
-                            birth_date: err
-                        };
-                        this.setState({errors});
-                        this.container.wiggle();
-                    }));
+                    if(response > -30){
+
+
+                        this.props.dispatch(Ajax.stopLoading(1, () => {
+
+                            const err = Translate('errors.' + response);
+                            const errors = {
+                                birth_date: err
+                            };
+                            this.setState({errors});
+                            this.container.wiggle();
+                        }));
+
+                    }else{
+
+                        this.props.dispatch(Ajax.stopLoading(2, () => {
+                        }));
+                    }
+
                 }
 
             }));

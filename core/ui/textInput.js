@@ -66,9 +66,7 @@ class TextInput extends Component {
                 }}
                 onBlur={this.focusLost}
                 underlineColorAndroid={Theme.transparent}
-                {...props}>
-                {children}
-            </TextInputParent>
+                {...props}/>
         )
     }
 }

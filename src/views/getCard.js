@@ -109,7 +109,7 @@ class GetCard extends Component {
 
 
         if (Object.keys(errors).length === 0) {
-            this.props.dispatch(Ajax.startLoading([Translate('getCardDone'), Translate('getCardError')]));
+            this.props.dispatch(Ajax.startLoading([Translate('getCardDone'), Translate('getCardError'),  Translate('internetError')]));
             this.props.dispatch(Auth.getCard(form, (success, response) => {
                 if (success) {
                     this.props.dispatch(Ajax.stopLoading(0, () => {
@@ -117,15 +117,24 @@ class GetCard extends Component {
                     }));
                 } else {
 
-                    this.props.dispatch(Ajax.stopLoading(1, () => {
 
-                        const err = Translate('errors.' + response);
-                        const errors = {
-                            birth_date: err
-                        };
-                        this.setState({errors});
-                        this.container.wiggle();
-                    }));
+                    if(response > -30){
+
+                        this.props.dispatch(Ajax.stopLoading(1, () => {
+
+                            const err = Translate('errors.' + response);
+                            const errors = {
+                                birth_date: err
+                            };
+                            this.setState({errors});
+                            this.container.wiggle();
+                        }));
+                    }else{
+
+                        this.props.dispatch(Ajax.stopLoading(2, () => {
+                        }));
+                    }
+
                 }
             }));
         } else {
@@ -136,6 +145,15 @@ class GetCard extends Component {
     render() {
         const {form, errors} = this.state;
 
+
+        let dtt = null;
+
+
+        if(form.birth_date) {
+            const date = new Date(form.birth_date * 1000);
+
+            dtt =  'miladi: ' + date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate();
+        }
 
         return (
             <Container>
@@ -151,6 +169,7 @@ class GetCard extends Component {
                         <Button title={Translate('requestCard')} onPress={this.onSubmit}/>
                         <Button title={Translate('cancel')} onPress={this.onBack}/>
                     </View>
+
                 </ScrollView>
             </Container>
         );

@@ -14,7 +14,7 @@ RCT_EXPORT_MODULE()
 
 - (NSDictionary *)constantsToExport
 {
-  return @{ @"loopOver": @"odeviceapi", @"stock": @"123456789" };
+  return @{ @"loopOver": @"odeviceapi", @"stock": @"123456789" , @"storageAccess": @(true)};
 }
 
 - (NSString*) resolvePath:(NSString*)name {

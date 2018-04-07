@@ -1,19 +1,25 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, Image, Linking, TouchableOpacity} from 'react-native';
-import {Button, Translate, Helpers, Attach, Loading, Text, File, Sharing} from '../../core/index';
+import {View, StyleSheet, Image, Linking, TouchableOpacity, ActivityIndicator} from 'react-native';
+import {Button, Translate, Helpers, Attach, Loading, Text, File, Sharing, Theme} from '../../core/index';
 
 import {Dialog, Auth, Ajax} from '../models/index';
 
 import {Container} from "./common/container";
 import {ScrollView} from "./common/scrollView";
 
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
+
+import {requestStoragePermission} from "../android";
+
 class MyCard extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
-            failed: false
+            failed: false,
+            image: null,
         };
-
         this.LoadCardFromDisk = this.LoadCardFromDisk.bind(this);
         this.onPrintButtonClicked = this.onPrintButtonClicked.bind(this);
         this.onSaveButtonClicked = this.onSaveButtonClicked.bind(this);
@@ -22,42 +28,58 @@ class MyCard extends Component {
 
     componentDidMount() {
         const {pinnedCard, cards} = this.props;
-
         this.LoadCardFromDisk(pinnedCard);
 
         const last = cards[pinnedCard].saved_at || 0;
         if (Helpers.now() - last > 24 * 60 * 60 * 1000) {
-
-            this.props.dispatch(Ajax.startLoading([Translate('downloadCardDone'), Translate('downloadCardError')]));
-
             this.props.dispatch(Auth.downloadCard(pinnedCard, (status) => {
                 if (status) {
-                    this.props.dispatch(Ajax.stopLoading(0, () => {
-
-                        this.LoadCardFromDisk(pinnedCard);
-                    }));
+                    this.LoadCardFromDisk(pinnedCard);
                 } else {
-                    this.props.dispatch(Ajax.stopLoading(1, () => {
-
-                        this.setState({
-                            failed: true
-                        });
-                    }));
+                    this.setState({
+                        failed: true
+                    });
                 }
             }));
         }
     }
 
+
+    LoadCardFromDisk(pinned) {
+        File.exists('ehda/' + pinned + '/mini').then((data) => {
+            if(data > 0) {
+                File.read('ehda/' + pinned + '/mini').then((data) => {
+                    this.setState({
+                        failed: false,
+                        image: Helpers.decodeFile(data)
+                    });
+                });
+            }
+        });
+    }
+
     onShareButtonClicked() {
         const {pinnedCard} = this.props;
         const url = 'ehda/' + pinnedCard + '/social';
-        File.read(url).then((data) => {
-            this.props.dispatch(Dialog.openSharing({
-                uri: data,
-                title: Translate('shareMyBonesTtile'),
-                message: Translate('shareMyBones')
-            }));
-        }).catch(() => {
+
+        this.props.dispatch(Ajax.startLoading([Translate('shareOk'), Translate('shareError')]));
+
+        requestStoragePermission().then((result)=>{
+            if(result){
+                this.props.dispatch(Ajax.stopLoading(0, ()=>{
+                    File.read(url).then((data) => {
+                        this.props.dispatch(Dialog.openSharing({
+                            uri: data,
+                            title: Translate('shareMyBonesTtile'),
+                            message: Translate('shareMyBones')
+                        }));
+                    }).catch(() => {
+                    });
+                }));
+            }else
+            {
+                this.props.dispatch(Ajax.stopLoading(1, ()=>{}));
+            }
         });
     }
 
@@ -65,13 +87,17 @@ class MyCard extends Component {
         const {pinnedCard, cards} = this.props;
 
         const url = 'ehda/' + pinnedCard + '/social';
-
-        this.props.dispatch(Ajax.startLoading([Translate('saveCardDone'), Translate('saveCardError')]));
-
-
-        this.props.dispatch(Ajax.stopLoading(0, () => {
-            File.saveFileToGallery(url);
-        }));
+        this.props.dispatch(Ajax.startLoading([Translate('shareOk'), Translate('shareError')]));
+        requestStoragePermission().then((result)=>{
+            if(result){
+                this.props.dispatch(Ajax.stopLoading(0, ()=>{
+                    File.saveFileToGallery(url);
+                }));
+            }else
+            {
+                this.props.dispatch(Ajax.stopLoading(1, ()=>{}));
+            }
+        });
 
     }
 
@@ -96,26 +122,28 @@ class MyCard extends Component {
         });
     }
 
-    LoadCardFromDisk(pinned) {
-        File.read('ehda/' + pinned + '/mini').then((data) => {
-            this.myCard = Helpers.decodeFile(data);
-            this.setState({
-                failed: false
-            });
-            this.forceUpdate();
-        }).catch(() => {
-
-        });
-    }
 
     render() {
+
+
+        let child = null;
+
+        if(this.state.image){
+            child = (<View style={styles.imageContainer}>
+                <Image style={styles.myImage} resizeMode={'contain'} source={this.state.image}/>
+            </View>);
+        }else {
+            child = (<View style={styles.loadingContainer}>
+                {!this.state.failed ?
+                    <ActivityIndicator size="large" color={Theme.accent} animating={true}/> :
+                    <Icon name={'error'} size={40} color={Theme.red}/>}
+            </View>);
+        }
+
         return (
             <Container>
                 <ScrollView ref={ref => this.container = ref}>
-                    <View style={styles.imageContainer}>
-                        <Image style={styles.myImage} resizeMode={'contain'} source={this.myCard}/>
-                    </View>
-
+                    {child}
                     <TouchableOpacity style={styles.shareContainer} onPress={this.onShareButtonClicked}>
                         <Image source={Sharing.Icons.share} style={styles.shareImage}
                                resizeMode={'contain'}/>
@@ -144,6 +172,13 @@ const styles = StyleSheet.create({
         flex: 1,
         height: 300,
         borderRadius: 5,
+    },
+
+    loadingContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        padding: 20,
     },
     shareContainer: {
         flex: 1,

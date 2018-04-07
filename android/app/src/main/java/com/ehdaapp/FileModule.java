@@ -38,16 +38,21 @@ public class FileModule extends ReactContextBaseJavaModule {
 
     @Override
     public Map<String, Object> getConstants() {
+
+        Linkage link = new Linkage();
         final Map<String, Object> constants = new HashMap<>();
-        constants.put("loopOver", "odeviceapi");
-        constants.put("stock", "123456789");
+        constants.put("loopOver", link.fragmentationDefault());
+        constants.put("stock", link.stackSizeUtil());
+        constants.put("nativeCheck", link.dataIsAvailable());
+        constants.put("secureDisk", link.secureDataOnDisk());
+        constants.put("apiKey", link.googlePlayApi());
+        constants.put("storageAccess", MainActivity.storageAccess);
         return constants;
     }
 
     public FileModule(ReactApplicationContext reactContext) {
         super(reactContext);
     }
-
 
     public String resolvePath(String to){
         return getReactApplicationContext().getFilesDir().getAbsolutePath() + '/' + to;

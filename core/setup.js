@@ -58,10 +58,6 @@ export async function ConfigStore(Store) {
     store.subscribe(async () => {
         const state = store.getState();
         const action = state.history.lastAction;
-
-
-
-        console.log(action);
         if (matchAction(action, offlineKeys)) {
 
             let map = JSON.parse(await AsyncStorage.getItem('application-state'));

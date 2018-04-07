@@ -4,7 +4,6 @@ import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import Drawer from 'react-native-drawer';
 import {Attach, Theme, Helpers, Text, ActionBar, Translate, Router, Loading, Calendar, Sharing} from "../../core/index";
 import {Auth, Navigation, Ajax, Dialog} from '../models/index';
-import {Routes} from '../routes';
 import {Menu} from "./menu/menu";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {LocalizeNumber} from "../../core/i18";
@@ -57,21 +56,25 @@ class App extends Component {
         }));
     }
     openDrawer() {
+        if(this.drawer)
         this.drawer.open();
     }
 
     closeDrawer() {
+        if(this.drawer)
         this.drawer.close();
     }
 
     onItemClicked(key) {
         this.props.dispatch(Navigation.goTo(key));
 
-        this.drawer.close();
+        this.closeDrawer();
     }
 
     render() {
-        const {redux,sharing, calendar, cardsCount, ajaxRequests, progress, ajaxInternet, currentRoute, defaultRoute, ownerName, dispatch} = this.props;
+        const {redux, sharing, routes, calendar, cardsCount, ajaxRequests, progress, ajaxInternet, currentRoute, defaultRoute, ownerName, dispatch} = this.props;
+
+        console.log(currentRoute);
         return (
             <Drawer
                 ref={(ref) => this.drawer = ref}
@@ -84,10 +87,10 @@ class App extends Component {
                 tweenHandler={(ratio) => ({main: {opacity: (1.4 - ratio) / 1.4}})}
                 side={"right"}
                 content={<Menu title={ownerName} onPress={this.onItemClicked} dispatch={dispatch}
-                               routes={Routes} redux={redux}/>}
+                               routes={routes} redux={redux}/>}
             >
                 <View style={styles.container}>
-                    <ActionBar name={Translate('app')} loading={ajaxRequests > 0} title={Routes[currentRoute].title}
+                    <ActionBar name={Translate('app')} loading={ajaxRequests > 0} title={routes[currentRoute].title}
                                onPress={this.openDrawer}/>
 
                     {ajaxInternet === false && <TouchableOpacity style={styles.banner} onPress={this.onInternetBannerClicked}>
@@ -96,7 +99,7 @@ class App extends Component {
                         </View>
                     </TouchableOpacity>}
 
-                    <Router routes={Routes} defaultRoute={defaultRoute} current={currentRoute} redux={redux}/>
+                    <Router routes={routes} defaultRoute={defaultRoute} current={currentRoute} redux={redux}/>
 
 
 
@@ -219,10 +222,10 @@ export default Attach({
             progress: ajax.progress
         };
     },
-    'navigation': (nav) => {
+    'navigation.current': (nav, whole) => {
         return {
-            currentRoute: nav.current,
-            defaultRoute: nav.default,
+            currentRoute: nav || Helpers.leaf(whole, 'navigation.routes.default'),
+            routes: Helpers.leaf(whole, 'navigation.routes', {})
         };
-    }
+    },
 })(App);

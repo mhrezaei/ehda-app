@@ -7,7 +7,8 @@ export function toGregorian(jy, jm, jd) {
 export function now() {
 
     const date = new Date();
-    return toJalaali(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate());
+
+    return toJalaali(date.getFullYear(), date.getMonth() + 1, date.getDate());
 }
 
 export function toJalaali(gy, gm, gd) {
@@ -16,24 +17,28 @@ export function toJalaali(gy, gm, gd) {
 
 export function startDayOfMonth(year, month){
     const std = toGregorian(year, month, 1);
-    const stdM = new Date(std.gy, std.gm-1, std.gd-1);
+    const stdM = new Date(std.gy, std.gm-1, std.gd);
 
     return stdM.getDay();
-}
-export function fromDate(date) {
-    return toJalaali(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate() + 1);
 }
 
 export function fromPhp(time) {
     const date = new Date(time * 1000);
-    return toJalaali(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate() + 1);
+
+    console.log('from: '+ date.getFullYear() +'/'+date.getMonth() + '/' + date.getDate());
+
+    return toJalaali(date.getFullYear(), date.getMonth() + 1, date.getDate());
 }
 
 
 export function toPhp(jy, jm, jd) {
+    const nw = new Date();
     const jl = toGregorian(jy, jm, jd);
     const date = new Date(jl.gy, jl.gm-1, jl.gd, 0, 0, 0, 0);
-    return date.getTime() / 1000;
+
+    console.log('to: '+ date.getFullYear() +'/'+date.getMonth() + '/' + date.getDate());
+
+    return date.getTime() / 1000 - nw.getTimezoneOffset() * 60 + 1;
 }
 
 function isValidJalaaliDate(jy, jm, jd) {

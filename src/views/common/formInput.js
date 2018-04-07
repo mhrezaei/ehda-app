@@ -24,8 +24,8 @@ export function CreateForm(name, form, errors, onChangeText, props = {}, icon) {
                 <TextInput hasError={errors.hasOwnProperty(name)} name={name}
                            onChangeText={onChangeText && (text => onChangeText(name, NumToEn(text)))}
                            placeholder={placeholder}
-                           value={LocalizeNumber(props.format ? props.format(form[name]) : form[name])}
-                           onFocus={props.onFocus} {...props}/>
+                           {...props}
+                           value={props.format ? props.format(form[name]) : form[name]}/>
 
             </View>
             {icon && <TouchableOpacity style={styles.extended_icon} onPress={icon.onPress}>
@@ -50,7 +50,7 @@ export function CreateFormDate(name, form, errors, onChangeText, props = {}, ico
                 <TextInput pointerEvents="none" hasError={errors.hasOwnProperty(name)} name={name}
                            onChangeText={onChangeText && (text => onChangeText(name, NumToEn(text)))}
                            placeholder={placeholder}
-                           value={LocalizeNumber(props.format ? props.format(form[name]) : form[name])}
+                           value={props.format ? props.format(form[name]) : form[name]}
                            onFocus={props.onFocus} {...props}/>
 
 

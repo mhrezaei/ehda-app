@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {Button, Translate, Helpers, Attach, Loading, Text, Dispatcher} from '../../core/index';
+import {Button, Translate, Helpers, Attach, Loading, Text, Dispatcher, File} from '../../core/index';
 
 import {Navigation, Auth, Ajax} from '../models/index';
 
@@ -13,9 +13,7 @@ class SearchCard extends Component {
         super(props);
         this.state = {
             form: {
-                code_melli: null,
-                birth_date: null,
-                tel_mobile: null,
+                code_melli: null
             },
             errors: {}
         };
@@ -60,30 +58,37 @@ class SearchCard extends Component {
         const errors = this.checkErrors();
         const {form} = this.state;
 
+
         if (Object.keys(errors).length === 0) {
-            this.props.dispatch(Ajax.startLoading([Translate('searchCardDone'), Translate('searchCardError')]));
+            this.props.dispatch(Ajax.startLoading([Translate('searchCardDone'), Translate('searchCardError'), Translate('internetError'), Translate('cardExists')]));
+
+            const data = Helpers.flatten(Helpers.leaf(this.props.redux, 'auth.cards')).filter(x => x.key === form.code_melli) || [];
+            if(data.length > 0 && data[0].key === form.code_melli)
+            {
+
+                /*
+                this.props.dispatch(Ajax.stopLoading(3, () => {
+                    this.props.dispatch(Navigation.goTo('myCards'));
+                }));
+                return;*/
+            }
             this.props.dispatch(Auth.searchCard(form.code_melli, (success, response) => {
                 if (success) {
                     this.props.dispatch(Ajax.stopLoading(0, ()=>{
                         this.props.dispatch(Navigation.goTo('getCard', {codeMelli: response}));
                     }));
                 } else {
-                    this.props.dispatch(Ajax.stopLoading(1, ()=>{
+                    if(response > -30){
 
+                        this.props.dispatch(Ajax.stopLoading(1, () => {
 
-                        /*
-                        const err = Translate('errors.' + response);
-                        const errors = {
-                            code_melli: err
-                        };
-                        this.setState({errors});
+                            this.props.dispatch(Navigation.goTo('registerCard', {codeMelli: form.code_melli}));
+                        }));
+                    }else{
 
-                        this.container.wiggle();
-
-                        */
-
-                        this.props.dispatch(Navigation.goTo('registerCard', {codeMelli: form.code_melli}));
-                    }));
+                        this.props.dispatch(Ajax.stopLoading(2, () => {
+                        }));
+                    }
                 }
 
 

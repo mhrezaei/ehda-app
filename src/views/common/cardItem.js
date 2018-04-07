@@ -17,10 +17,11 @@ import {Navigation, Dialog, Auth, Ajax} from '../../models/index';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import PropTypes from 'prop-types';
 import {Translate} from "../../../core/i18";
+import {requestStoragePermission} from "../../android";
 
 
 export class CardItem extends Component {
-
+    mounted = false;
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
         name: PropTypes.string.isRequired
@@ -43,18 +44,22 @@ export class CardItem extends Component {
         this.hideMenu = this.hideMenu.bind(this);
 
 
-
         this.onPinButtonClicked = this.onPinButtonClicked.bind(this);
         this.onPrintButtonClicked = this.onPrintButtonClicked.bind(this);
         this.onSaveButtonClicked = this.onSaveButtonClicked.bind(this);
         this.onShareButtonClicked = this.onShareButtonClicked.bind(this);
     }
 
-    // loads image after component added to view
-    componentDidMount() {
+
+    componentDidMount(){
+        this.mounted = true;
+
         this.setState({loading: true});
         this.loadCard();
+    }
 
+    componentWillUnmount(){
+        this.mounted = false;
     }
 
     // download and display a card
@@ -74,12 +79,20 @@ export class CardItem extends Component {
                 // download images and display it.
                 this.props.dispatch(Auth.downloadCard(this.props.name, (result) => {
                     if (result) {
-                        File.read(path).then(data => {
-                            this.setState({
-                                image: Helpers.decodeFile(data),
-                                loading: false
-                            })
+
+                        File.exists(path).then((data) => {
+                            if(data > 0) {
+                                File.read(path).then(data => {
+                                    this.setState({
+                                        image: Helpers.decodeFile(data),
+                                        loading: false
+                                    })
+                                });
+                            }
                         });
+
+
+
                     } else {
                         this.setState({
                             loading: false
@@ -117,7 +130,7 @@ export class CardItem extends Component {
             ).start();
 
 
-            this.myTimer = setTimeout(()=>{
+            this.myTimer = setTimeout(() => {
                 if (this.state.menu)
                     this.hideMenu();
             }, 4000);
@@ -131,7 +144,7 @@ export class CardItem extends Component {
 
 
     hideMenu() {
-        if (this.state.menuTrigger) {
+        if (this.mounted) {
             Animated.timing(
                 this.state.translateY,
                 {
@@ -140,8 +153,8 @@ export class CardItem extends Component {
                 }
             ).start(() => {
 
-                if(this.myTimer)
-                clearTimeout(this.myTimer);
+                if (this.myTimer)
+                    clearTimeout(this.myTimer);
 
                 this.setState({
                     menu: false,
@@ -152,7 +165,7 @@ export class CardItem extends Component {
     }
 
 
-    onPinButtonClicked(){
+    onPinButtonClicked() {
 
         this.props.dispatch(Auth.changePinnedCard(this.props.name));
         this.props.dispatch(Navigation.goTo('myCard'));
@@ -161,13 +174,23 @@ export class CardItem extends Component {
     onShareButtonClicked() {
         const pinnedCard = this.props.name;
         const url = 'ehda/' + pinnedCard + '/social';
-        File.read(url).then((data) => {
-            this.props.dispatch(Dialog.openSharing({
-                uri: data,
-                title: Translate('shareMyBonesTtile'),
-                message: Translate('shareMyBones')
-            }));
-        }).catch(() => {
+
+
+        this.props.dispatch(Ajax.startLoading([Translate('shareOk'), Translate('shareError')]));
+        requestStoragePermission().then((result) => {
+            if (result) {
+
+                this.props.dispatch(Ajax.stopLoading(0, () => {
+                    this.props.dispatch(Dialog.openSharing({
+                        uri: data,
+                        title: Translate('shareMyBonesTtile'),
+                        message: Translate('shareMyBones')
+                    }));
+                }));
+            } else {
+                this.props.dispatch(Ajax.stopLoading(1, () => {
+                }));
+            }
         });
     }
 
@@ -176,12 +199,17 @@ export class CardItem extends Component {
 
         const url = 'ehda/' + pinnedCard + '/social';
 
-        this.props.dispatch(Ajax.startLoading([Translate('saveCardDone'), Translate('saveCardError')]));
-
-
-        this.props.dispatch(Ajax.stopLoading(0, () => {
-            File.saveFileToGallery(url);
-        }));
+        this.props.dispatch(Ajax.startLoading([Translate('shareOk'), Translate('shareError')]));
+        requestStoragePermission().then((result) => {
+            if (result) {
+                this.props.dispatch(Ajax.stopLoading(0, () => {
+                    File.saveFileToGallery(url);
+                }));
+            } else {
+                this.props.dispatch(Ajax.stopLoading(1, () => {
+                }));
+            }
+        });
 
     }
 

@@ -40,7 +40,7 @@ export const Routes = {
         visibility: false,
         redirect: function (redux) {
             // redirect back to searchCard because there is no data provided with route.
-            if(!Helpers.leaf(redux, 'navigation.props.codeMelli'))
+            if(Helpers.leaf(redux, 'navigation.props.codeMelli', null) === null)
                 return 'searchCard';
         },
         title: Translate('getCard'),
