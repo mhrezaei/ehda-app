@@ -11,12 +11,12 @@ import {
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 
 
-import Theme from '../theme'
+import Theme from '../../../core/theme'
 
-import {Translate} from "../i18";
+import {Translate} from "../../../core/i18";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import Text from './text';
+import Text from '../../../core/ui/text';
 
 
 class Picker extends Component {

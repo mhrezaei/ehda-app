@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import {StyleSheet, View, Dimensions, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, Dimensions, TouchableOpacity,Linking} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -8,6 +8,7 @@ import {Stretch, Theme, Text, Translate, LocalizeNumber} from '../../core';
 import PropTypes from 'prop-types';
 
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import {NumToEn} from "../../core/i18";
 
 const viewWidth = Dimensions.get('window').width;
 
@@ -17,15 +18,15 @@ const Region = {
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421
 };
+import Communications from 'react-native-communications';
 
-
-const Row = ({icon, label, link, onPress}) => {
+const Row = ({icon, label, link, onPress, address}) => {
 
     return (<TouchableOpacity style={styles.row} onPress={onPress}>
         <View style={styles.icon}><Icon name={icon} size={30} color={Theme.gray}/></View>
         <View style={styles.rowDirect}>
             <Text style={styles.label}>{label}</Text>
-            <Text style={styles.link}>{LocalizeNumber(link)}</Text>
+            <Text style={address ? styles.address :styles.link}>{LocalizeNumber(link)}</Text>
         </View>
     </TouchableOpacity>);
 };
@@ -65,10 +66,16 @@ class Contact extends Component {
                             />
                         </MapView>
                     </View>
-                    <Row icon={'link'} label={Translate('webAddress')} link={Translate('webAddressTemp')}/>
-                    <Row icon={'phone'} label={Translate('telephone')} link={Translate('telephoneTemp')}/>
-                    <Row icon={'mail'} label={Translate('email')} link={Translate('emailTemp')}/>
-                    <Row icon={'place'} label={Translate('address')} link={Translate('addressTemp')}/>
+                    <Row icon={'link'} label={Translate('webAddress')} link={Translate('webAddressTemp')}  onPress={()=>{
+                        Linking.openURL(Translate('webAddressTemp'));
+                    }}/>
+                    <Row icon={'phone'} label={Translate('telephone')} link={Translate('telephoneTemp')} onPress={()=>{
+                        Communications.phonecall(NumToEn(Translate('telephoneTemp')), true);
+                    }}/>
+                    <Row icon={'mail'} label={Translate('email')} link={Translate('emailTemp')} onPress={()=>{
+                        Communications.email(Translate('emailTemp'), "", "", "", "");
+                    }}/>
+                    <Row icon={'place'} label={Translate('address')} address link={Translate('addressTemp')}/>
                 </KeyboardAwareScrollView>
             </View>
         );
@@ -108,8 +115,12 @@ const styles = StyleSheet.create({
     label: {textAlign: 'right', color: Theme.grayDark, paddingVertical: 2},
     link: {
         fontSize: 16,
-        textAlign: 'justify',
         color: Theme.accentLight,
+        paddingVertical: 2
+    },
+    address: {
+        fontSize: 16,
+        color: Theme.textInvert,
         paddingVertical: 2
     }
 

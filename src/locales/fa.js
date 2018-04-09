@@ -22,7 +22,7 @@ export default {
     yes: 'بلی',
     no: 'خیر',
     choose: 'انتخاب',
-    contactUs: 'تماس با‌ما',
+    contactUs: 'تماس با‌ ما',
     chooseIt: 'انتخاب کنید',
     searchCard: 'استعلام کارت',
     noInternet: 'خطا در برقراری ارتباط...',
@@ -30,7 +30,7 @@ export default {
     webAddress: 'آدرس وبسایت',
     webAddressTemp: 'https://ehda.center',
     telephone: 'تلفن',
-    telephoneTemp: '+982188190180',
+    telephoneTemp: '02188190180',
     email: 'ایمیل',
     emailTemp: 'info@ehda.center',
     address: 'آدرس',
@@ -44,6 +44,9 @@ export default {
 
     shareOk: 'از منوی اشتراک گذاری مقصد را مشخص کنید.',
     shareError: 'دسترسی به حافظه مقدور نیست.',
+
+    next: 'صفحه بعد',
+    previous: 'صفحه قبل',
 
     pin: 'کارت من',
     saveIt: 'ذخیره',
@@ -82,6 +85,7 @@ export default {
     searchCardDone: 'کارت پیدا شد، در حال انتقال شما به صفحه‌ی دریافت کارت هستیم.',
     searchCardError: 'کاربر مورد نظر پیدا نشد. در حال انتقال شما به صفحه‌ی ثبت نام کارت هستیم.',
 
+    codeMelliOrName: 'جستجو کد ملی یا نام',
     fields: {
         gender: 'جنسیت',
         tel_mobile: 'شماره تماس',
@@ -108,6 +112,8 @@ export default {
         id: 3,
         title: 'سایر'
     }],
+
+    tests: 'مدیرعامل انجمن اهدای عضو ایرانیان:«بوستان نفس» به یاد اهداکنندگان عضو گشایش یافت ',
     errors: {
         '0': 'نام کاربری و گذرواژه دریافت نشده است.',
         '-1': 'نام کاربری یا گذرواژه اشتباه است.',

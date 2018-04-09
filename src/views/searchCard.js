@@ -66,11 +66,11 @@ class SearchCard extends Component {
             if(data.length > 0 && data[0].key === form.code_melli)
             {
 
-                /*
+
                 this.props.dispatch(Ajax.stopLoading(3, () => {
                     this.props.dispatch(Navigation.goTo('myCards'));
                 }));
-                return;*/
+                return;
             }
             this.props.dispatch(Auth.searchCard(form.code_melli, (success, response) => {
                 if (success) {

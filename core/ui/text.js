@@ -25,7 +25,6 @@ const styles = StyleSheet.create({
     text: {
         color: theme.textInvert,
         fontFamily: theme.font,
-
         textAlign: Platform.OS === 'ios' ? 'justify' : 'right',
         writingDirection:'rtl',
     },

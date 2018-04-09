@@ -26,16 +26,16 @@ export {Helpers};
 
 
 // expose Components
-import ActionBar from './ui/actionBar';
+import ActionBar from '../src/views/common/actionBar';
 import Button from './ui/button';
 import Text from './ui/text';
 import TextInput from './ui/textInput';
-import Calendar from './ui/calendar';
-import Picker from './ui/picker';
+import Calendar from '../src/views/common/calendar';
+import Picker from '../src/views/common/picker';
 import Router from './ui/router';
 import Stretch from './ui/stretch';
 import Loading from './ui/loading';
-import Sharing from './ui/sharing';
+import Sharing from '../src/views/common/sharing';
 
 export {Text, TextInput, Button, ActionBar, Calendar, Picker, Router, Stretch, Loading, Sharing};
 // end exposing Components

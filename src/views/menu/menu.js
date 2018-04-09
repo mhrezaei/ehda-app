@@ -24,7 +24,7 @@ import splashMenu from '../../resources/splashMenu';
 import {Navigation} from '../../models/index';
 
 
-const Menu = ({title, redux, dispatch, onPress, routes}) => {
+const Menu = ({title, redux, dispatch, onPress, routes, current}) => {
     return (
         <ScrollView style={styles.menu}>
             <View style={styles.menu_header}>
@@ -52,7 +52,7 @@ const Menu = ({title, redux, dispatch, onPress, routes}) => {
 
                     // if it's visible then return it's child
                     if(visible) {
-                        return (<MenuItem key={'menuItem:'+i} title={route.title} icon={route.icon} onPress={() => {
+                        return (<MenuItem key={'menuItem:'+i} current={current === key} title={route.title} icon={route.icon} onPress={() => {
                             dispatch(Navigation.goTo(key));
                             onPress(key);
                         }}/>);
@@ -66,6 +66,7 @@ const Menu = ({title, redux, dispatch, onPress, routes}) => {
 
 Menu.propTypes = {
     title: PropTypes.string,
+    current: PropTypes.string,
     dispatch: PropTypes.func,
     onPress: PropTypes.func,
     redux: PropTypes.object,

@@ -12,12 +12,7 @@ export async function requestStoragePermission() {
                     'message': 'Needs Storage Permission.'
                 }
             );
-
-            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                return true;
-            } else {
-                return false;
-            }
+            return granted === PermissionsAndroid.RESULTS.GRANTED;
         } catch (err) {
             return false;
         }

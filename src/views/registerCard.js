@@ -72,7 +72,9 @@ class RegisterCard extends Component {
 
 
     onHomeCityFocused() {
+
         const {form} = this.state;
+        this.props.dispatch(Data.getCities(form.province));
         this.homeCitySelector.show(form.home_city);
     }
 
@@ -103,11 +105,7 @@ class RegisterCard extends Component {
     }
 
     onProvinceChanged(value) {
-        const old = this.state.form.province;
 
-        if (old !== value) {
-            this.props.dispatch(Data.getCities(value));
-        }
         this.onChangeText('province', value);
     }
 
@@ -214,7 +212,7 @@ class RegisterCard extends Component {
                 if (success) {
                     this.props.dispatch(Ajax.stopLoading(0, () => {
 
-                        this.props.dispatch(Navigation.goTo('myCard'));
+                        this.props.dispatch(Navigation.goTo('myCards'));
                     }));
                 } else {
 

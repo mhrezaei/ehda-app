@@ -11,9 +11,9 @@ import {
 } from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 
-import theme from '../theme'
-import {Translate} from "../i18";
-import Text from './text';
+import theme from '../../../core/theme'
+import {Translate} from "../../../core/i18";
+import Text from '../../../core/ui/text';
 
 import Share from 'react-native-share';
 

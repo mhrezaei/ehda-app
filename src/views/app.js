@@ -72,9 +72,9 @@ class App extends Component {
     }
 
     render() {
-        const {redux, sharing, routes, calendar, cardsCount, ajaxRequests, progress, ajaxInternet, currentRoute, defaultRoute, ownerName, dispatch} = this.props;
+        const {redux, sharing, routes, calendar, cardsCount, search, ajaxRequests, progress, ajaxInternet, currentRoute, defaultRoute, ownerName, dispatch} = this.props;
 
-        console.log(currentRoute);
+        const crt = routes[currentRoute];
         return (
             <Drawer
                 ref={(ref) => this.drawer = ref}
@@ -86,11 +86,11 @@ class App extends Component {
                 closedDrawerOffset={-3}
                 tweenHandler={(ratio) => ({main: {opacity: (1.4 - ratio) / 1.4}})}
                 side={"right"}
-                content={<Menu title={ownerName} onPress={this.onItemClicked} dispatch={dispatch}
+                content={<Menu current={currentRoute} title={ownerName} onPress={this.onItemClicked} dispatch={dispatch}
                                routes={routes} redux={redux}/>}
             >
                 <View style={styles.container}>
-                    <ActionBar name={Translate('app')} loading={ajaxRequests > 0} title={routes[currentRoute].title}
+                    <ActionBar dispatch={dispatch} actions={crt.hasOwnProperty('actions') ? crt.actions : null} name={Translate('app')} loading={ajaxRequests > 0} title={crt.title}
                                onPress={this.openDrawer}/>
 
                     {ajaxInternet === false && <TouchableOpacity style={styles.banner} onPress={this.onInternetBannerClicked}>
@@ -172,6 +172,8 @@ const styles = StyleSheet.create({
         backgroundColor: Theme.accent,
         padding: 18,
         borderRadius: 40,
+        borderColor:Theme.accentDark,
+        borderWidth:1,
         ...Theme.shadow
     },
     floatingButtonContainer:{

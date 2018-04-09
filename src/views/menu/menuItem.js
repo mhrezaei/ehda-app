@@ -16,11 +16,11 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Text, Theme} from '../../../core/index';
 
 
-const MenuItem = ({title, icon, onPress}) => {
+const MenuItem = ({title, icon, onPress, current}) => {
     return (<TouchableOpacity style={styles.menuItem} onPress={onPress}>
         <View style={styles.menuItem_direct}>
-            <Icon name={icon} style={styles.menuItem_icon} size={20} color={Theme.accent}/>
-            <Text>{title}</Text>
+            <Icon name={icon} style={styles.menuItem_icon} size={20} color={current ? Theme.accent : Theme.gray}/>
+            <Text style={current ? {color: Theme.accent} : {}}>{title}</Text>
         </View>
     </TouchableOpacity>);
 };
@@ -29,6 +29,7 @@ const MenuItem = ({title, icon, onPress}) => {
 MenuItem.propTypes = {
     title: PropTypes.string,
     icon: PropTypes.string,
+    current: PropTypes.bool,
     onPress: PropTypes.func
 };
 

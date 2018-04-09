@@ -13,7 +13,7 @@
 import axios from 'axios';
 
 const url = "https://ehda.center/api/ehda/";
-const timeout = 1000;
+const timeout = 20000;
 
 export const axiosInstance = axios.create({
     baseURL: url,

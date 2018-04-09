@@ -3,6 +3,7 @@ export default {
     primary: '#70A30A',
     green: '#70A30A',
     accent: '#3b59f7',
+    accentDark: '#3652e0',
     accentLight: '#6a9ef7',
     text: '#fff',
     textInvert: '#213200',
@@ -24,8 +25,8 @@ export default {
             height: 2
         },
 
-        shadowRadius: 3,
-        shadowOpacity: 0.3,
+        shadowRadius: 2,
+        shadowOpacity: 0.2,
         elevation: 3
     }
 };

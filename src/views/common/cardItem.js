@@ -10,7 +10,16 @@
 
 
 import React, {Component} from 'react';
-import {View, Image, ActivityIndicator, TouchableOpacity, StyleSheet, Animated, Linking} from 'react-native';
+import {
+    View,
+    Image,
+    ActivityIndicator,
+    TouchableOpacity,
+    StyleSheet,
+    Animated,
+    Linking,
+    Dimensions
+} from 'react-native';
 import {Theme, File, Helpers, Text} from '../../../core';
 import {Navigation, Dialog, Auth, Ajax} from '../../models/index';
 
@@ -19,6 +28,11 @@ import PropTypes from 'prop-types';
 import {Translate} from "../../../core/i18";
 import {requestStoragePermission} from "../../android";
 
+
+const window = Dimensions.get('window');
+const viewWidth = Helpers.min(window.width, window.height) - 40;
+const imageWidth = viewWidth;
+const imageHeight = viewWidth * 0.629;
 
 export class CardItem extends Component {
     mounted = false;
@@ -51,14 +65,13 @@ export class CardItem extends Component {
     }
 
 
-    componentDidMount(){
+    componentDidMount() {
         this.mounted = true;
-
         this.setState({loading: true});
         this.loadCard();
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.mounted = false;
     }
 
@@ -81,16 +94,15 @@ export class CardItem extends Component {
                     if (result) {
 
                         File.exists(path).then((data) => {
-                            if(data > 0) {
+                            if (data > 0) {
                                 File.read(path).then(data => {
                                     this.setState({
                                         image: Helpers.decodeFile(data),
                                         loading: false
-                                    })
+                                    });
                                 });
                             }
                         });
-
 
 
                     } else {
@@ -181,11 +193,17 @@ export class CardItem extends Component {
             if (result) {
 
                 this.props.dispatch(Ajax.stopLoading(0, () => {
-                    this.props.dispatch(Dialog.openSharing({
-                        uri: data,
-                        title: Translate('shareMyBonesTtile'),
-                        message: Translate('shareMyBones')
-                    }));
+
+                    File.read(url).then((data) => {
+
+                        this.props.dispatch(Dialog.openSharing({
+                            uri: data,
+                            title: Translate('shareMyBonesTtile'),
+                            message: Translate('shareMyBones')
+                        }));
+                    }).catch(() => {
+                    });
+
                 }));
             } else {
                 this.props.dispatch(Ajax.stopLoading(1, () => {
@@ -236,6 +254,7 @@ export class CardItem extends Component {
 
     render() {
         return (<TouchableOpacity ref={ref => this.Base = ref} style={styles.container} onPress={this.onPress}>
+
                 {this.state.image ?
                     <Animated.View style={{
                         flex: 1,
@@ -246,7 +265,9 @@ export class CardItem extends Component {
                             outputRange: [1, 0.3]
                         })
                     }}>
-                        <Image style={styles.image} resizeMode={'contain'} source={this.state.image}/>
+                        <View style={styles.myImageContainer}>
+                            <Image style={styles.myImage} resizeMode={'cover'} source={this.state.image}/>
+                        </View>
                     </Animated.View> :
                     <View style={styles.loadingContainer}>
                         {this.state.loading ?
@@ -254,48 +275,48 @@ export class CardItem extends Component {
                             <Icon name={'error'} size={40} color={Theme.red}/>}
                     </View>
                 }
-                <Animated.View style={{
-                    position: 'absolute',
-                    left: 0,
-                    bottom: 0,
-                    right: 0,
-                    flexDirection: 'row',
-                    alignContent: 'center',
-                    borderRadius: 10,
-                    margin: 20,
-                    overflow: 'hidden',
-                    justifyContent: 'center',
-                    backgroundColor: Theme.white,
-                    ...Theme.shadow,
-                    opacity: this.state.translateY.interpolate({
-                        inputRange: [-1, 0],
-                        outputRange: [0, 1]
-                    }),
-                    transform: [{
-                        translateY: this.state.translateY.interpolate({
+                <View style={styles.menuContainer}>
+                    <Animated.View style={{
+                        position: 'absolute',
+                        flexDirection: 'row',
+                        alignSelf: 'center',
+                        borderRadius: 10,
+                        width: viewWidth,
+                        overflow: 'hidden',
+                        justifyContent: 'center',
+                        backgroundColor: Theme.white,
+                        ...Theme.shadow,
+                        opacity: this.state.translateY.interpolate({
                             inputRange: [-1, 0],
-                            outputRange: [100, 0]
-                        })
-                    }]
-                }}>
-                    <TouchableOpacity style={styles.buttonContainer} onPress={this.onPinButtonClicked}>
-                        <Icon name={'offline-pin'} color={Theme.white} size={20} style={styles.buttonText}/>
-                        <Text style={styles.buttonText}>{Translate('pin')}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonContainer} onPress={this.onSaveButtonClicked}>
-                        <Icon name={'file-download'} color={Theme.white} size={20} style={styles.buttonText}/>
-                        <Text style={styles.buttonText}>{Translate('saveIt')}</Text>
+                            outputRange: [0, 1]
+                        }),
+                        transform: [{
+                            translateY: this.state.translateY.interpolate({
+                                inputRange: [-1, 0],
+                                outputRange: [100, 0]
+                            })
+                        }]
+                    }}>
+                        <TouchableOpacity style={styles.buttonContainer} onPress={this.onPinButtonClicked}>
+                            <Icon name={'offline-pin'} color={Theme.white} size={20} style={styles.buttonText}/>
+                            <Text style={styles.buttonText}>{Translate('pin')}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.buttonContainer} onPress={this.onSaveButtonClicked}>
+                            <Icon name={'file-download'} color={Theme.white} size={20} style={styles.buttonText}/>
+                            <Text style={styles.buttonText}>{Translate('saveIt')}</Text>
 
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonContainer} onPress={this.onShareButtonClicked}>
-                        <Icon name={'share'} color={Theme.white} size={20} style={styles.buttonText}/>
-                        <Text style={styles.buttonText}>{Translate('shareIt')}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonContainer} onPress={this.onPrintButtonClicked}>
-                        <Icon name={'print'} color={Theme.white} size={20} style={styles.buttonText}/>
-                        <Text style={styles.buttonText}>{Translate('printIt')}</Text>
-                    </TouchableOpacity>
-                </Animated.View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.buttonContainer} onPress={this.onShareButtonClicked}>
+                            <Icon name={'share'} color={Theme.white} size={20} style={styles.buttonText}/>
+                            <Text style={styles.buttonText}>{Translate('shareIt')}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.buttonContainer} onPress={this.onPrintButtonClicked}>
+                            <Icon name={'print'} color={Theme.white} size={20} style={styles.buttonText}/>
+                            <Text style={styles.buttonText}>{Translate('printIt')}</Text>
+                        </TouchableOpacity>
+                    </Animated.View>
+
+                </View>
             </TouchableOpacity>
         );
     }
@@ -303,15 +324,36 @@ export class CardItem extends Component {
 
 
 const styles = StyleSheet.create({
+    menuContainer: {
+        flex: 1,
+        position: 'absolute',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignContent:'center',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        top: 0,
+        overflow: 'hidden'
+    },
     container: {
         flex: 1,
         borderBottomWidth: 1,
         borderBottomColor: '#eee',
-        overflow: 'hidden'
+        overflow: 'visible',
+        paddingVertical: 10,
     },
-    image: {
-        flex: 1,
-        height: 200
+    myImageContainer: {
+        borderRadius: 5,
+        width: imageWidth,
+        height: imageHeight,
+        ...Theme.shadow,
+
+    },
+    myImage: {
+        width: imageWidth,
+        height: imageHeight,
+        borderRadius: 5,
     },
     buttonContainer: {
         flex: 1,

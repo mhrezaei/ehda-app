@@ -18,6 +18,10 @@ export default class Dialog {
             "visible": false,
             "value": null,
             "action": null
+        },
+        "search": {
+            "visible": false,
+            "value": null,
         }
     };
 
@@ -25,7 +29,11 @@ export default class Dialog {
         DIALOG_SHOW_CALENDAR: 'DIALOG_SHOW_CALENDAR',
         DIALOG_HIDE_CALENDAR: 'DIALOG_HIDE_CALENDAR',
         DIALOG_SHOW_SHARING: 'DIALOG_SHOW_SHARING',
-        DIALOG_HIDE_SHARING: 'DIALOG_HIDE_SHARING'
+        DIALOG_HIDE_SHARING: 'DIALOG_HIDE_SHARING',
+
+        DIALOG_OPEN_SEARCH: 'DIALOG_OPEN_SEARCH',
+        DIALOG_CLOSE_SEARCH: 'DIALOG_CLOSE_SEARCH',
+        DIALOG_SEARCH_CHANGE: 'DIALOG_SEARCH_CHANGE'
     };
 
     static openCalendar(value, action){
@@ -43,8 +51,6 @@ export default class Dialog {
         }
     }
 
-
-
     static openSharing(value){
         return {
             type: Dialog.types.DIALOG_SHOW_SHARING,
@@ -58,6 +64,33 @@ export default class Dialog {
             type: Dialog.types.DIALOG_HIDE_SHARING
         }
     }
+
+
+
+
+    static openSearch(value){
+        return {
+            type: Dialog.types.DIALOG_OPEN_SEARCH,
+            value: value
+        }
+    }
+
+
+    static updateSearch(value){
+        return {
+            type: Dialog.types.DIALOG_OPEN_SEARCH,
+            value: value
+        }
+    }
+
+
+    static closeSearch(){
+        return {
+            type: Dialog.types.DIALOG_CLOSE_SEARCH
+        }
+    }
+
+
     static reducer(state = Dialog.initialState, payload){
         switch (payload.type) {
             case Dialog.types.DIALOG_SHOW_CALENDAR:
@@ -96,6 +129,37 @@ export default class Dialog {
                     ...state,
                     sharing: {
                         ...state.sharing,
+                        visible: false,
+                        value: null,
+
+                    }
+                };
+
+
+            case Dialog.types.DIALOG_OPEN_SEARCH:
+                return {
+                    ...state,
+                    search: {
+                        ...state.search,
+                        visible: true,
+                        value: payload.value,
+                    }
+                };
+
+            case Dialog.types.DIALOG_SEARCH_CHANGE:
+                return {
+                    ...state,
+                    search: {
+                        ...state.search,
+                        value: payload.value,
+                    }
+                };
+
+            case Dialog.types.DIALOG_CLOSE_SEARCH:
+                return {
+                    ...state,
+                    search: {
+                        ...state.search,
                         visible: false,
                         value: null,
 

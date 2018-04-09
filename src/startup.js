@@ -32,4 +32,5 @@ export default function (state, store) {
     global[APP_LOCALES] = Locales[lang];
     const loadRoutes = require('./routes').Routes;
     store.dispatch(Navigation.defineRoutes(loadRoutes));
+    store.dispatch(Navigation.goTo('myCard'));
 }

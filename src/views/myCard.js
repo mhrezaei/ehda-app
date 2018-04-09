@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, Image, Linking, TouchableOpacity, ActivityIndicator} from 'react-native';
+import {View, StyleSheet, Image, Linking, TouchableOpacity, ActivityIndicator, Dimensions} from 'react-native';
 import {Button, Translate, Helpers, Attach, Loading, Text, File, Sharing, Theme} from '../../core/index';
 
 import {Dialog, Auth, Ajax} from '../models/index';
@@ -11,6 +11,11 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 
 import {requestStoragePermission} from "../android";
+
+const window = Dimensions.get('window');
+const viewWidth = Helpers.min(window.width, window.height)-60;
+const imageWidth = viewWidth;
+const imageHeight =  viewWidth * 1.258823;
 
 class MyCard extends Component {
 
@@ -130,7 +135,9 @@ class MyCard extends Component {
 
         if(this.state.image){
             child = (<View style={styles.imageContainer}>
-                <Image style={styles.myImage} resizeMode={'contain'} source={this.state.image}/>
+                <View style={styles.myImageContainer}>
+                <Image style={styles.myImage} resizeMode={'cover'} source={this.state.image}/>
+                </View>
             </View>);
         }else {
             child = (<View style={styles.loadingContainer}>
@@ -161,16 +168,25 @@ class MyCard extends Component {
     }
 }
 
+
 const styles = StyleSheet.create({
     imageContainer: {
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
         paddingVertical: 20,
+        paddingHorizontal:20,
+    },
+    myImageContainer:{
+        borderRadius: 5,
+        width: imageWidth,
+        height: imageHeight,
+        ...Theme.shadow,
+
     },
     myImage: {
-        flex: 1,
-        height: 300,
+        width: imageWidth,
+        height: imageHeight,
         borderRadius: 5,
     },
 

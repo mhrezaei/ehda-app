@@ -1,14 +1,20 @@
 import React, {Component} from 'react';
 
-import {View, StyleSheet, Image, WebView, Platform} from 'react-native';
+import {View, StyleSheet, Image, Dimensions, Platform, ScrollView} from 'react-native';
 
-import {Text, Translate} from '../../core';
+import {Text, Translate,Helpers} from '../../core';
 
 import {Container} from "./common/container";
-import {ScrollView} from "./common/scrollView";
 
 
 import splash from '../resources/splash';
+
+
+
+const window = Dimensions.get('window');
+const viewWidth = Helpers.min(window.width, window.height);
+
+import temp from './temp.jpg';
 
 
 class News extends Component {
@@ -23,13 +29,17 @@ class News extends Component {
     render() {
         return (
             <Container>
-                <ScrollView ref={ref => this.container = ref}>
+
+                <ScrollView>
+
 
                     <View style={styles.imageContainer}>
-                        <Image style={styles.myImage} resizeMode={'contain'} source={splash}/>
+                        <Image style={styles.myImage} resizeMode={'cover'} source={temp}/>
                     </View>
+                    <View style={{padding: 10}}>
+                    <Text style={styles.title}>{Translate('tests')}</Text>
                     <Text style={styles.text}>{Translate('aboutText')}</Text>
-
+                    </View>
                 </ScrollView>
             </Container>
         );
@@ -42,12 +52,16 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
-        paddingVertical: 20,
+        width: viewWidth
     },
     myImage: {
         flex: 1,
-        height: 90,
-        borderRadius: 5,
+        height: 240,
+    },
+
+
+    title: {
+        fontSize: 18,
     },
     text:{
         padding: 15,

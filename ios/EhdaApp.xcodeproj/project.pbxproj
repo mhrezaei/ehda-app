@@ -37,6 +37,7 @@
 		38D038B4F613861DB16F217A /* libPods-EhdaApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C273E5186E129A88C87D61C /* libPods-EhdaApp.a */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		9299AC56207BD32200B11ED7 /* IRANSansMobile(FaNum).ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9299AC31207BD32200B11ED7 /* IRANSansMobile(FaNum).ttf */; };
 		92B525382070377C00AAA72F /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 92B525352070377C00AAA72F /* EvilIcons.ttf */; };
 		92B525392070377C00AAA72F /* IRANSansMobile.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 92B525362070377C00AAA72F /* IRANSansMobile.ttf */; };
 		92B5253A2070377C00AAA72F /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 92B525372070377C00AAA72F /* MaterialIcons.ttf */; };
@@ -344,6 +345,7 @@
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		88BF0E1130A5F0A2321DA770 /* Pods-EhdaApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EhdaApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-EhdaApp/Pods-EhdaApp.release.xcconfig"; sourceTree = "<group>"; };
+		9299AC31207BD32200B11ED7 /* IRANSansMobile(FaNum).ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IRANSansMobile(FaNum).ttf"; sourceTree = "<group>"; };
 		92B525352070377C00AAA72F /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
 		92B525362070377C00AAA72F /* IRANSansMobile.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = IRANSansMobile.ttf; sourceTree = "<group>"; };
 		92B525372070377C00AAA72F /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
@@ -635,6 +637,7 @@
 		92EDA7BC206FFE2000F68E61 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9299AC31207BD32200B11ED7 /* IRANSansMobile(FaNum).ttf */,
 				92B525352070377C00AAA72F /* EvilIcons.ttf */,
 				92B525362070377C00AAA72F /* IRANSansMobile.ttf */,
 				92B525372070377C00AAA72F /* MaterialIcons.ttf */,
@@ -1105,6 +1108,7 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				92B525392070377C00AAA72F /* IRANSansMobile.ttf in Resources */,
+				9299AC56207BD32200B11ED7 /* IRANSansMobile(FaNum).ttf in Resources */,
 				92B5253A2070377C00AAA72F /* MaterialIcons.ttf in Resources */,
 				92B525382070377C00AAA72F /* EvilIcons.ttf in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,

@@ -62,7 +62,7 @@ class Auth {
         };
     }
 
-    static getCard(form, callback){
+    static getCard(form, callback) {
         return {
             type: Auth.types.AUTH_GET_CARD_ASYNC,
             callback: callback,
@@ -70,7 +70,7 @@ class Auth {
         };
     }
 
-    static registerCard(form, callback){
+    static registerCard(form, callback) {
         return {
             type: Auth.types.AUTH_REGISTER_CARD_ASYNC,
             callback: callback,
@@ -112,7 +112,7 @@ class Auth {
 
     // + async operations
 
-    static *_checkToken() {
+    static* _checkToken() {
         const state = yield select();
         let token = state.auth.token;
 
@@ -129,7 +129,7 @@ class Auth {
         return token;
     }
 
-    static *_getToken(payload) {
+    static* _getToken(payload) {
 
         try {
             if (!(yield Ajax._checkConnection())) {
@@ -172,7 +172,7 @@ class Auth {
         }
     }
 
-    static *_searchCard(payload) {
+    static* _searchCard(payload) {
         try {
 
             if (!(yield Ajax._checkConnection())) {
@@ -218,7 +218,7 @@ class Auth {
         }
     }
 
-    static * _getCard(payload) {
+    static* _getCard(payload) {
         try {
 
             if (!(yield Ajax._checkConnection())) {
@@ -263,7 +263,7 @@ class Auth {
         }
     }
 
-    static *_registerCard(payload) {
+    static* _registerCard(payload) {
         try {
 
             if (!(yield Ajax._checkConnection())) {
@@ -309,7 +309,7 @@ class Auth {
     }
 
 
-    static *_downloadCard(payload) {
+    static* _downloadCard(payload) {
 
         const state = yield select();
         try {
@@ -386,20 +386,24 @@ class Auth {
                 };
             case Auth.types.AUTH_REGISTER_CARD_SUCCESS:
             case Auth.types.AUTH_GET_CARD_SUCCESS:
-                const codeMelli = payload.data.ehda_card_details.code_melli;
-                return {
-                    ...state,
-                    pinned: codeMelli,
-                    handle: state.handle+1,
-                    cards: {
-                        ...state.cards,
-                        [codeMelli]: {
-                            ...state.cards[codeMelli],
-                            info: payload.data,
-                            updated_at: Helpers.now()
+                if (payload.data.hasOwnProperty('ehda_card_details')) {
+                    const codeMelli = payload.data.ehda_card_details.code_melli;
+                    return {
+                        ...state,
+                        pinned: state.pinned ? state.pinned : codeMelli,
+                        handle: state.handle + 1,
+                        cards: {
+                            ...state.cards,
+                            [codeMelli]: {
+                                ...state.cards[codeMelli],
+                                info: payload.data,
+                                updated_at: Helpers.now()
+                            }
                         }
-                    }
-                };
+                    };
+                } else {
+                    return state;
+                }
             case Auth.types.AUTH_CHANGE_PINNED_CARD:
                 return {
                     ...state,

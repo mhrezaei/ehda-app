@@ -49,7 +49,7 @@ class TextInput extends Component {
                     textAlign: 'right',
                     borderRadius: 5,
                     color: Theme.textInvert,
-                    fontFamily: Theme.font,
+                    fontFamily: Theme.font+"(FaNum)",
                     fontSize: 16,
                     margin: 10,
                     flex: 1,

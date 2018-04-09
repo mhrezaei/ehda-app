@@ -29,6 +29,7 @@
 
 
 import {Translate, Helpers} from '../core/index'
+import {Dialog} from './models'
 
 export const Routes = {
     searchCard: {
@@ -62,7 +63,7 @@ export const Routes = {
             if(Object.keys(Helpers.leaf(redux, 'auth.cards')).length === 0)
                 return 'searchCard';
             // check if there is no pinned card available then return to cards
-            else if(!Helpers.leaf(redux, 'auth.pinned'))
+            else if(!Helpers.leaf(redux, 'auth.pinned', null))
                 return 'myCards';
         },
         title: Translate('myCard'),
@@ -70,6 +71,14 @@ export const Routes = {
         component: require('./views/myCard').default
     },
     myCards: {
+        actions: [
+            {
+                icon: "search",
+                action: function (dispatch, state) {
+                    dispatch(Dialog.openSearch());
+                }
+            },
+        ],
         visibility: function (redux) {
             // must not show this link when there is no card available !
             return Object.keys(Helpers.leaf(redux, 'auth.cards')).length > 0;
@@ -83,11 +92,18 @@ export const Routes = {
         icon: "list",
         component: require('./views/myCards').default
     },
-    /*news: {
+    news: {
         title: Translate('news'),
         icon: "rss-feed",
         component: require('./views/news').default
-    },*/
+    },
+
+    newsPage: {
+        visibility: false,
+        title: Translate('news'),
+        icon: "rss-feed",
+        component: require('./views/newsPage').default
+    },
     contact: {
         title: Translate('contactUs'),
         icon: "phone",

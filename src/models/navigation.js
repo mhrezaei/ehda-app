@@ -10,10 +10,9 @@ import {select, put, takeLatest} from 'redux-saga/effects';
 
 
 export default class Navigation {
-    static save = true;
 
     static initialState = {
-        "current": 'searchCard',
+        "current": 'myCard',
         "default": 'searchCard',
         "props": null
     };
@@ -103,7 +102,6 @@ export default class Navigation {
         switch (payload.type) {
             case Navigation.types.NAVIGATION_GO_TO_PAGE_DONE:
                 return { ...state, current: payload.page, props: payload.props };
-
             case Navigation.types.DEFINE_ROUTES:
                 return { ...state, routes: payload.routes };
             default:
