@@ -98,9 +98,8 @@ class Picker extends Component {
         const {selected} = this.state;
 
 
-
         return (this.state.show &&
-            <TouchableWithoutFeedback onPress={()=>{
+            <TouchableWithoutFeedback style={{zIndex: 9999}} onPress={() => {
                 this.hide();
             }}>
                 <Animated.View style={{
@@ -110,7 +109,6 @@ class Picker extends Component {
                     right: 0,
                     bottom: 0,
                     backgroundColor: 'rgba(0,0,0,0.5)',
-                    zIndex: 999,
                     opacity: this.state.translateY.interpolate({
                         inputRange: [-1, 0],
                         outputRange: [0, 1]
@@ -120,39 +118,39 @@ class Picker extends Component {
 
                         <TouchableWithoutFeedback onPress={() => {
                         }}>
-                        <Animated.View style={{
-                            padding: 20,
-                            backgroundColor: '#fff',
-                            transform: [{
-                                translateY: this.state.translateY.interpolate({
-                                    inputRange: [-1, 0],
-                                    outputRange: [-600, 0]
-                                })
-                            }]
-                        }}>
-                            {
-                                data.map((x, i) =>
-                                    <TouchableOpacity key={i} style={styles.menuItem} onPress={() => {
-                                        onChange(x.id);
-                                        this.setState({selected: x.id});
-                                        this.hide();
-                                    }}>
-                                        <View style={styles.menuItem_direct}>
-                                            {x.id === selected &&
-                                            <Icon name={'check'} style={styles.menuItem_icon} size={20}/>}
-                                            <Text style={styles.menuItem_text}>{x.title}</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                )
-                            }
-                            <TouchableOpacity style={{
-                                flex: 1
-                            }} onPress={this.onCancelClicked}>
-                                <View style={styles.menuItem_direct}>
-                                    <Text style={{color: Theme.gray}}>{Translate('cancel')}</Text>
-                                </View>
-                            </TouchableOpacity>
-                        </Animated.View>
+                            <Animated.View style={{
+                                padding: 20,
+                                backgroundColor: '#fff',
+                                transform: [{
+                                    translateY: this.state.translateY.interpolate({
+                                        inputRange: [-1, 0],
+                                        outputRange: [-600, 0]
+                                    })
+                                }]
+                            }}>
+                                {
+                                    data.map((x, i) =>
+                                        <TouchableOpacity key={i} style={styles.menuItem} onPress={() => {
+                                            onChange(x.id);
+                                            this.setState({selected: x.id});
+                                            this.hide();
+                                        }}>
+                                            <View style={styles.menuItem_direct}>
+                                                {x.id === selected &&
+                                                <Icon name={'check'} style={styles.menuItem_icon} size={20}/>}
+                                                <Text style={styles.menuItem_text}>{x.title}</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    )
+                                }
+                                <TouchableOpacity style={{
+                                    flex: 1
+                                }} onPress={this.onCancelClicked}>
+                                    <View style={styles.menuItem_direct}>
+                                        <Text style={{color: Theme.gray}}>{Translate('cancel')}</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </Animated.View>
 
                         </TouchableWithoutFeedback>
                     </KeyboardAwareScrollView>
@@ -179,7 +177,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1
     },
     menuItem_text: {
-      fontSize: 16,
+        fontSize: 16,
     },
     menuItem_direct: {
         flex: 1,

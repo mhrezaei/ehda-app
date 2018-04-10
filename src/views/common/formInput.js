@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         top: 10,
 
         alignSelf: 'center',
-        zIndex: 4
+        zIndex: 3
     },
     containerVertical: {
         flex: 1,

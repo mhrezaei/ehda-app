@@ -99,10 +99,10 @@ class Calendar extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.visible){
+        if (nextProps.visible) {
             this.show(nextProps.value);
-        }else{
-           this.hide();
+        } else {
+            this.hide();
         }
 
     }
@@ -156,7 +156,7 @@ class Calendar extends Component {
             }
         ).start(() => {
 
-            const {sy,sm,sd} = this.state;
+            const {sy, sm, sd} = this.state;
 
             if (this.props.onChange)
                 this.props.onChange(Jalali.toPhp(sy, sm, sd));
@@ -181,7 +181,7 @@ class Calendar extends Component {
         if (this.props.onChange)
             this.props.onChange(Jalali.toPhp(date.year, date.month, date.current));
 
-        if(this.props.hide)
+        if (this.props.hide)
             this.props.hide();
     }
 
@@ -240,6 +240,7 @@ class Calendar extends Component {
             padding: 20,
             backgroundColor: '#fff',
             alignSelf: 'center',
+            zIndex: 1600,
             width: size,
             transform: [{
                 translateY: this.state.translateY.interpolate({
@@ -259,7 +260,7 @@ class Calendar extends Component {
             padding: 20,
             backgroundColor: '#fff',
             width: size,
-
+            zIndex: 1600,
             alignSelf: 'center',
             transform: [{
                 translateY: this.state.translateY.interpolate({
@@ -331,6 +332,7 @@ class Calendar extends Component {
             padding: 20,
             backgroundColor: '#fff',
             width: size,
+            zIndex: 1600,
             alignSelf: 'center',
             transform: [{
                 translateY: this.state.translateY.interpolate({
@@ -384,12 +386,12 @@ class Calendar extends Component {
                 break;
         }
         return (this.state.show &&
-            <TouchableWithoutFeedback onPress={() => {
+            <TouchableWithoutFeedback style={{zIndex: 2700, elevation: 5}} onPress={() => {
                 if (view !== 0) {
                     this.setState({view: 0});
                 } else {
 
-                    if(this.props.hide)
+                    if (this.props.hide)
                         this.props.hide();
                 }
             }}>
@@ -398,9 +400,8 @@ class Calendar extends Component {
                     left: 0,
                     top: 0,
                     right: 0,
-                    bottom: 0,
+                    bottom: 0, zIndex: 9999,
                     backgroundColor: 'rgba(0,0,0,0.5)',
-                    zIndex: 999,
                     flexDirection: 'row',
                     justifyContent: 'center',
                     opacity: this.state.translateY.interpolate({
@@ -507,7 +508,7 @@ const styles = StyleSheet.create({
         bottom: 0,
 
         backgroundColor: 'rgba(0,0,0,0.5)',
-        zIndex: 999
+        zIndex: 9999
 
     },
     calendar_row: {

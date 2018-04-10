@@ -21,21 +21,21 @@ const ActionBar = ({dispatch, redux, loading, title, onPress, actions}) => {
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
+            zIndex: -1,
             ...Theme.shadow,
-            zIndex: 700,
+            elevation: 0,
             paddingTop: Platform.OS === 'ios' ? 22 : 0
         }}>
-            <View style={
-                {
-                    flex: 1,
-                    backgroundColor: Theme.primary,
-                    flexDirection: 'row-reverse',
-                    alignContent: 'center',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    paddingHorizontal: 20,
-                    paddingVertical: 15
-                }
+            <View style={{
+                flex: 1,
+                backgroundColor: Theme.primary,
+                flexDirection: 'row-reverse',
+                alignContent: 'center',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                paddingHorizontal: 20,
+                paddingVertical: 15
+            }
             }>
 
                 <StatusBar backgroundColor={Theme.primaryDark}/>

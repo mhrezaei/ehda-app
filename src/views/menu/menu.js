@@ -53,7 +53,6 @@ const Menu = ({title, redux, dispatch, onPress, routes, current}) => {
                     // if it's visible then return it's child
                     if(visible) {
                         return (<MenuItem key={'menuItem:'+i} current={current === key} title={route.title} icon={route.icon} onPress={() => {
-                            dispatch(Navigation.goTo(key));
                             onPress(key);
                         }}/>);
                     }

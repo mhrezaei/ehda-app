@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, BackHandler} from 'react-native';
 import Drawer from 'react-native-drawer';
 import {Attach, Theme, Helpers, Text, ActionBar, Translate, Router, Loading, Calendar, Sharing} from "../../core/index";
 import {Auth, Navigation, Ajax, Dialog} from '../models/index';
@@ -28,8 +28,20 @@ class App extends Component {
         this.closeDrawer = this.closeDrawer.bind(this);
         this.onItemClicked = this.onItemClicked.bind(this);
         this.gotoSearchCard = this.gotoSearchCard.bind(this);
+        this.onBack = this.onBack.bind(this);
         this.onInternetBannerClicked = this.onInternetBannerClicked.bind(this);
 
+
+    }
+
+    onBack(){
+
+
+        if (this.props.routeHistory.length > 0) {
+            this.props.dispatch(Navigation.goBack());
+            return true;
+        }
+        return false;
     }
 
     componentWillReceiveProps(nextProps) {
@@ -70,6 +82,14 @@ class App extends Component {
 
         this.closeDrawer();
     }
+    componentDidMount(){
+
+        BackHandler.addEventListener('hardwareBackPress', this.onBack);
+
+    }
+    componentWillUnmount(){
+        BackHandler.removeEventListener();
+    }
 
     render() {
         const {redux, sharing, routes, calendar, cardsCount, search, ajaxRequests, progress, ajaxInternet, currentRoute, defaultRoute, ownerName, dispatch} = this.props;
@@ -90,6 +110,8 @@ class App extends Component {
                                routes={routes} redux={redux}/>}
             >
                 <View style={styles.container}>
+
+
                     <ActionBar dispatch={dispatch} actions={crt.hasOwnProperty('actions') ? crt.actions : null} name={Translate('app')} loading={ajaxRequests > 0} title={crt.title}
                                onPress={this.openDrawer}/>
 
@@ -100,9 +122,6 @@ class App extends Component {
                     </TouchableOpacity>}
 
                     <Router routes={routes} defaultRoute={defaultRoute} current={currentRoute} redux={redux}/>
-
-
-
 
                     {['myCard', 'myCards', 'contact', 'about'].includes(currentRoute) && <View style={styles.floatingButtonContainer}>
                         <TouchableOpacity style={styles.floatingButtonIcon} onPress={this.gotoSearchCard}>
@@ -227,6 +246,7 @@ export default Attach({
     'navigation.current': (nav, whole) => {
         return {
             currentRoute: nav || Helpers.leaf(whole, 'navigation.routes.default'),
+            routeHistory: Helpers.leaf(whole, 'navigation.history', []),
             routes: Helpers.leaf(whole, 'navigation.routes', {})
         };
     },
