@@ -34,12 +34,20 @@ class App extends Component {
 
     }
 
-    onBack(){
-
-
-        if (this.props.routeHistory.length > 0) {
-            this.props.dispatch(Navigation.goBack());
-            return true;
+    onBack() {
+        const {routes,redux, currentRoute} = this.props;
+        const cardsCount = Object.keys(Helpers.leaf(redux, 'auth.cards', {})).length;
+        try {
+            const crt = routes[currentRoute].back;
+            if(currentRoute === 'searchCard' && cardsCount < 1){
+                return false;
+            }
+            if (crt) {
+                this.props.dispatch(Navigation.goTo(crt));
+                return true;
+            }
+        } catch (x) {
+            return false;
         }
         return false;
     }
@@ -52,29 +60,31 @@ class App extends Component {
 
     }
 
-    gotoSearchCard(){
+    gotoSearchCard() {
         this.props.dispatch(Navigation.goTo('searchCard'));
     }
-    onInternetBannerClicked(){
+
+    onInternetBannerClicked() {
 
         this.props.dispatch(Ajax.startLoading([Translate('internetConnected'), Translate('internetError')]));
 
 
         this.props.dispatch(Auth.getToken((status) => {
-            if(status)
+            if (status)
                 this.props.dispatch(Ajax.stopLoading(0));
             else
                 this.props.dispatch(Ajax.stopLoading(1));
         }));
     }
+
     openDrawer() {
-        if(this.drawer)
-        this.drawer.open();
+        if (this.drawer)
+            this.drawer.open();
     }
 
     closeDrawer() {
-        if(this.drawer)
-        this.drawer.close();
+        if (this.drawer)
+            this.drawer.close();
     }
 
     onItemClicked(key) {
@@ -82,18 +92,21 @@ class App extends Component {
 
         this.closeDrawer();
     }
-    componentDidMount(){
+
+    componentDidMount() {
 
         BackHandler.addEventListener('hardwareBackPress', this.onBack);
 
     }
-    componentWillUnmount(){
+
+    componentWillUnmount() {
         BackHandler.removeEventListener();
     }
 
     render() {
-        const {redux, sharing, routes, calendar, cardsCount, search, ajaxRequests, progress, ajaxInternet, currentRoute, defaultRoute, ownerName, dispatch} = this.props;
+        const {redux, sharing, routes, calendar, search, ajaxRequests, progress, ajaxInternet, currentRoute, defaultRoute, ownerName, dispatch} = this.props;
 
+        const cardsCount = Object.keys(Helpers.leaf(redux, 'auth.cards', {})).length;
         const crt = routes[currentRoute];
         return (
             <Drawer
@@ -112,10 +125,12 @@ class App extends Component {
                 <View style={styles.container}>
 
 
-                    <ActionBar dispatch={dispatch} actions={crt.hasOwnProperty('actions') ? crt.actions : null} name={Translate('app')} loading={ajaxRequests > 0} title={crt.title}
+                    <ActionBar dispatch={dispatch} actions={crt.hasOwnProperty('actions') ? crt.actions : null}
+                               name={Translate('app')} loading={ajaxRequests > 0} title={crt.title}
                                onPress={this.openDrawer}/>
 
-                    {ajaxInternet === false && <TouchableOpacity style={styles.banner} onPress={this.onInternetBannerClicked}>
+                    {ajaxInternet === false &&
+                    <TouchableOpacity style={styles.banner} onPress={this.onInternetBannerClicked}>
                         <View style={styles.bannerDirect}>
                             <Text invert>{Translate('noInternet')}</Text>
                         </View>
@@ -123,22 +138,24 @@ class App extends Component {
 
                     <Router routes={routes} defaultRoute={defaultRoute} current={currentRoute} redux={redux}/>
 
-                    {['myCard', 'myCards', 'contact', 'about'].includes(currentRoute) && <View style={styles.floatingButtonContainer}>
+                    {['myCard', 'myCards', 'contact', 'about'].includes(currentRoute) &&
+                    <View style={styles.floatingButtonContainer}>
                         <TouchableOpacity style={styles.floatingButtonIcon} onPress={this.gotoSearchCard}>
                             <Icon name={'add'} color={Theme.white} size={20}/>
-                            {cardsCount && <View style={styles.cardsCountContainer}><Text style={styles.cardsCount}>{LocalizeNumber(cardsCount.toString())}</Text></View>}
+                            {cardsCount && <View style={styles.cardsCountContainer}><Text
+                                style={styles.cardsCount}>{LocalizeNumber(cardsCount.toString())}</Text></View>}
                         </TouchableOpacity>
                     </View>}
 
 
-                    <Calendar hide={()=>{
+                    <Calendar hide={() => {
                         this.props.dispatch(Dialog.closeCalendar());
-                    }} visible={calendar.visible} value={calendar.value}  onChange={calendar.action}/>
+                    }} visible={calendar.visible} value={calendar.value} onChange={calendar.action}/>
 
 
-                    <Sharing hide={()=>{
+                    <Sharing hide={() => {
                         this.props.dispatch(Dialog.closeSharing());
-                    }} visible={sharing.visible} value={sharing.value} />
+                    }} visible={sharing.visible} value={sharing.value}/>
 
 
                     <Loading progress={progress}/>
@@ -171,7 +188,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         backgroundColor: Theme.background,
     },
-    cardsCountContainer:{
+    cardsCountContainer: {
         position: 'absolute',
         width: 25,
         height: 25,
@@ -191,11 +208,11 @@ const styles = StyleSheet.create({
         backgroundColor: Theme.accent,
         padding: 18,
         borderRadius: 40,
-        borderColor:Theme.accentDark,
-        borderWidth:1,
+        borderColor: Theme.accentDark,
+        borderWidth: 1,
         ...Theme.shadow
     },
-    floatingButtonContainer:{
+    floatingButtonContainer: {
         position: 'absolute',
         bottom: 0,
         left: 0,
@@ -203,7 +220,7 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
         zIndex: 888
     },
-    banner:{
+    banner: {
         backgroundColor: Theme.accent,
         flexDirection: 'row',
         justifyContent: 'center',
@@ -232,9 +249,8 @@ export default Attach({
     },
     'auth.pinned': (pinned, redux) => {
         return {
-            ownerName: Helpers.leaf(redux, 'auth.cards.'+ pinned + '.info.ehda_card_details.full_name', ''),
-            cardsCount: Object.keys(Helpers.leaf(redux, 'auth.cards', {})).length,
-        };
+            ownerName: Helpers.leaf(redux, 'auth.cards.' + pinned + '.info.ehda_card_details.full_name', '')
+        }
     },
     'ajax': (ajax) => {
         return {

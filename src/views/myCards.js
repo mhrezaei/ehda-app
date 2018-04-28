@@ -67,13 +67,12 @@ class MyCards extends Component {
         const {redux, cards, search, dispatch} = this.props;
 
         let sorted = Helpers.flatten(this.props.cards).sort((x, y) => {
-            return x.value.updated_at < y.value.updated_at;
+            return y.value.updated_at - x.value.updated_at;
         });
 
         if(this.state.search){
             sorted = sorted.filter(item => {
-                console.log(item)
-                return item.value.info.ehda_card_details.full_name.includes(this.state.search)
+                return item.value.info.ehda_card_details.full_name.includes(this.state.search) || item.value.info.ehda_card_details.code_melli.includes(this.state.search)
             })
         }
 

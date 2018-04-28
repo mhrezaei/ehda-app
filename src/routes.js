@@ -34,11 +34,13 @@ import {Dialog} from './models'
 export const Routes = {
     searchCard: {
         title: Translate('searchCard'),
+        back: 'myCard',
         icon: "home",
         component: require('./views/searchCard').default
     },
     getCard: {
         visibility: false,
+        back: 'searchCard',
         redirect: function (redux) {
             // redirect back to searchCard because there is no data provided with route.
             if(Helpers.leaf(redux, 'navigation.props.codeMelli', null) === null)
@@ -49,11 +51,13 @@ export const Routes = {
         component: require('./views/getCard').default
     },
     registerCard: {
+        back: 'searchCard',
         visibility: false,
         title: Translate('registerCard'),
         component: require('./views/registerCard').default
     },
     myCard: {
+        back: null,
         visibility: function (redux) {
             // must not show this link when there is no card available !
             return Object.keys(Helpers.leaf(redux, 'auth.cards')).length > 0 && Helpers.leaf(redux, 'auth.pinned');
@@ -71,6 +75,7 @@ export const Routes = {
         component: require('./views/myCard').default
     },
     myCards: {
+        back: 'myCard',
         actions: [
             {
                 icon: "search",
@@ -93,23 +98,27 @@ export const Routes = {
         component: require('./views/myCards').default
     },
     news: {
+        back: 'myCard',
         title: Translate('news'),
         icon: "rss-feed",
         component: require('./views/news').default
     },
 
     newsPage: {
+        back: 'news',
         visibility: false,
         title: Translate('news'),
         icon: "rss-feed",
         component: require('./views/newsPage').default
     },
     contact: {
+        back: 'myCard',
         title: Translate('contactUs'),
         icon: "phone",
         component: require('./views/contact').default
     },
     about: {
+        back: 'myCard',
         title: Translate('aboutUs'),
         icon: "info",
         component: require('./views/about').default
