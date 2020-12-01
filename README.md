@@ -32,3 +32,4 @@ react-native run-ios
 yarn test-watch
 
 ```
+[YasnaTeam](https://yasna.team)
