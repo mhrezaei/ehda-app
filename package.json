@@ -7,7 +7,7 @@
     "test": "mocha --require js:babel-core/register  --require js:babel-polyfill ./core/__tests__/**/*.js"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "buffer": "^5.1.0",
     "lodash": "^4.17.19",
     "momentj": "^1.0.5",
