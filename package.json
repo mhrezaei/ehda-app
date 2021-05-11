@@ -9,7 +9,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "buffer": "^5.1.0",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "momentj": "^1.0.5",
     "prop-types": "^15.6.1",
     "react": "16.0.0",
